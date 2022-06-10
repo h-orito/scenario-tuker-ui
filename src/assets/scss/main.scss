@@ -1,0 +1,22 @@
+@import 'primeflex/primeflex.scss';
+
+a {
+  @include styleclass('no-underline text-blue-500');
+}
+
+h1 {
+  @include styleclass('text-2xl font-normal');
+}
+
+h2 {
+  @include styleclass('text-lg font-normal');
+}
+
+h3 {
+  @include styleclass('text-sm font-bold');
+}
+
+p {
+  @include styleclass('line-height-3');
+  word-break: break-word;
+}
