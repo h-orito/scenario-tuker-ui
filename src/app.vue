@@ -1,12 +1,19 @@
 <template>
   <div class="text-sm">
-    <NuxtLayout>
-      <LayoutDefaultHeader />
-      <NuxtPage class="p-1 sm:p-3 w-full max-w-lg mx-auto" />
-      <LayoutDefaultFooter />
-    </NuxtLayout>
+    <client-only>
+      <NuxtLayout>
+        <LayoutDefaultHeader />
+        <NuxtPage class="p-1 sm:p-3 w-full max-w-lg mx-auto" />
+        <LayoutDefaultFooter />
+      </NuxtLayout>
+      <ConfirmDialog></ConfirmDialog>
+    </client-only>
   </div>
 </template>
+
+<script setup lang="ts">
+import ConfirmDialog from 'primevue/confirmdialog'
+</script>
 
 <style lang="scss">
 @import 'primeflex/primeflex.scss';

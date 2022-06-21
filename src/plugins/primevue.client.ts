@@ -14,12 +14,16 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Panel from 'primevue/panel'
 import Fieldset from 'primevue/fieldset'
+import AutoComplete from 'primevue/autocomplete'
+import Checkbox from 'primevue/checkbox'
+import ConfirmationService from 'primevue/confirmationservice'
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, {
     ripple: true,
     inputStyle: 'outlined'
   })
+  nuxtApp.vueApp.use(ConfirmationService)
   nuxtApp.vueApp.component('Button', Button)
   nuxtApp.vueApp.component('SelectButton', SelectButton)
   nuxtApp.vueApp.component('Dialog', Dialog)
@@ -34,4 +38,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component('Column', Column)
   nuxtApp.vueApp.component('Panel', Panel)
   nuxtApp.vueApp.component('Fieldset', Fieldset)
+  nuxtApp.vueApp.component('AutoComplete', AutoComplete)
+  nuxtApp.vueApp.component('Checkbox', Checkbox)
 })

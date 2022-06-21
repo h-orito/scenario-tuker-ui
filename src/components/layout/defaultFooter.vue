@@ -16,7 +16,7 @@
       <li>
         © 2022- ort（
         <a
-          href="https://github.com/h-orito/dice-role-nuxt"
+          href="https://github.com/h-orito/scenario-tuker-ui"
           target="_blank"
           rel="noreferrer"
         >

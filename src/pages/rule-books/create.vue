@@ -1,0 +1,77 @@
+<template>
+  <div>
+    <RuleBookName v-model:value="name" :has-error="v$.name.$error" />
+    <RuleBookDictionaryNames
+      v-model:value="dictionaryNames"
+      :has-error="v$.dictionaryNames.$error"
+    />
+    <ButtonPrimary label="確認画面へ" @click="confirm" />
+    <ConfirmModal
+      v-model:show="isConfirmModalShow"
+      :rule-book="inputRuleBook"
+    />
+    <div class="mt-4">
+      <NuxtLink to="/rule-books">
+        <ButtonSecondary label="ルールブック一覧へ" />
+      </NuxtLink>
+    </div>
+    <div class="mt-2">
+      <NuxtLink to="/">
+        <ButtonSecondary label="トップページへ" />
+      </NuxtLink>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, maxLength } from '@vuelidate/validators'
+import RuleBookName from '~/components/pages/rule-books/rule-book-name.vue'
+import RuleBookDictionaryNames from '~/components/pages/rule-books/rule-book-dictionary-names.vue'
+import ConfirmModal from '~/components/pages/rule-books/confirm-modal.vue'
+
+const name = ref('')
+const dictionaryNames = ref('')
+
+const rules = {
+  name: {
+    required,
+    minLength: minLength(1),
+    maxLength: maxLength(255)
+  },
+  dictionaryNames: {
+    len: () => {
+      const names = dictionaryNames.value.trim()
+      return (
+        names.length === 0 ||
+        names
+          .replace('\r\n', '\n')
+          .split('\n')
+          .every((dn) => {
+            const length = dn.length
+            return 0 < length && length <= 255
+          })
+      )
+    }
+  }
+}
+
+const v$ = useVuelidate(rules, {
+  name,
+  dictionaryNames
+})
+
+const confirm = async () => {
+  const isValid = await v$.value.$validate()
+  if (!isValid) return
+  openConfirmModal()
+}
+
+const isConfirmModalShow = ref(false)
+const openConfirmModal = () => (isConfirmModalShow.value = true)
+
+const inputRuleBook = computed(() => ({
+  name: name.value,
+  dictionaryNames: dictionaryNames.value
+}))
+</script>

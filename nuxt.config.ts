@@ -9,7 +9,8 @@ export default defineNuxtConfig({
   publicRuntimeConfig: {
     firebaseApiKey: process.env.FIREBASE_API_KEY,
     firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    imageDomain: 'https://r2-image-worker.wolfort.workers.dev/'
+    imageDomain: 'https://r2-image-worker.wolfort.workers.dev/',
+    apiBase: process.env.API_BASE || 'http://localhost:8091/scenario-tuker/'
   },
   privateRuntimeConfig: {
     firebaseDatabaseUrl: process.env.FIREBASE_DATABASE_URL,

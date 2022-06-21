@@ -1,0 +1,3 @@
+type RuleBookQuery = {
+  name: string
+}
