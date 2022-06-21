@@ -19,9 +19,6 @@ export default defineNuxtConfig({
     firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
     firebaseAppId: process.env.FIREBASE_APP_ID
   },
-  nitro: {
-    preset: 'node-server'
-  },
   css: [
     'primevue/resources/themes/lara-light-blue/theme.css',
     'primevue/resources/primevue.css',
