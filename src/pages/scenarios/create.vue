@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Title>Scenario Tuker | シナリオ登録</Title>
     <ScenarioName v-model:value="name" :has-error="v$.name.$error" />
     <ScenarioDictionaryNames
       v-model:value="dictionaryNames"

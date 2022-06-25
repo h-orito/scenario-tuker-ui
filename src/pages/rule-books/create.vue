@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Title>Scenario Tuker | ルールブック登録</Title>
     <RuleBookName v-model:value="name" :has-error="v$.name.$error" />
     <RuleBookDictionaryNames
       v-model:value="dictionaryNames"

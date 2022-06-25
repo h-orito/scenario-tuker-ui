@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Title>Scenario Tuker</Title>
     <div v-if="authState.myself">
       <div>ようこそ {{ authState.myself.name }} さん</div>
       <div class="mt-2">

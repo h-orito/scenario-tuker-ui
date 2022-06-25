@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Title>Scenario Tuker | シナリオ一覧</Title>
     <h1>シナリオ一覧</h1>
     <DataTable :value="scenarioItems" :scrollable="true" class="p-datatable-sm">
       <template v-if="canModify" #header>

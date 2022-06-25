@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Title>Scenario Tuker | ユーザー検索</Title>
     <h1>ユーザー検索</h1>
     <div class="grid p-fluid mb-2">
       <div class="col-12 md:col-6">

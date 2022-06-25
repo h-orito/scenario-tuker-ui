@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Title>Scenario Tuker | ルールブック一覧</Title>
     <h1>ルールブック一覧</h1>
     <DataTable :value="ruleBookItems" :scrollable="true" class="p-datatable-sm">
       <template v-if="canModify" #header>
