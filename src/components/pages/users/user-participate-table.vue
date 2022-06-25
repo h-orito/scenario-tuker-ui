@@ -1,9 +1,9 @@
 <template>
   <DataTable
     :value="scenarios"
-    :scrollable="true"
     class="p-datatable-sm"
     responsive-layout="scroll"
+    @row-reorder="reorder"
   >
     <template v-if="canModify" #header>
       <div class="flex justify-content-end">
@@ -11,6 +11,7 @@
       </div>
     </template>
     <template #empty>通過したシナリオが登録されていません。</template>
+    <Column v-if="canModify" :row-reorder="true" header-style="width: 3rem" />
     <Column field="scenario.name" header="シナリオ"></Column>
     <Column
       v-if="type.value === ScenarioType.Trpg.value"
@@ -22,7 +23,7 @@
         {{ roleLabels(slotProps.data.role_types) }}
       </template>
     </Column>
-    <Column v-if="canModify" class="justify-content-end">
+    <Column v-if="canModify" class="justify-content-end text-right">
       <template #body="slotProps">
         <ButtonPrimary
           icon="pencil"
@@ -52,7 +53,10 @@
 </template>
 
 <script setup lang="ts">
-import { deleteParticipates } from '~/components/api/myself-api'
+import {
+  deleteParticipates,
+  putParticipates
+} from '~/components/api/myself-api'
 import { ScenarioType } from '~/@types/scenario-type'
 import { AllRoleType } from '~/@types/role-type'
 import ParticipateModal from '~/components/pages/participates/participate-modal.vue'
@@ -61,23 +65,23 @@ import { useConfirm } from 'primevue/useconfirm'
 
 interface Props {
   allScenarios: ScenariosResponse
-  allParticipates: Array<ParticipateResponse>
   type: ScenarioType
   canModify: boolean
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'reload'): void
   (e: 'delete', participate: ParticipateResponse): void
 }>()
 
-const scenarios = computed(() => {
-  return props.allParticipates.filter(
-    (p) => p.scenario.type === props.type.value
-  )
-})
+const scenarios: Ref<Array<ParticipateResponse>> = ref([])
+const orgScenarios: Ref<Array<ParticipateResponse>> = ref([])
+const init = (participates: Array<ParticipateResponse>) => {
+  scenarios.value = participates
+  orgScenarios.value = participates
+}
 
 const roleLabels = (types: Array<string>): string => {
   return AllRoleType.filter((rt) => types.some((type) => type === rt.value))
@@ -111,5 +115,26 @@ const deleteParticipate = async (target: ParticipateResponse) => {
   })
 }
 
+// reorder
+const reorder = async (event) => {
+  scenarios.value = event.value
+  scenarios.value.forEach(async (p: ParticipateResponse, idx: number) => {
+    const org = orgScenarios.value[idx]
+    if (p.id != org.id) {
+      await putParticipates({
+        id: p.id,
+        scenario_id: p.scenario.id,
+        user_id: p.user_id,
+        role_types: p.role_types,
+        disp_order: org.disp_order
+      } as Participate)
+    }
+  })
+}
+
 const reload = () => emit('reload')
+
+defineExpose({
+  init
+})
 </script>

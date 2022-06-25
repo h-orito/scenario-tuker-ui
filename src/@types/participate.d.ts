@@ -3,4 +3,5 @@ type Participate = {
   scenario_id: number
   user_id: number
   role_types: Array<string>
+  disp_order: number
 }

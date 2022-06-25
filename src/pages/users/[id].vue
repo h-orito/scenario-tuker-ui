@@ -18,8 +18,8 @@
       <div>
         <h2>通過したマーダーミステリー</h2>
         <UserParticipateTable
+          ref="murderParticipatesTable"
           :all-scenarios="allScenarios"
-          :all-participates="participateScenarios"
           :type="ScenarioType.MurderMystery"
           :can-modify="canModify"
           @reload="reload"
@@ -28,8 +28,8 @@
       <div class="mt-5">
         <h2>通過したTRPG</h2>
         <UserParticipateTable
+          ref="trpgParticipatesTable"
           :all-scenarios="allScenarios"
-          :all-participates="participateScenarios"
           :type="ScenarioType.Trpg"
           :can-modify="canModify"
           @reload="reload"
@@ -84,7 +84,6 @@ const authState: Ref<AuthState> = await useAuth()
 const user: UserResponse | null = await fetchUser(userId)
 const allScenarios = await fetchScenarios()
 
-const participateScenarios: Ref<Array<ParticipateResponse>> = ref([])
 const myself: Ref<User | null> = ref(null)
 
 const canModify = computed(() => {
@@ -109,9 +108,19 @@ const followingMessage = computed(() => {
 
 const isShowFollowButton = computed(() => !!myself.value && !canModify.value)
 
+const murderParticipatesTable = ref()
+const trpgParticipatesTable = ref()
+
 const reload = async () => {
   const userParticipates = await fetchUserParticipates(userId)
-  participateScenarios.value = userParticipates.list
+  const murderParticipates = userParticipates.list.filter(
+    (p) => p.scenario.type === ScenarioType.MurderMystery.value
+  )
+  murderParticipatesTable.value.init(murderParticipates)
+  const trpgParticipates = userParticipates.list.filter(
+    (p) => p.scenario.type === ScenarioType.Trpg.value
+  )
+  trpgParticipatesTable.value.init(trpgParticipates)
 }
 
 const reloadMyself = async () => {
