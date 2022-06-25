@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="user">
+      <Title>ユーザー情報 | {{ user.name }}</Title>
       <h1>{{ user.name }}</h1>
       <div v-if="user.twitter_user_name" class="mt-2">
         <LinkTwitter :user="user" />
@@ -55,7 +56,10 @@
         />
       </div>
     </div>
-    <div v-else>存在しないユーザーです。</div>
+    <div v-else>
+      <Title>ユーザー情報</Title>
+      存在しないユーザーです。
+    </div>
     <div class="mt-4">
       <NuxtLink to="/">
         <ButtonSecondary label="トップページへ" />

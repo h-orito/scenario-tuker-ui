@@ -40,9 +40,7 @@
     <DataTable :value="users" :scrollable="true" class="p-datatable-sm">
       <Column field="name" header="ユーザー">
         <template #body="slotProps">
-          <NuxtLink :to="`/users/${slotProps.data.id}`">
-            {{ slotProps.data.name }}
-          </NuxtLink>
+          <LinkUserName :user="slotProps.data" />
         </template>
       </Column>
       <Column class="justify-content-end">
@@ -70,13 +68,9 @@ import { searchUser } from '~/components/api/user-api'
 const name = ref('')
 const twitterUserName = ref('')
 const users: Ref<Array<User>> = ref([])
-const searchByName = async () => {
-  console.log('search')
-  await search(name.value, null)
-}
-const searchByTwitterUserName = async () => {
+const searchByName = async () => await search(name.value, null)
+const searchByTwitterUserName = async () =>
   await search(null, twitterUserName.value)
-}
 
 const hasSearched = ref(false)
 const search = async (name: string | null, twitterUserName: string | null) => {
