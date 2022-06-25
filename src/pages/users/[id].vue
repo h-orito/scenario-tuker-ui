@@ -36,55 +36,23 @@
       </div>
       <div class="mt-5">
         <h2>フォロー</h2>
-        <DataTable
-          :value="user.follows"
-          :scrollable="true"
-          class="p-datatable-sm"
-          responsive-layout="scroll"
-        >
-          <Column field="name" header="ユーザー">
-            <template #body="slotProps">
-              <LinkUserName :user="slotProps.data" />
-            </template>
-          </Column>
-          <Column v-if="canModify" class="justify-content-end">
-            <template #body="slotProps">
-              <ButtonFollow
-                :from="myself"
-                :target="slotProps.data"
-                @follow="reloadMyself"
-                @unfollow="reloadMyself"
-              />
-            </template>
-          </Column>
-          <template #empty>フォローしているユーザーがいません。</template>
-        </DataTable>
+        <UsersTable
+          :users="user.follows"
+          :myself="myself"
+          :is-show-follow="canModify"
+          @follow="reloadMyself"
+          @unfollow="reloadMyself"
+        />
       </div>
       <div class="mt-5">
         <h2>フォロワー</h2>
-        <DataTable
-          :value="user.followers"
-          :scrollable="true"
-          class="p-datatable-sm"
-          responsive-layout="scroll"
-        >
-          <Column field="name" header="ユーザー">
-            <template #body="slotProps">
-              <LinkUserName :user="slotProps.data" />
-            </template>
-          </Column>
-          <Column v-if="canModify" class="justify-content-end">
-            <template #body="slotProps">
-              <ButtonFollow
-                :from="myself"
-                :target="slotProps.data"
-                @follow="reloadMyself"
-                @unfollow="reloadMyself"
-              />
-            </template>
-          </Column>
-          <template #empty>フォローされているユーザーがいません。</template>
-        </DataTable>
+        <UsersTable
+          :users="user.followers"
+          :myself="myself"
+          :is-show-follow="canModify"
+          @follow="reloadMyself"
+          @unfollow="reloadMyself"
+        />
       </div>
     </div>
     <div v-else>存在しないユーザーです。</div>
@@ -103,6 +71,7 @@ import { fetchMyself } from '~/components/api/myself-api'
 import { fetchScenarios } from '~/components/api/scenario-api'
 import { ScenarioType } from '~/@types/scenario-type'
 import UserParticipateTable from '~/components/pages/users/user-participate-table.vue'
+import UsersTable from '~/components/pages/users/users-table.vue'
 
 const route = useRoute()
 const userId = route.params.id

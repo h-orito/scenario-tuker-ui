@@ -8,7 +8,7 @@
       <ButtonPrimary
         icon="google"
         label="Googleログイン"
-        @click="$signInGoogle"
+        @click="signInGoogle"
       />
       <p>
         ユーザー名で他の方からあなたを検索することができます。<br />
@@ -21,7 +21,7 @@
       <ButtonPrimary
         icon="twitter"
         label="Twitterログイン"
-        @click="$signInTwitter"
+        @click="signInTwitter"
       />
       <p>
         ユーザー名およびTwitterのIDで他の方からあなたを検索することができます。<br />
@@ -48,4 +48,14 @@ const isShow = computed({
 })
 
 const { $signInGoogle, $signInTwitter } = useNuxtApp()
+
+const signInGoogle = async () => {
+  await $signInGoogle()
+  location.reload()
+}
+
+const signInTwitter = async () => {
+  await $signInTwitter()
+  location.reload()
+}
 </script>

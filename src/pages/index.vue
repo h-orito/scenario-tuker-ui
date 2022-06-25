@@ -49,6 +49,7 @@ const openSignInModal = () => (isShowSignInModal.value = true)
 const signOut = async () => {
   const { $signOut } = useNuxtApp()
   await $signOut()
+  location.reload()
 }
 
 const authState = await useAuth()

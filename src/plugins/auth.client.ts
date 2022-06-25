@@ -30,11 +30,13 @@ export default defineNuxtPlugin((nuxtApp) => {
   const auth = getAuth(app)
   nuxtApp.provide('firebaseApp', app)
   nuxtApp.provide('firebaseAuth', auth)
-  nuxtApp.provide('signInGoogle', async () =>
-    signIn(auth, new GoogleAuthProvider())
+  nuxtApp.provide(
+    'signInGoogle',
+    async () => await signIn(auth, new GoogleAuthProvider())
   )
-  nuxtApp.provide('signInTwitter', async () =>
-    signIn(auth, new TwitterAuthProvider())
+  nuxtApp.provide(
+    'signInTwitter',
+    async () => await signIn(auth, new TwitterAuthProvider())
   )
   nuxtApp.provide('signOut', async () => signOut(auth))
 })

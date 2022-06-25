@@ -11,6 +11,7 @@
             v-model:value="name"
             :has-error="false"
             placeholder="ユーザー名"
+            @keyup.enter="searchByName"
           />
           <Button
             icon="pi pi-search"
@@ -26,6 +27,7 @@
             v-model:value="twitterUserName"
             :has-error="false"
             placeholder="Twitter ID"
+            @keyup.enter="searchByTwitterUserName"
           />
           <Button
             icon="pi pi-search"
@@ -69,6 +71,7 @@ const name = ref('')
 const twitterUserName = ref('')
 const users: Ref<Array<User>> = ref([])
 const searchByName = async () => {
+  console.log('search')
   await search(name.value, null)
 }
 const searchByTwitterUserName = async () => {
