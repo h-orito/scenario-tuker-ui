@@ -14,18 +14,15 @@ export const useApi = async <T, U>(
     : undefined
 
   const config = useRuntimeConfig()
-  const { data, refresh, error } = (await useFetch(url, {
+  const { data, error } = (await useFetch(url, {
     ...options,
     headers,
-    baseURL: config.apiBase
+    baseURL: config.apiBase,
+    initialCache: false
   })) as {
     data: Ref<unknown>
     refresh: () => Promise<void>
     error: Ref<Error | boolean>
-  }
-  if (options?.method == null || options?.method === 'GET') {
-    // cacheされてしまうので2回取得する
-    await refresh()
   }
 
   if (error.value) {

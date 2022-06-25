@@ -5,6 +5,7 @@
     :modal="true"
     :dismissable-mask="true"
     class="text-sm"
+    style="min-width: 50%"
   >
     <slot />
     <template #footer>

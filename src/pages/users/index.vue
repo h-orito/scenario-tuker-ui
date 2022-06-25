@@ -45,13 +45,7 @@
       </Column>
       <Column class="justify-content-end">
         <template #body="slotProps">
-          <NuxtLink
-            v-if="slotProps.data.twitter_user_name"
-            :to="getTwitterUrl(slotProps.data)"
-            target="_blank"
-          >
-            <ButtonPrimary icon="twitter" label="" />
-          </NuxtLink>
+          <LinkTwitter :user="slotProps.data" />
         </template>
       </Column>
       <template #empty>{{
@@ -90,9 +84,5 @@ const search = async (name: string | null, twitterUserName: string | null) => {
     })
   ).list
   hasSearched.value = true
-}
-
-const getTwitterUrl = (user: User): string => {
-  return `https://twitter.com/${user.twitter_user_name}`
 }
 </script>

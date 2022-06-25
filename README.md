@@ -1,10 +1,8 @@
-# Nuxt 3 Minimal Starter
+# Scenario Tuker
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+通過したシナリオを管理できるサービス
 
 ## Setup
-
-Make sure to install the dependencies:
 
 ```bash
 # yarn
@@ -25,18 +23,11 @@ Start the development server on http://localhost:3000
 npm run dev
 ```
 
-## Production
+## 今後の予定
 
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+- 通過シナリオの並び替え
+- 通過シナリオの感想登録
+  - ふせったーリンク
+  - 直接記入＋現未 NG などの表記
+- フォロー機能
+- 公開範囲を指定しての予定調整機能

@@ -4,6 +4,10 @@ export const deleteParticipates = async (id: number): Promise<void> => {
   })
 }
 
+export const fetchMyself = async (): Promise<User | null> => {
+  return await useApi<void, User | null>(`users/myself`)
+}
+
 export const postMyself = async (user: User): Promise<User> => {
   return await useApi<User, User>(`users/myself`, {
     method: 'PUT',

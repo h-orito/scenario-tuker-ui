@@ -18,22 +18,24 @@
           <strong>{{ participate.scenario.name }}</strong>
         </p>
       </div>
-      <div class="field mb-4">
-        <div>
+      <div class="grid mb-4">
+        <div class="col-12">
           <label for="scenario-name">役割</label>
         </div>
         <div
           v-for="(role, idx) in roleTypeCandidates"
           :key="role.label"
-          class="field-checkbox"
+          class="col-4 sm:col-3 lg:col-2"
         >
-          <Checkbox
-            :id="`role-type${idx}`"
-            v-model="roleTypes"
-            name="role"
-            :value="role.value"
-          />
-          <label :for="`role-type${idx}`">{{ role.label }}</label>
+          <div class="field-checkbox">
+            <Checkbox
+              :id="`role-type${idx}`"
+              v-model="roleTypes"
+              name="role"
+              :value="role.value"
+            />
+            <label :for="`role-type${idx}`">{{ role.label }}</label>
+          </div>
         </div>
       </div>
     </div>

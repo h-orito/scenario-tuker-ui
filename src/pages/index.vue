@@ -31,6 +31,11 @@
         <ButtonPrimary label="ユーザーを検索する" />
       </NuxtLink>
     </div>
+    <div class="mt-2">
+      <NuxtLink to="/scenarios">
+        <ButtonPrimary label="シナリオ一覧" />
+      </NuxtLink>
+    </div>
   </div>
 </template>
 
