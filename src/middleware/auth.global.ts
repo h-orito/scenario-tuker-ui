@@ -23,6 +23,7 @@ const auth = async (): Promise<AuthState> => {
       }
       if (!user) {
         await removeAuthorizationCookie()
+        resolve(authState)
         return
       }
       await setAuthorizationCookie(user)
