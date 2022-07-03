@@ -13,12 +13,12 @@
     />
     <div class="mt-4">
       <NuxtLink to="/rule-books">
-        <ButtonSecondary label="ルールブック一覧へ" />
+        <ButtonSecondary label="ルールブック一覧" />
       </NuxtLink>
     </div>
     <div class="mt-2">
       <NuxtLink to="/">
-        <ButtonSecondary label="トップページへ" />
+        <ButtonSecondary label="トップページ" />
       </NuxtLink>
     </div>
   </div>

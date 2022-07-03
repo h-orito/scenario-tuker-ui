@@ -2,6 +2,7 @@
   <Button
     :label="label"
     class="p-button-secondary p-button-sm"
+    :class="props.outlined ? ' p-button-outlined' : ''"
     :icon="iconClass"
     icon-pos="left"
   />
@@ -11,11 +12,13 @@
 interface Props {
   label: string
   icon?: string
+  outlined?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   label: '',
-  icon: undefined
+  icon: undefined,
+  outlined: false
 })
 
 const iconClass = computed(() => {

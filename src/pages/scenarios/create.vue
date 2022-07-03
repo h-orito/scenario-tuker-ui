@@ -17,12 +17,12 @@
     <ConfirmModal v-model:show="isConfirmModalShow" :scenario="inputScenario" />
     <div class="mt-4">
       <NuxtLink to="/scenarios">
-        <ButtonSecondary label="シナリオ一覧へ" />
+        <ButtonSecondary label="シナリオ一覧" />
       </NuxtLink>
     </div>
     <div class="mt-2">
       <NuxtLink to="/">
-        <ButtonSecondary label="トップページへ" />
+        <ButtonSecondary label="トップページ" />
       </NuxtLink>
     </div>
   </div>

@@ -78,7 +78,7 @@
     </div>
     <div class="mt-4">
       <NuxtLink to="/">
-        <ButtonSecondary label="トップページへ" />
+        <ButtonSecondary label="トップページ" />
       </NuxtLink>
     </div>
   </div>

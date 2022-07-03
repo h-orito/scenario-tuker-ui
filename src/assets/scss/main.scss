@@ -1,4 +1,5 @@
 @import 'primeflex/primeflex.scss';
+@import url('https://fonts.googleapis.com/css2?family=Sarpanch&display=swap');
 
 a {
   @include styleclass('no-underline text-blue-500');
@@ -23,4 +24,9 @@ p {
 
 .field-label {
   @include styleclass('font-semibold')
+}
+
+.title-font {
+  font-family: 'Sarpanch', sans-serif;
+  @include styleclass('text-4xl text-white')
 }

@@ -1,30 +1,27 @@
 <template>
   <footer class="w-full p-2 border-top-1 border-bluegray-200 text-xs">
-    <ul>
-      <li>
-        要望、改善提案、不具合報告はTwitter
-        <a href="https://twitter.com/ort_dev" target="_blank" rel="noreferrer">
-          @ort_dev
-        </a>
-        までお願いします。
-      </li>
-      <li>
-        投げ銭いただける方は
-        <a href="#" @click="openKampaModal"> こちら </a>
-        からお願いします。
-      </li>
-      <li>
-        © 2022- ort（
-        <a
-          href="https://github.com/h-orito/scenario-tuker-ui"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Github
-        </a>
-        ）
-      </li>
-    </ul>
+    <div class="flex justify-content-center gap-2">
+      <NuxtLink
+        to="https://twitter.com/ort_dev"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <Button icon="pi pi-twitter" class="p-button-rounded p-button-info" />
+      </NuxtLink>
+      <Button
+        icon="pi pi-dollar"
+        class="p-button-rounded p-button-info"
+        @click="openKampaModal"
+      />
+      <NuxtLink
+        to="https://github.com/h-orito/scenario-tuker-ui"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <Button icon="pi pi-github" class="p-button-rounded p-button-info" />
+      </NuxtLink>
+    </div>
+    <div class="flex justify-content-center mt-2">© 2022- ort</div>
     <KampaModal v-model:show="isKampaModalShow" />
   </footer>
 </template>
