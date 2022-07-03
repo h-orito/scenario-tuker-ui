@@ -38,6 +38,16 @@
         />
       </template>
     </Column>
+    <Column v-if="!canModify" class="justify-content-end text-right">
+      <template #body="slotProps">
+        <ButtonPrimary
+          v-if="slotProps.data.impression"
+          icon="comment"
+          label=""
+          @click="openImpressionModal(slotProps.data)"
+        />
+      </template>
+    </Column>
   </DataTable>
   <ParticipateModal
     v-model:show="isShowParticipateModal"
@@ -50,9 +60,17 @@
     v-model:show="isShowModifyModal"
     @save="reload"
   />
+  <ImpressionModal
+    ref="impressionModal"
+    v-model:show="isShowImpressionModal"
+    :user="user"
+    :myself="myself"
+  />
 </template>
 
 <script setup lang="ts">
+import { Ref } from 'vue'
+import { useConfirm } from 'primevue/useconfirm'
 import {
   deleteParticipates,
   putParticipates
@@ -61,12 +79,14 @@ import { ScenarioType } from '~/@types/scenario-type'
 import { AllRoleType } from '~/@types/role-type'
 import ParticipateModal from '~/components/pages/participates/participate-modal.vue'
 import ParticipateModifyModal from '~/components/pages/participates/participate-modify-modal.vue'
-import { useConfirm } from 'primevue/useconfirm'
+import ImpressionModal from '~/components/pages/participates/impression-modal.vue'
 
 interface Props {
   allScenarios: ScenariosResponse
   type: ScenarioType
   canModify: boolean
+  user: UserResponse
+  myself: User | null
 }
 
 defineProps<Props>()
@@ -115,8 +135,16 @@ const deleteParticipate = async (target: ParticipateResponse) => {
   })
 }
 
+// view impression
+const isShowImpressionModal = ref(false)
+const impressionModal = ref()
+const openImpressionModal = (participate: ParticipateResponse) => {
+  impressionModal.value.init(participate)
+  isShowImpressionModal.value = true
+}
+
 // reorder
-const reorder = async (event) => {
+const reorder = async (event: any) => {
   scenarios.value = event.value
   scenarios.value.forEach(async (p: ParticipateResponse, idx: number) => {
     const org = orgScenarios.value[idx]
@@ -124,10 +152,10 @@ const reorder = async (event) => {
       await putParticipates({
         id: p.id,
         scenario_id: p.scenario.id,
-        user_id: p.user_id,
         role_types: p.role_types,
-        disp_order: org.disp_order
-      } as Participate)
+        disp_order: org.disp_order,
+        impression: p.impression
+      })
     }
   })
 }

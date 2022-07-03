@@ -78,6 +78,14 @@ export const RoleType = {
   Participant: {
     label: '参加',
     value: 'Participant'
+  } as LabelValue,
+  AbleToGameMaster: {
+    label: 'GM可',
+    value: 'AbleToGameMaster'
+  } as LabelValue,
+  AbleToKeeper: {
+    label: 'KP可',
+    value: 'AbleToKeeper'
   } as LabelValue
 }
 
@@ -93,7 +101,8 @@ export const AllMuderMysteryRoleType: LabelValue[] = [
   RoleType.PlayerCharacter7,
   RoleType.PlayerCharacter8,
   RoleType.Audience,
-  RoleType.Participant
+  RoleType.Participant,
+  RoleType.AbleToGameMaster
 ]
 export const AllTrpgRoleType: LabelValue[] = [
   RoleType.Keeper,
@@ -106,6 +115,7 @@ export const AllTrpgRoleType: LabelValue[] = [
   RoleType.HandOut7,
   RoleType.HandOut8,
   RoleType.Audience,
-  RoleType.Participant
+  RoleType.Participant,
+  RoleType.AbleToKeeper
 ]
 export const AllRoleType: LabelValue[] = Object.values(RoleType)

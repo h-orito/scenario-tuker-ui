@@ -6,3 +6,11 @@ body {
 ul > li {
   list-style: none;
 }
+
+.pre-wrap {
+  white-space: pre-wrap;
+}
+
+.break-word {
+  word-wrap: break-word;
+}

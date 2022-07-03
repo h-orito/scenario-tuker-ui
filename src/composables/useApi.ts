@@ -14,14 +14,19 @@ export const useApi = async <T, U>(
     : undefined
 
   const config = useRuntimeConfig()
-  const { data, error } = (await useFetch(url, {
-    ...options,
-    headers,
-    baseURL: config.apiBase,
-    initialCache: false
-  })) as {
+  const { data, error } = (await useAsyncData(
+    url,
+    () =>
+      $fetch(url, {
+        ...options,
+        headers,
+        baseURL: config.apiBase
+      }),
+    {
+      initialCache: false
+    }
+  )) as {
     data: Ref<unknown>
-    refresh: () => Promise<void>
     error: Ref<Error | boolean>
   }
 
@@ -29,5 +34,6 @@ export const useApi = async <T, U>(
     console.log(error.value)
     throw error
   }
+
   return data.value as U
 }

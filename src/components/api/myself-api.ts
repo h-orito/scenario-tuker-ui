@@ -8,33 +8,41 @@ export const fetchMyself = async (): Promise<User | null> => {
   return await useApi<void, User | null>(`users/myself`)
 }
 
-export const postMyself = async (user: User): Promise<User> => {
-  return await useApi<User, User>(`users/myself`, {
+export const putMyself = async (name: string): Promise<User> => {
+  return await useApi<any, User>(`users/myself`, {
     method: 'PUT',
-    body: user
+    body: { name }
   })
 }
 
 export const postParticipates = async (
-  participate: Participate
+  request: ParticipatePostRequest
 ): Promise<ParticipateResponse> => {
-  return await useApi<Participate, ParticipateResponse>(
+  return await useApi<ParticipatePostRequest, ParticipateResponse>(
     `users/myself/participates`,
     {
       method: 'POST',
-      body: participate
+      body: request
     }
   )
 }
 
 export const putParticipates = async (
-  participate: Participate
+  request: ParticipatePostRequest
 ): Promise<ParticipateResponse> => {
-  return await useApi<Participate, ParticipateResponse>(
+  return await useApi<ParticipatePostRequest, ParticipateResponse>(
     `users/myself/participates`,
     {
       method: 'PUT',
-      body: participate
+      body: request
     }
   )
+}
+
+type ParticipatePostRequest = {
+  id?: number
+  scenario_id: number
+  role_types: Array<string>
+  disp_order?: number
+  impression: ParticipateImpression | null
 }

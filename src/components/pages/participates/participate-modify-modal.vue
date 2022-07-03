@@ -4,48 +4,43 @@
     header="通過したシナリオ編集"
     class="text-sm"
     submit-button-name="更新する"
-    :submit-disabled="!canSubmit"
     close-button-name="キャンセル"
+    :submit-disabled="submitting"
     @submit="save"
     @close="closeModal"
   >
     <div v-if="participate">
       <div class="field mb-4">
         <div>
-          <label for="scenario-name">シナリオ</label>
+          <label class="field-label" for="scenario-name">シナリオ</label>
         </div>
-        <p>
-          <strong>{{ participate.scenario.name }}</strong>
-        </p>
+        <p>{{ participate.scenario.name }}</p>
       </div>
-      <div class="grid mb-4">
-        <div class="col-12">
-          <label for="scenario-name">役割</label>
-        </div>
-        <div
-          v-for="(role, idx) in roleTypeCandidates"
-          :key="role.label"
-          class="col-4 sm:col-3 lg:col-2"
-        >
-          <div class="field-checkbox">
-            <Checkbox
-              :id="`role-type${idx}`"
-              v-model="roleTypes"
-              name="role"
-              :value="role.value"
-            />
-            <label :for="`role-type${idx}`">{{ role.label }}</label>
-          </div>
-        </div>
-      </div>
+      <RoleTypeCheckbox
+        v-if="type"
+        v-model:role-types="roleTypes"
+        :type="type"
+        :has-error="v$.roleTypes.$error"
+      />
+      <Impression
+        v-model:has-spoiler="hasSpoiler"
+        v-model:disclosure-range="disclosureRange"
+        v-model:impression="impression"
+        :has-impression-error="v$.impression.$error"
+      />
     </div>
   </Modal>
 </template>
 
 <script setup lang="ts">
+import { Ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, maxLength } from '@vuelidate/validators'
 import { putParticipates } from '~/components/api/myself-api'
-import { ScenarioType } from '~/@types/scenario-type'
-import { AllMuderMysteryRoleType, AllTrpgRoleType } from '~/@types/role-type'
+import { AllScenarioType } from '~/@types/scenario-type'
+import { DisclosureRange } from '~/@types/disclosure-range'
+import RoleTypeCheckbox from './form/role-type-checkbox.vue'
+import Impression from './form/impression.vue'
 
 // props
 interface Props {
@@ -64,39 +59,63 @@ const isShow = computed({
   get: () => props.show,
   set: (value: boolean | undefined) => emit('update:show', value ?? false)
 })
-
 const closeModal = () => (isShow.value = false)
 
 // data
 const participate: Ref<ParticipateResponse | null> = ref(null)
 const roleTypes: Ref<Array<string>> = ref([])
+const hasSpoiler: Ref<boolean> = ref(true)
+const disclosureRange: Ref<string> = ref(DisclosureRange.Everyone.value)
+const impression: Ref<string> = ref('')
 
-// role type
-const roleTypeCandidates = computed(() => {
-  if (participate.value?.scenario?.type === ScenarioType.MurderMystery.value) {
-    return AllMuderMysteryRoleType
-  } else {
-    return AllTrpgRoleType
-  }
+const type = computed(() => {
+  return AllScenarioType.find(
+    (st) => st.value === participate.value?.scenario.type
+  )
 })
 
 // init
 const init = (target: ParticipateResponse) => {
   participate.value = target
   roleTypes.value = [...target.role_types]
+  hasSpoiler.value = target.impression?.has_spoiler || true
+  disclosureRange.value =
+    target.impression?.disclosure_range || DisclosureRange.Everyone.value
+
+  impression.value = target.impression?.content || ''
 }
+
+// validation
+const rules = {
+  roleTypes: {
+    required,
+    notEmpty: () => roleTypes.value.length > 0
+  },
+  impression: {
+    maxLength: maxLength(10000)
+  }
+}
+
+const v$ = useVuelidate(rules, {
+  roleTypes,
+  impression
+})
 
 // submit
 const submitting = ref(false)
-const canSubmit = computed(() => {
-  return !submitting.value && roleTypes.value.length > 0
-})
 const save = async () => {
+  const isValid = await v$.value.$validate()
+  if (!isValid) return
   submitting.value = true
   await putParticipates({
-    id: participate.value.id,
-    scenario_id: participate.value.scenario.id,
-    role_types: roleTypes.value
+    id: participate.value?.id,
+    scenario_id: participate.value?.scenario.id || 0,
+    role_types: roleTypes.value,
+    impression: {
+      has_spoiler: hasSpoiler.value,
+      disclosure_range: disclosureRange.value,
+      content: impression.value
+    }
   })
   emit('save')
   submitting.value = false

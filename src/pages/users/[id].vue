@@ -2,14 +2,22 @@
   <div>
     <div v-if="user">
       <Title>Scenario Tuker | ユーザー情報 {{ user.name }}</Title>
-      <h1>{{ user.name }}</h1>
+      <h1>
+        {{ user.name }}
+        <ButtonPrimary
+          v-if="canModify"
+          label=""
+          icon="pencil"
+          @click="openUserMofifyModal"
+        />
+      </h1>
       <div v-if="user.twitter_user_name" class="mt-2">
         <LinkTwitter :user="user" />
       </div>
       <div v-if="followingMessage" class="mt-2">{{ followingMessage }}</div>
       <div v-if="isShowFollowButton" class="mt-2">
         <ButtonFollow
-          :from="myself"
+          :from="myself!"
           :target="user"
           @follow="reloadMyself"
           @unfollow="reloadMyself"
@@ -22,6 +30,8 @@
           :all-scenarios="allScenarios"
           :type="ScenarioType.MurderMystery"
           :can-modify="canModify"
+          :user="user"
+          :myself="myself"
           @reload="reload"
         />
       </div>
@@ -32,6 +42,8 @@
           :all-scenarios="allScenarios"
           :type="ScenarioType.Trpg"
           :can-modify="canModify"
+          :user="user"
+          :myself="myself"
           @reload="reload"
         />
       </div>
@@ -55,6 +67,10 @@
           @unfollow="reloadMyself"
         />
       </div>
+      <UserModifyModal
+        v-model:show="isShowUserModifyModel"
+        @save="updateName"
+      />
     </div>
     <div v-else>
       <Title>Scenario Tuker | ユーザー情報</Title>
@@ -76,24 +92,30 @@ import { fetchScenarios } from '~/components/api/scenario-api'
 import { ScenarioType } from '~/@types/scenario-type'
 import UserParticipateTable from '~/components/pages/users/user-participate-table.vue'
 import UsersTable from '~/components/pages/users/users-table.vue'
+import UserModifyModal from '~/components/pages/users/user-modify-modal.vue'
 
 const route = useRoute()
-const userId = route.params.id
+const userId = parseInt(route.params.id as string)
 const authState: Ref<AuthState> = await useAuth()
 
-const user: UserResponse | null = await fetchUser(userId)
+const user: Ref<UserResponse | null> = ref(await fetchUser(userId))
 const allScenarios = await fetchScenarios()
 
 const myself: Ref<User | null> = ref(null)
 
 const canModify = computed(() => {
-  return !!myself.value && !!user && myself.value.id === user.id
+  return !!myself.value && !!user.value && myself.value.id === user.value.id
 })
 
 const followingMessage = computed(() => {
-  if (!myself.value || !user || myself.value.id === user.id) return null
-  const isUserFollowMyself = user.follows.some((u) => u.id === myself.value.id)
-  const isMyselfFollowUser = myself.value.follows.some((u) => u === user.id)
+  if (!myself.value || !user.value || myself.value.id === user.value.id)
+    return null
+  const isUserFollowMyself = user.value.follows.some(
+    (u) => u.id === myself.value?.id
+  )
+  const isMyselfFollowUser = myself.value.follows.some(
+    (u) => u === user.value?.id
+  )
 
   if (isUserFollowMyself && isMyselfFollowUser) {
     return '相互フォロー'
@@ -123,8 +145,18 @@ const reload = async () => {
   trpgParticipatesTable.value.init(trpgParticipates)
 }
 
+const reloadUser = async () => {
+  user.value = await fetchUser(userId)
+}
+
 const reloadMyself = async () => {
   myself.value = await fetchMyself()
+}
+
+const isShowUserModifyModel = ref(false)
+const openUserMofifyModal = () => (isShowUserModifyModel.value = true)
+const updateName = async () => {
+  await reloadUser()
 }
 
 onMounted(async () => {

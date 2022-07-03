@@ -20,3 +20,7 @@ p {
   @include styleclass('line-height-3');
   word-break: break-word;
 }
+
+.field-label {
+  @include styleclass('font-semibold')
+}

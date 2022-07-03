@@ -4,61 +4,43 @@
     header="通過したシナリオ登録"
     class="text-sm"
     submit-button-name="登録する"
-    :submit-disabled="!canSubmit"
     close-button-name="キャンセル"
+    :submit-disabled="submitting"
     @submit="save"
     @close="closeModal"
   >
     <div>
-      <div class="field mb-4">
-        <div>
-          <label for="scenario-name">シナリオ</label>
-        </div>
-        <AutoComplete
-          v-model="scenario"
-          :suggestions="filteredScenarios"
-          :dropdown="true"
-          field="name"
-          force-selection
-          @complete="search($event)"
-        />
-        <p>
-          見つからない場合はお手数ですが<br />シナリオを<NuxtLink
-            to="/scenarios/create"
-            target="_blank"
-            >新規登録</NuxtLink
-          >してください。
-        </p>
-      </div>
-      <div class="grid mb-4">
-        <div class="col-12">
-          <label for="scenario-name">役割</label>
-        </div>
-        <div
-          v-for="(role, idx) in roleTypeCandidates"
-          :key="role.label"
-          class="col-4 sm:col-3 lg:col-2"
-        >
-          <div class="field-checkbox">
-            <Checkbox
-              :id="`role-type${idx}`"
-              v-model="roleTypes"
-              name="role"
-              :value="role.value"
-            />
-            <label :for="`role-type${idx}`">{{ role.label }}</label>
-          </div>
-        </div>
-      </div>
+      <ScenarioSelect
+        v-model:value="scenario"
+        :has-error="v$.scenario.$error"
+        :type="type"
+        :all-scenarios="allScenarios"
+      />
+      <RoleTypeCheckbox
+        v-model:role-types="roleTypes"
+        :type="type"
+        :has-error="v$.roleTypes.$error"
+      />
+      <Impression
+        v-model:has-spoiler="hasSpoiler"
+        v-model:disclosure-range="disclosureRange"
+        v-model:impression="impression"
+        :has-impression-error="v$.impression.$error"
+      />
     </div>
   </Modal>
 </template>
 
 <script setup lang="ts">
+import { Ref } from 'vue'
+import useVuelidate from '@vuelidate/core'
+import { required, maxLength } from '@vuelidate/validators'
 import { postParticipates } from '~/components/api/myself-api'
-import { searchScenarios } from '~/components/api/scenario-api'
 import { ScenarioType } from '~/@types/scenario-type'
-import { AllMuderMysteryRoleType, AllTrpgRoleType } from '~/@types/role-type'
+import { DisclosureRange } from '~/@types/disclosure-range'
+import ScenarioSelect from './form/scenario-select.vue'
+import RoleTypeCheckbox from './form/role-type-checkbox.vue'
+import Impression from './form/impression.vue'
 
 // props
 interface Props {
@@ -79,54 +61,59 @@ const isShow = computed({
   get: () => props.show,
   set: (value: boolean | undefined) => emit('update:show', value ?? false)
 })
-
 const closeModal = () => (isShow.value = false)
 
 // data
 const scenario: Ref<Scenario | null> = ref(null)
 const roleTypes: Ref<Array<string>> = ref([])
+const hasSpoiler: Ref<boolean> = ref(true)
+const disclosureRange: Ref<string> = ref(DisclosureRange.Everyone.value)
+const impression: Ref<string> = ref('')
 
-// scenario
-const allScenarios = computed(() => {
-  return props.allScenarios.list.filter((s) => s.type === props.type.value)
-})
-const filteredScenarios = ref([...allScenarios.value])
-const search = async (event) => {
-  if (!event.query.trim().length) {
-    filteredScenarios.value = [...allScenarios.value]
-  } else {
-    const searched = await searchScenarios({
-      name: event.query,
-      type: props.type.value
-    })
-    filteredScenarios.value = searched.list
+// validation
+const rules = {
+  scenario: {
+    required
+  },
+  roleTypes: {
+    required,
+    notEmpty: () => roleTypes.value.length > 0
+  },
+  impression: {
+    maxLength: maxLength(10000)
   }
 }
 
-// role type
-const roleTypeCandidates = computed(() => {
-  if (props.type.value === ScenarioType.MurderMystery.value) {
-    return AllMuderMysteryRoleType
-  } else {
-    return AllTrpgRoleType
-  }
+const v$ = useVuelidate(rules, {
+  scenario,
+  roleTypes,
+  impression
 })
 
 // submit
 const submitting = ref(false)
-const canSubmit = computed(() => {
-  return !submitting.value && !!scenario.value && roleTypes.value.length > 0
-})
 const save = async () => {
+  const isValid = await v$.value.$validate()
+  if (!isValid) return
+
   submitting.value = true
   await postParticipates({
-    scenario_id: scenario.value.id,
-    role_types: roleTypes.value
+    scenario_id: scenario.value?.id || 0,
+    role_types: roleTypes.value,
+    impression: {
+      has_spoiler: hasSpoiler.value,
+      disclosure_range: disclosureRange.value,
+      content: impression.value
+    }
   })
   emit('save')
   scenario.value = null
   roleTypes.value = []
+  hasSpoiler.value = true
+  disclosureRange.value = DisclosureRange.Everyone.value
+  impression.value = ''
   submitting.value = false
+  v$.value.$reset()
   closeModal()
 }
 </script>

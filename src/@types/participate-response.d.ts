@@ -4,4 +4,5 @@ type ParticipateResponse = {
   user: User
   role_types: Array<string>
   disp_order: number
+  impression: ParticipateImpression | null
 }

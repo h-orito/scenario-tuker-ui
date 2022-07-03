@@ -20,7 +20,7 @@
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
 import UserName from './user-name.vue'
-import { postMyself } from '~/components/api/myself-api'
+import { putMyself } from '~/components/api/myself-api'
 
 // props
 interface Props {
@@ -40,7 +40,7 @@ const isShow = computed({
 })
 
 onMounted(async () => {
-  name.value = (await useAuth()).value.myself.name
+  name.value = (await useAuth()).value.myself?.name || ''
 })
 
 const name = ref('')
@@ -61,9 +61,7 @@ const save = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
   submitting.value = true
-  await postMyself({
-    name: name.value
-  })
+  await putMyself(name.value)
   submitting.value = false
   emit('save', name.value)
   isShow.value = false
