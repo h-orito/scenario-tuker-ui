@@ -2,7 +2,7 @@
   <DataTable
     :value="users"
     :scrollable="true"
-    class="p-datatable-sm"
+    class="p-datatable-sm text-xs sm:text-sm"
     responsive-layout="scroll"
   >
     <Column field="name" header="ユーザー">

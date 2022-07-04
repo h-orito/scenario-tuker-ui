@@ -1,7 +1,7 @@
 <template>
   <DataTable
     :value="scenarios"
-    class="p-datatable-sm"
+    class="p-datatable-sm text-xs sm:text-sm"
     responsive-layout="scroll"
     @row-reorder="reorder"
   >

@@ -1,9 +1,9 @@
 <template>
-  <div class="text-sm">
+  <div class="text-xs sm:text-sm">
     <client-only>
       <NuxtLayout>
         <LayoutDefaultHeader />
-        <NuxtPage class="p-1 sm:p-3 w-full max-w-lg mx-auto" />
+        <NuxtPage class="p-2 sm:p-3 w-full max-w-lg mx-auto" />
         <LayoutDefaultFooter />
       </NuxtLayout>
       <ConfirmDialog></ConfirmDialog>

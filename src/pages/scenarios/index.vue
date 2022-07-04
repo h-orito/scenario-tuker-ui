@@ -2,7 +2,11 @@
   <div>
     <Title>Scenario Tuker | シナリオ一覧</Title>
     <h1>シナリオ一覧</h1>
-    <DataTable :value="scenarioItems" :scrollable="true" class="p-datatable-sm">
+    <DataTable
+      :value="scenarioItems"
+      :scrollable="true"
+      class="p-datatable-sm text-xs sm:text-sm"
+    >
       <template v-if="canModify" #header>
         <div class="flex justify-content-end">
           <NuxtLink to="/scenarios/create">

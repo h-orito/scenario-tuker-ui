@@ -2,7 +2,11 @@
   <div>
     <Title>Scenario Tuker | ルールブック一覧</Title>
     <h1>ルールブック一覧</h1>
-    <DataTable :value="ruleBookItems" :scrollable="true" class="p-datatable-sm">
+    <DataTable
+      :value="ruleBookItems"
+      :scrollable="true"
+      class="p-datatable-sm text-xs sm:text-sm"
+    >
       <template v-if="canModify" #header>
         <div class="flex justify-content-end">
           <NuxtLink to="/rule-books/create">
