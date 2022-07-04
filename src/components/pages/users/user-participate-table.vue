@@ -100,7 +100,6 @@ const scenarios: Ref<Array<ParticipateResponse>> = ref([])
 const orgScenarios: Ref<Array<ParticipateResponse>> = ref([])
 const init = (participates: Array<ParticipateResponse>) => {
   scenarios.value = participates
-  orgScenarios.value = participates
 }
 
 const roleLabels = (types: Array<string>): string => {
@@ -145,9 +144,14 @@ const openImpressionModal = (participate: ParticipateResponse) => {
 
 // reorder
 const reorder = async (event: any) => {
+  orgScenarios.value = [...scenarios.value]
   scenarios.value = event.value
-  scenarios.value.forEach(async (p: ParticipateResponse, idx: number) => {
-    const org = orgScenarios.value[idx]
+
+  for (let i = 0; i < scenarios.value.length; i++) {
+    const p = scenarios.value[i]
+    const org = orgScenarios.value[i]
+    console.log(p)
+    console.log(org)
     if (p.id != org.id) {
       await putParticipates({
         id: p.id,
@@ -157,7 +161,7 @@ const reorder = async (event: any) => {
         impression: p.impression
       })
     }
-  })
+  }
 }
 
 const reload = () => emit('reload')
