@@ -7,7 +7,7 @@
       <div
         v-for="(role, idx) in roleTypeCandidates"
         :key="role.label"
-        class="col-4 sm:col-3 lg:col-2"
+        class="col-4 sm:col-3"
       >
         <div class="field-checkbox">
           <Checkbox

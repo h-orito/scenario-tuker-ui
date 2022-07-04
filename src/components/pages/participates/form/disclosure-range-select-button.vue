@@ -1,9 +1,10 @@
 <template>
   <SelectButton v-model="value" option-label="label" :options="candidates" />
+  <p>{{ rangeMessage }}</p>
 </template>
 
 <script setup lang="ts">
-import { AllDisclosureRange } from '~/@types/disclosure-range'
+import { AllDisclosureRange, DisclosureRange } from '~/@types/disclosure-range'
 interface Props {
   value: string
 }
@@ -20,4 +21,17 @@ const value = computed({
 })
 
 const candidates = AllDisclosureRange
+
+const rangeMessage = computed(() => {
+  switch (value.value.value) {
+    case DisclosureRange.Everyone.value:
+      return '誰でも: ログインしていない人を含め誰でも閲覧できます。'
+    case DisclosureRange.Follower.value:
+      return 'フォロワーのみ: あなたをフォローしている人のみ閲覧できます。'
+    case DisclosureRange.EachFollow.value:
+      return '相互フォローのみ: 相互フォローの人のみ閲覧できます。'
+    case DisclosureRange.OnlyMe.value:
+      return '自分のみ: あなた以外は閲覧できません。'
+  }
+})
 </script>

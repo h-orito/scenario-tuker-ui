@@ -2,15 +2,18 @@
   <div class="field mb-4">
     <div class="grid">
       <div class="col-12">
-        <label class="field-label" for="scenario-name">感想</label>
+        <label class="field-label" for="scenario-name">感想（任意）</label>
       </div>
       <div class="col-12">
+        <p>内容</p>
         <SpoilerSelectButton v-model:has-spoiler="hasSpoiler" />
       </div>
       <div class="col-12">
+        <p>公開範囲</p>
         <DisclosureRangeSelectButton v-model:value="disclosureRange" />
       </div>
       <div class="col-12">
+        <p>感想</p>
         <ImpressionTextarea
           v-model:value="impression"
           :has-error="hasImpressionError"
