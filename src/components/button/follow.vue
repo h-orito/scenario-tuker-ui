@@ -8,7 +8,7 @@
   <ButtonDanger
     v-if="isFollowing"
     icon="user-minus"
-    label="フォロー解除する"
+    label=""
     @click="unfollow"
   />
 </template>
