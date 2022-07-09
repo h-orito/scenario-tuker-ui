@@ -3,6 +3,7 @@ import {
   removeAuthorizationCookie,
   setAuthorizationCookie
 } from '~/components/firebase/firebase-auth'
+import { fetchMyself } from '~/components/api/myself-api'
 
 export default defineNuxtRouteMiddleware(async () => {
   if (!process.client) return
@@ -27,15 +28,7 @@ const auth = async (): Promise<AuthState> => {
         return
       }
       await setAuthorizationCookie(user)
-      const myself = await useApi<User, User>('users', {
-        method: 'POST',
-        body: {
-          uid: authState.userId,
-          name: authState.userName,
-          twitter_user_name: (user as any).reloadUserInfo?.screenName
-        }
-      })
-      authState.myself = myself
+      authState.myself = await fetchMyself()
       resolve(authState)
     })
   })

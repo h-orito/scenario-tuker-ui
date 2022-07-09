@@ -64,6 +64,7 @@
 </template>
 
 <script setup lang="ts">
+import { Ref } from 'vue'
 import { searchUser } from '~/components/api/user-api'
 
 const name = ref('')
@@ -78,7 +79,7 @@ const search = async (name: string | null, twitterUserName: string | null) => {
   users.value = (
     await searchUser({
       name,
-      twitter_user_name: twitterUserName
+      screen_name: twitterUserName
     })
   ).list
   hasSearched.value = true

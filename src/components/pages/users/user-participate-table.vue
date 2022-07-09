@@ -85,7 +85,7 @@ interface Props {
   allScenarios: ScenariosResponse
   type: ScenarioType
   canModify: boolean
-  user: UserResponse
+  user: User
   myself: User | null
 }
 

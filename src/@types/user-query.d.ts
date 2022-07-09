@@ -1,4 +1,4 @@
 type UserQuery = {
   name: string | null
-  twitter_user_name: string | null
+  screen_name: string | null
 }

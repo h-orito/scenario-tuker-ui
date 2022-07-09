@@ -1,21 +1,6 @@
 <template>
   <Modal v-model:show="isShow" header="ログイン" class="text-sm">
-    <p className="my-2">
-      いずれかのSNSアカウントと連携してサインインしてください。
-    </p>
-    <div class="my-3">
-      <hr class="mb-3" />
-      <ButtonPrimary
-        icon="google"
-        label="Googleログイン"
-        @click="signInGoogle"
-      />
-      <p>
-        ユーザー名で他の方からあなたを検索することができます。<br />
-        名前はログイン後にマイページで変更することができます。<br />
-        （メールアドレスは表示されず、検索することもできません）
-      </p>
-    </div>
+    <p className="my-2">Twitterアカウントと連携してサインインしてください。</p>
     <div class="my-3">
       <hr class="mb-3" />
       <ButtonPrimary
@@ -47,12 +32,7 @@ const isShow = computed({
   set: (value: boolean | undefined) => emit('update:show', value ?? false)
 })
 
-const { $signInGoogle, $signInTwitter } = useNuxtApp()
-
-const signInGoogle = async () => {
-  await $signInGoogle()
-  location.reload()
-}
+const { $signInTwitter } = useNuxtApp()
 
 const signInTwitter = async () => {
   await $signInTwitter()

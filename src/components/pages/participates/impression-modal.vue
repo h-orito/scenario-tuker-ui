@@ -14,10 +14,10 @@
       {{ impression.content }}
     </div>
     <div v-else>
-      <p v-text="disclosureMessage"></p>
+      <p v-if="failureMessage">{{ failureMessage }}</p>
       <ButtonPrimary
         label="閲覧する"
-        :disabled="!canView"
+        :disabled="!!failureMessage"
         @click="confirmToDisplay"
       />
     </div>
@@ -25,16 +25,16 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ComputedRef } from 'vue'
+import { Ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 import { fetchParticipateImpression } from '~/components/api/participate-api'
 import { AllRoleType } from '~/@types/role-type'
-import { AllDisclosureRange, DisclosureRange } from '~/@types/disclosure-range'
+import { AllDisclosureRange } from '~/@types/disclosure-range'
 
 // props
 interface Props {
   show: boolean
-  user: UserResponse
+  user: User
   myself: User | null
 }
 const props = defineProps<Props>()
@@ -69,37 +69,6 @@ const range = computed(() => {
   )?.label
 })
 
-const disclosureMessage = computed(() => {
-  return canView.value
-    ? 'あなたはこの感想を閲覧できます。'
-    : 'あなたはこの感想を閲覧できません。'
-})
-
-const canView: ComputedRef<boolean> = computed(() => {
-  if (!participate.value?.impression) return false
-  const range = participate.value.impression.disclosure_range
-
-  switch (range) {
-    case DisclosureRange.Everyone.value:
-      return true
-    case DisclosureRange.Follower.value:
-      return isUserFollowedByMyself.value
-    case DisclosureRange.EachFollow.value:
-      return isUserFollowedByMyself.value && isUserFollowingMyself.value
-    case DisclosureRange.OnlyMe.value:
-      return false
-  }
-  return false
-})
-
-const isUserFollowedByMyself = computed(() => {
-  return props.user.followers.some((f) => f.id === props.myself?.id)
-})
-
-const isUserFollowingMyself = computed(() => {
-  return props.user.follows.some((f) => f.id === props.myself?.id)
-})
-
 // confirm
 const confirm = useConfirm()
 const confirmToDisplay = () => {
@@ -111,12 +80,16 @@ const confirmToDisplay = () => {
     header: '表示確認',
     icon: 'pi pi-exclamation-triangle',
     accept: async () => {
-      impression.value = await fetchParticipateImpression(
-        participate.value?.id || 0
-      )
+      const i = await fetchParticipateImpression(participate.value?.id || 0)
+      if (i) {
+        impression.value = i
+      } else {
+        failureMessage.value = 'あなたはこの感想を参照できません。'
+      }
     }
   })
 }
+const failureMessage = ref('')
 
 // init
 const init = (target: ParticipateResponse) => {

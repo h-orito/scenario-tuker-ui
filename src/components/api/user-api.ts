@@ -1,5 +1,5 @@
-export const fetchUser = async (id: number): Promise<UserResponse | null> => {
-  return await useApi<void, UserResponse | null>(`users/${id}`)
+export const fetchUser = async (id: number): Promise<User | null> => {
+  return await useApi<void, User | null>(`users/${id}`)
 }
 
 export const searchUser = async (query: UserQuery): Promise<Users> => {
