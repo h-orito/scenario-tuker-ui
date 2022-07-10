@@ -1,0 +1,3 @@
+type AuthorQuery = {
+  name: string
+}

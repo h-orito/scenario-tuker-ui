@@ -1,25 +1,23 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label for="scenario-type">種別</label>
+      <label for="author-name"
+        >シナリオ製作者名 <span class="text-red-500">*</span></label
+      >
     </div>
-    <SelectButton
-      id="scenario-type"
-      v-model="value"
-      :options="candidates"
-      option-label="label"
-      option-value="value"
+    <FormText
+      id="author-name"
+      v-model:value="value"
+      class="w-20rem"
       :has-error="hasError"
     />
     <div v-if="hasError" class="p-error text-xs">
-      種別はいずれかを選択してください。
+      シナリオ製作者名は1~255字で入力してください。
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { AllScenarioType } from '~/@types/scenario-type'
-
 interface Props {
   value: string
   hasError: boolean
@@ -35,6 +33,4 @@ const value = computed({
   get: () => props.value,
   set: (value: string) => emit('update:value', value)
 })
-
-const candidates = ref(AllScenarioType)
 </script>

@@ -27,8 +27,8 @@
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
-import RuleBookName from '~/components/pages/rule-books/rule-book-name.vue'
-import RuleBookDictionaryNames from '~/components/pages/rule-books/rule-book-dictionary-names.vue'
+import RuleBookName from '~/components/pages/rule-books/form/rule-book-name.vue'
+import RuleBookDictionaryNames from '~/components/pages/rule-books/form/rule-book-dictionary-names.vue'
 import ConfirmModal from '~/components/pages/rule-books/confirm-modal.vue'
 
 const name = ref('')

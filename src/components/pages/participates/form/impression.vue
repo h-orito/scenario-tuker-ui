@@ -2,7 +2,7 @@
   <div class="field mb-4">
     <div class="grid">
       <div class="col-12">
-        <label class="field-label" for="scenario-name">感想（任意）</label>
+        <label class="field-label" for="scenario-name">感想</label>
       </div>
       <div class="col-12">
         <p>内容</p>

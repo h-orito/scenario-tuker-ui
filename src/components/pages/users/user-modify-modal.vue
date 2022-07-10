@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
-import UserName from './user-name.vue'
+import UserName from './form/user-name.vue'
 import { putMyself } from '~/components/api/myself-api'
 
 // props

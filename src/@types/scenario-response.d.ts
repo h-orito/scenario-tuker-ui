@@ -5,4 +5,5 @@ type ScenarioResponse = {
   type: string
   rule_book: RuleBook | null
   url: string
+  authors: Array<Author>
 }

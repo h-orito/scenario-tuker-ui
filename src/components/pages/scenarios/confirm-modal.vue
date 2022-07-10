@@ -39,6 +39,8 @@ interface Props {
     dictionaryNames: string
     type: string
     ruleBook: RuleBook | null
+    url: string | null
+    authors: Array<Author>
   }
 }
 const props = defineProps<Props>()
@@ -67,9 +69,17 @@ const items = computed(() => {
       name: '種別',
       value: AllScenarioType.find((st) => st.value === props.scenario.type)
         ?.label
+    },
+    {
+      name: 'URL',
+      value: props.scenario.url
+    },
+    {
+      name: 'シナリオ製作者',
+      value: props.scenario.authors.map((a) => a.name).join('、')
     }
   ]
-  if (props.scenario.type === ScenarioType.Trpg) {
+  if (props.scenario.type === ScenarioType.Trpg.value) {
     list.push({
       name: 'ルールブック',
       value: props.scenario.ruleBook?.name
@@ -92,7 +102,9 @@ const save = async () => {
     name: props.scenario.name,
     dictionary_names: [...new Set(dictionaryNames)],
     type: props.scenario.type,
-    rule_book_id: props.scenario.ruleBook?.id
+    rule_book_id: props.scenario.ruleBook?.id,
+    url: props.scenario.url,
+    author_ids: props.scenario.authors.map((a) => a.id)
   } as Scenario)
 
   useRouter().push({

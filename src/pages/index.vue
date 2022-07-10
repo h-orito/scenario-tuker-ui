@@ -53,6 +53,18 @@
             <ButtonPrimary label="シナリオ一覧" />
           </NuxtLink>
         </div>
+        <div class="col-12 md:col-6">
+          <p>登録されているルールブックを確認することができます。</p>
+          <NuxtLink to="/rule-books">
+            <ButtonPrimary label="ルールブック一覧" />
+          </NuxtLink>
+        </div>
+        <div class="col-12 md:col-6">
+          <p>登録されているシナリオ製作者を確認することができます。</p>
+          <NuxtLink to="/authors">
+            <ButtonPrimary label="シナリオ製作者一覧" />
+          </NuxtLink>
+        </div>
       </div>
     </div>
   </div>

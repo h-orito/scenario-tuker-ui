@@ -1,7 +1,7 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label for="scenario-rule-book">ルールブック</label>
+      <label class="field-label" for="scenario-rule-book">ルールブック</label>
     </div>
     <AutoComplete
       v-model="value"
@@ -45,7 +45,7 @@ const value = computed({
 })
 
 const filteredRuleBooks = ref([...props.ruleBooks.list])
-const search = async (event) => {
+const search = async (event: any) => {
   if (!event.query.trim().length) {
     filteredRuleBooks.value = [...props.ruleBooks.list]
   } else {

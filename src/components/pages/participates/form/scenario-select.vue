@@ -1,7 +1,9 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label class="field-label" for="scenario-name">シナリオ</label>
+      <label class="field-label" for="scenario-name"
+        >シナリオ <span class="text-red-500">*</span></label
+      >
     </div>
     <AutoComplete
       v-model="scenario"

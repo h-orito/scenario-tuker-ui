@@ -1,7 +1,7 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label for="scenario-dictionary-names"
+      <label class="field-label" for="scenario-dictionary-names"
         >シナリオ検索用ワード（改行区切り）</label
       >
     </div>

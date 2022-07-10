@@ -1,18 +1,18 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label for="rule-book-dictionary-names"
-        >ルールブック検索用ワード（改行区切り）</label
+      <label class="field-label" for="rule-book-name"
+        >ルールブック名 <span class="text-red-500">*</span></label
       >
     </div>
-    <FormTextarea
-      id="rule-book-dictionary-names"
+    <FormText
+      id="rule-book-name"
       v-model:value="value"
-      class="w-20rem h-15rem"
+      class="w-20rem"
       :has-error="hasError"
     />
     <div v-if="hasError" class="p-error text-xs">
-      ルールブック検索用ワードは各行255字以内で入力してください。
+      ルールブック名は1~255字で入力してください。
     </div>
   </div>
 </template>

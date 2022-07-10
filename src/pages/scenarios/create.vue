@@ -13,6 +13,8 @@
       :has-error="v$.ruleBook.$error"
       :rule-books="ruleBooks"
     />
+    <ScenarioUrl v-model:value="url" :has-error="v$.url.$error" />
+    <ScenarioAuthors v-model:value="authors" />
     <ButtonPrimary label="確認画面へ" @click="confirm" />
     <ConfirmModal v-model:show="isConfirmModalShow" :scenario="inputScenario" />
     <div class="mt-4">
@@ -33,10 +35,13 @@ import { Ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
-import ScenarioName from '~/components/pages/scenarios/scenario-name.vue'
-import ScenarioDictionaryNames from '~/components/pages/scenarios/scenario-dictionary-names.vue'
-import ScenarioTypeSelect from '~/components/pages/scenarios/scenario-type.vue'
-import ScenarioRuleBook from '~/components/pages/scenarios/scenario-rule-book.vue'
+import { availableDomains } from '~/components/pages/scenarios/form/scenario-url-domain'
+import ScenarioName from '~/components/pages/scenarios/form/scenario-name.vue'
+import ScenarioDictionaryNames from '~/components/pages/scenarios/form/scenario-dictionary-names.vue'
+import ScenarioTypeSelect from '~/components/pages/scenarios/form/scenario-type.vue'
+import ScenarioRuleBook from '~/components/pages/scenarios/form/scenario-rule-book.vue'
+import ScenarioUrl from '~/components/pages/scenarios/form/scenario-url.vue'
+import ScenarioAuthors from '~/components/pages/scenarios/form/scenario-authors.vue'
 import ConfirmModal from '~/components/pages/scenarios/confirm-modal.vue'
 import { fetchRuleBooks } from '~/components/api/rule-book-api'
 
@@ -44,6 +49,8 @@ const name = ref('')
 const dictionaryNames = ref('')
 const type: Ref<string> = ref(ScenarioType.MurderMystery.value)
 const ruleBook: Ref<RuleBook | null> = ref(null)
+const url = ref('')
+const authors: Ref<Array<Author>> = ref([])
 
 const isTrpg = computed(() => type.value == ScenarioType.Trpg.value)
 const ruleBooks = await fetchRuleBooks()
@@ -79,6 +86,12 @@ const rules = {
     trpg: () => {
       return type.value === ScenarioType.MurderMystery.value || !!ruleBook.value
     }
+  },
+  url: {
+    domain: () => {
+      if (url.value === '') return true
+      return availableDomains.some((domain) => url.value.startsWith(domain))
+    }
   }
 }
 
@@ -86,7 +99,8 @@ const v$ = useVuelidate(rules, {
   name,
   dictionaryNames,
   type,
-  ruleBook
+  ruleBook,
+  url
 })
 
 const confirm = async () => {
@@ -105,6 +119,8 @@ const inputScenario = computed(() => ({
   ruleBook:
     type.value !== ScenarioType.Trpg.value || !ruleBook.value
       ? null
-      : ruleBook.value
+      : ruleBook.value,
+  url: url.value,
+  authors: authors.value
 }))
 </script>

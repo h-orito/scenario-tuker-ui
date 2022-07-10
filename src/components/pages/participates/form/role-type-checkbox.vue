@@ -2,7 +2,9 @@
   <div class="field mb-4">
     <div class="grid">
       <div class="col-12">
-        <label class="field-label" for="scenario-name">役割</label>
+        <label class="field-label" for="scenario-name"
+          >役割 <span class="text-red-500">*</span></label
+        >
       </div>
       <div
         v-for="(role, idx) in roleTypeCandidates"

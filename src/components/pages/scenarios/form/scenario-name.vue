@@ -1,7 +1,9 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label for="scenario-name">シナリオ名</label>
+      <label class="field-label" for="scenario-name"
+        >シナリオ名 <span class="text-red-500">*</span></label
+      >
     </div>
     <FormText
       id="scenario-name"
