@@ -19,9 +19,11 @@
 
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core'
-import { required, minLength, maxLength } from '@vuelidate/validators'
+import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
+import { searchAuthors } from '~/components/api/author-api'
 import AuthorName from '~/components/pages/authors/form/author-name.vue'
 import ConfirmModal from '~/components/pages/authors/confirm-modal.vue'
+const { withAsync } = helpers
 
 const name = ref('')
 
@@ -29,7 +31,14 @@ const rules = {
   name: {
     required,
     minLength: minLength(1),
-    maxLength: maxLength(255)
+    maxLength: maxLength(255),
+    asyncValidator: withAsync(async () => {
+      const authors = await searchAuthors({
+        name: name.value
+      })
+      return authors.list.every((s) => s.name !== name.value)
+    }),
+    $lazy: true
   }
 }
 

@@ -12,7 +12,8 @@
       :has-error="hasError"
     />
     <div v-if="hasError" class="p-error text-xs">
-      シナリオ名は1~255字で入力してください。
+      シナリオ名は1~255字で入力してください。<br />
+      既に登録されているシナリオ名も登録できません。
     </div>
   </div>
 </template>

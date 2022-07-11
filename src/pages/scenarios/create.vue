@@ -33,9 +33,11 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
-import { required, minLength, maxLength } from '@vuelidate/validators'
+import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
 import { availableDomains } from '~/components/pages/scenarios/form/scenario-url-domain'
+import { fetchRuleBooks } from '~/components/api/rule-book-api'
+import { searchScenarios } from '~/components/api/scenario-api'
 import ScenarioName from '~/components/pages/scenarios/form/scenario-name.vue'
 import ScenarioDictionaryNames from '~/components/pages/scenarios/form/scenario-dictionary-names.vue'
 import ScenarioTypeSelect from '~/components/pages/scenarios/form/scenario-type.vue'
@@ -43,7 +45,7 @@ import ScenarioRuleBook from '~/components/pages/scenarios/form/scenario-rule-bo
 import ScenarioUrl from '~/components/pages/scenarios/form/scenario-url.vue'
 import ScenarioAuthors from '~/components/pages/scenarios/form/scenario-authors.vue'
 import ConfirmModal from '~/components/pages/scenarios/confirm-modal.vue'
-import { fetchRuleBooks } from '~/components/api/rule-book-api'
+const { withAsync } = helpers
 
 const name = ref('')
 const dictionaryNames = ref('')
@@ -59,7 +61,16 @@ const rules = {
   name: {
     required,
     minLength: minLength(1),
-    maxLength: maxLength(255)
+    maxLength: maxLength(255),
+    asyncValidator: withAsync(async () => {
+      const scenarios = await searchScenarios({
+        name: name.value,
+        rule_book_id: null,
+        type: type.value
+      })
+      return scenarios.list.every((s) => s.name !== name.value)
+    }),
+    $lazy: true
   },
   dictionaryNames: {
     len: () => {

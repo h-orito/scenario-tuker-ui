@@ -26,10 +26,12 @@
 
 <script setup lang="ts">
 import useVuelidate from '@vuelidate/core'
-import { required, minLength, maxLength } from '@vuelidate/validators'
+import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
+import { searchRuleBooks } from '~/components/api/rule-book-api'
 import RuleBookName from '~/components/pages/rule-books/form/rule-book-name.vue'
 import RuleBookDictionaryNames from '~/components/pages/rule-books/form/rule-book-dictionary-names.vue'
 import ConfirmModal from '~/components/pages/rule-books/confirm-modal.vue'
+const { withAsync } = helpers
 
 const name = ref('')
 const dictionaryNames = ref('')
@@ -38,7 +40,14 @@ const rules = {
   name: {
     required,
     minLength: minLength(1),
-    maxLength: maxLength(255)
+    maxLength: maxLength(255),
+    asyncValidator: withAsync(async () => {
+      const ruleBooks = await searchRuleBooks({
+        name: name.value
+      })
+      return ruleBooks.list.every((s) => s.name !== name.value)
+    }),
+    $lazy: true
   },
   dictionaryNames: {
     len: () => {
