@@ -8,6 +8,10 @@ export const searchAuthors = async (query: AuthorQuery): Promise<Authors> => {
   })
 }
 
+export const fetchAuthor = async (id: number): Promise<Author | null> => {
+  return await useApi<void, Author | null>(`authors/${id}`)
+}
+
 export const postAuthor = async (author: Author): Promise<Author> => {
   return await useApi<Author, Author>(`authors`, {
     method: 'POST',

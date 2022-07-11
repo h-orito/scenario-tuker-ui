@@ -14,7 +14,13 @@
           </NuxtLink>
         </div>
       </template>
-      <Column field="name" header="シナリオ製作者名"></Column>
+      <Column field="name" header="シナリオ製作者名">
+        <template #body="slotProps">
+          <NuxtLink :to="`/authors/${slotProps.data.id}`" target="_blank">{{
+            slotProps.data.name
+          }}</NuxtLink>
+        </template>
+      </Column>
       <template #empty>シナリオ製作者が登録されていません。</template>
     </DataTable>
     <div class="mt-4">
@@ -31,6 +37,7 @@ import { fetchAuthors } from '~/components/api/author-api'
 const authors: Authors = await fetchAuthors()
 const authorItems = computed(() => {
   return authors.list.map((s) => ({
+    id: s.id,
     name: s.name
   }))
 })
