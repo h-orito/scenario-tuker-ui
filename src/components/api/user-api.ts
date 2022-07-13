@@ -13,18 +13,3 @@ export const fetchUserParticipates = async (
 ): Promise<ParticipatesResponse> => {
   return await useApi<void, ParticipatesResponse>(`users/${id}/participates`)
 }
-
-export const followUser = async (id: number): Promise<void> => {
-  return await useApi<void, void>(`users/myself/follow`, {
-    method: 'POST',
-    body: {
-      user_id: id
-    }
-  })
-}
-
-export const unfollowUser = async (id: number): Promise<void> => {
-  return await useApi<void, void>(`users/myself/follow/${id}`, {
-    method: 'DELETE'
-  })
-}

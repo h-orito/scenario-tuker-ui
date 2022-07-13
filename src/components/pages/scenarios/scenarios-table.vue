@@ -11,9 +11,11 @@
         </NuxtLink>
       </div>
     </template>
-    <Column field="name" header="シナリオ名">
+    <Column header="シナリオ名">
       <template #body="slotProps">
-        {{ slotProps.data.name }}
+        <NuxtLink :to="`/scenarios/${slotProps.data.id}`">
+          {{ slotProps.data.name }}
+        </NuxtLink>
         <span v-if="slotProps.data.url">
           &nbsp;
           <NuxtLink @click="confirmToMoveExternal(slotProps.data.url)">
@@ -23,13 +25,20 @@
       </template>
     </Column>
     <Column field="type" header="種別"></Column>
-    <Column field="ruleBook" header="ルールブック"></Column>
+    <Column header="ゲームシステム">
+      <template #body="slotProps">
+        <NuxtLink
+          v-if="slotProps.data.gameSystem"
+          :to="`/game-systems/${slotProps.data.gameSystem.id}`"
+        >
+          {{ slotProps.data.gameSystem.name }}
+        </NuxtLink>
+      </template>
+    </Column>
     <Column field="authors" header="製作者">
       <template #body="slotProps">
         <span v-for="(author, idx) in slotProps.data.authors" :key="author.id">
-          <NuxtLink :to="`/authors/${author.id}`" target="_blank">{{
-            author.name
-          }}</NuxtLink
+          <NuxtLink :to="`/authors/${author.id}`">{{ author.name }}</NuxtLink
           ><span v-if="idx < slotProps.data.authors.length - 1">、</span>
         </span>
       </template>
@@ -55,7 +64,7 @@ const items = computed(() =>
     name: s.name,
     url: s.url,
     type: AllScenarioType.find((st) => st.value === s.type)?.label,
-    ruleBook: s.rule_book?.name,
+    gameSystem: s.game_system,
     authors: s.authors
   }))
 )

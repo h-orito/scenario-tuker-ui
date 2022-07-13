@@ -1,12 +1,10 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label class="field-label" for="scenario-type"
-        >種別 <span class="text-red-500">*</span></label
-      >
+      <label class="field-label" for="rule-book-type">種別</label>
     </div>
     <SelectButton
-      id="scenario-type"
+      id="rule-book-type"
       v-model="value"
       :options="candidates"
       option-label="label"
@@ -20,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { AllScenarioType } from '~/@types/scenario-type'
+import { AllRuleBookType } from '~/@types/rule-book-type'
 
 interface Props {
   value: string
@@ -38,5 +36,5 @@ const value = computed({
   set: (value: string) => emit('update:value', value)
 })
 
-const candidates = ref(AllScenarioType)
+const candidates = ref(AllRuleBookType)
 </script>

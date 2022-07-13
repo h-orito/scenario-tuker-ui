@@ -3,7 +3,7 @@ type ScenarioResponse = {
   name: string
   dictionary_names: Array<string>
   type: string
-  rule_book: RuleBook | null
-  url: string
+  url: string | null
+  game_system: GameSystem | null
   authors: Array<Author>
 }

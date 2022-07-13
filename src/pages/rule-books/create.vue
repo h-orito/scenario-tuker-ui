@@ -6,6 +6,11 @@
       v-model:value="dictionaryNames"
       :has-error="v$.dictionaryNames.$error"
     />
+    <GameSystemSelect
+      v-model:value="gameSystem"
+      :has-error="v$.gameSystem.$error"
+    />
+    <RuleBookType v-model:value="type" />
     <ButtonPrimary label="確認画面へ" @click="confirm" />
     <ConfirmModal
       v-model:show="isConfirmModalShow"
@@ -25,16 +30,21 @@
 </template>
 
 <script setup lang="ts">
+import { Ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
 import { searchRuleBooks } from '~/components/api/rule-book-api'
+import { RuleBookType, AllRuleBookType } from '~/@types/rule-book-type'
 import RuleBookName from '~/components/pages/rule-books/form/rule-book-name.vue'
+import GameSystemSelect from '~/components/pages/game-systems/form/game-system-select.vue'
 import RuleBookDictionaryNames from '~/components/pages/rule-books/form/rule-book-dictionary-names.vue'
 import ConfirmModal from '~/components/pages/rule-books/confirm-modal.vue'
 const { withAsync } = helpers
 
 const name = ref('')
 const dictionaryNames = ref('')
+const type = ref(RuleBookType.Base.value)
+const gameSystem: Ref<GameSystem | null> = ref(null)
 
 const rules = {
   name: {
@@ -43,7 +53,9 @@ const rules = {
     maxLength: maxLength(255),
     asyncValidator: withAsync(async () => {
       const ruleBooks = await searchRuleBooks({
-        name: name.value
+        name: name.value,
+        game_system_id: gameSystem.value?.id || null,
+        rule_book_type: type.value
       })
       return ruleBooks.list.every((s) => s.name !== name.value)
     }),
@@ -63,12 +75,16 @@ const rules = {
           })
       )
     }
+  },
+  gameSystem: {
+    required
   }
 }
 
 const v$ = useVuelidate(rules, {
   name,
-  dictionaryNames
+  dictionaryNames,
+  gameSystem
 })
 
 const confirm = async () => {
@@ -82,6 +98,8 @@ const openConfirmModal = () => (isConfirmModalShow.value = true)
 
 const inputRuleBook = computed(() => ({
   name: name.value,
-  dictionaryNames: dictionaryNames.value
+  dictionaryNames: dictionaryNames.value,
+  type: AllRuleBookType.find((rbt) => rbt.value === type.value)!,
+  gameSystem: gameSystem.value!
 }))
 </script>

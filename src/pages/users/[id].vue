@@ -16,25 +16,19 @@
       </div>
       <div>
         <h2>通過したマーダーミステリー</h2>
-        <UserParticipateTable
+        <ParticipateTable
           ref="murderParticipatesTable"
-          :all-scenarios="allScenarios"
           :type="ScenarioType.MurderMystery"
           :can-modify="canModify"
-          :user="user"
-          :myself="myself"
           @reload="reload"
         />
       </div>
       <div class="mt-5">
         <h2>通過したTRPG</h2>
-        <UserParticipateTable
+        <ParticipateTable
           ref="trpgParticipatesTable"
-          :all-scenarios="allScenarios"
           :type="ScenarioType.Trpg"
           :can-modify="canModify"
-          :user="user"
-          :myself="myself"
           @reload="reload"
         />
       </div>
@@ -48,6 +42,11 @@
       存在しないユーザーです。
     </div>
     <div class="mt-4">
+      <NuxtLink to="/users">
+        <ButtonSecondary label="ユーザー検索" />
+      </NuxtLink>
+    </div>
+    <div class="mt-2">
       <NuxtLink to="/">
         <ButtonSecondary label="トップページ" />
       </NuxtLink>
@@ -58,9 +57,8 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { fetchUser, fetchUserParticipates } from '~/components/api/user-api'
-import { fetchScenarios } from '~/components/api/scenario-api'
 import { ScenarioType } from '~/@types/scenario-type'
-import UserParticipateTable from '~/components/pages/users/user-participate-table.vue'
+import ParticipateTable from '~/components/pages/participates/participate-table.vue'
 import UserModifyModal from '~/components/pages/users/user-modify-modal.vue'
 
 const route = useRoute()
@@ -68,7 +66,6 @@ const userId = parseInt(route.params.id as string)
 const authState: Ref<AuthState> = await useAuth()
 
 const user: Ref<User | null> = ref(await fetchUser(userId))
-const allScenarios = await fetchScenarios()
 
 const myself: Ref<User | null> = ref(null)
 

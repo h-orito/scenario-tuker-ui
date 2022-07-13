@@ -1,27 +1,24 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label class="field-label" for="scenario-type"
-        >種別 <span class="text-red-500">*</span></label
+      <label class="field-label" for="game-system-name"
+        >ゲームシステム名 <span class="text-red-500">*</span></label
       >
     </div>
-    <SelectButton
-      id="scenario-type"
-      v-model="value"
-      :options="candidates"
-      option-label="label"
-      option-value="value"
+    <FormText
+      id="game-system-name"
+      v-model:value="value"
+      class="w-20rem"
       :has-error="hasError"
     />
     <div v-if="hasError" class="p-error text-xs">
-      種別はいずれかを選択してください。
+      ゲームシステム名は1~255字で入力してください。<br />
+      既に登録されているゲームシステム名も登録できません。
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { AllScenarioType } from '~/@types/scenario-type'
-
 interface Props {
   value: string
   hasError: boolean
@@ -37,6 +34,4 @@ const value = computed({
   get: () => props.value,
   set: (value: string) => emit('update:value', value)
 })
-
-const candidates = ref(AllScenarioType)
 </script>

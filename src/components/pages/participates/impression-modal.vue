@@ -34,8 +34,6 @@ import { AllDisclosureRange } from '~/@types/disclosure-range'
 // props
 interface Props {
   show: boolean
-  user: User
-  myself: User | null
 }
 const props = defineProps<Props>()
 

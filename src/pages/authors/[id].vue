@@ -13,6 +13,11 @@
       存在しないシナリオ製作者です。
     </div>
     <div class="mt-4">
+      <NuxtLink to="/authors">
+        <ButtonSecondary label="シナリオ製作者一覧" />
+      </NuxtLink>
+    </div>
+    <div class="mt-2">
       <NuxtLink to="/">
         <ButtonSecondary label="トップページ" />
       </NuxtLink>

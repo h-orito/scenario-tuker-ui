@@ -60,6 +60,12 @@
           </NuxtLink>
         </div>
         <div class="col-12 md:col-6">
+          <p>登録されているゲームシステムを確認することができます。</p>
+          <NuxtLink to="/game-systems">
+            <ButtonPrimary label="ゲームシステム一覧" />
+          </NuxtLink>
+        </div>
+        <div class="col-12 md:col-6">
           <p>登録されているシナリオ製作者を確認することができます。</p>
           <NuxtLink to="/authors">
             <ButtonPrimary label="シナリオ製作者一覧" />

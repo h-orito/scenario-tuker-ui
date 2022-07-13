@@ -1,7 +1,7 @@
-type RuleBook = {
+type RuleBookResponse = {
   id: number
   name: string
   dictionary_names: Array<string>
   type: string
-  game_system_id: number
+  game_system: GameSystem
 }

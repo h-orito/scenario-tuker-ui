@@ -1,6 +1,6 @@
 <template>
   <DataTable
-    :value="scenarios"
+    :value="participates"
     class="p-datatable-sm text-xs sm:text-sm"
     responsive-layout="scroll"
     @row-reorder="reorder"
@@ -12,12 +12,37 @@
     </template>
     <template #empty>通過したシナリオが登録されていません。</template>
     <Column v-if="canModify" :row-reorder="true" header-style="width: 3rem" />
-    <Column field="scenario.name" header="シナリオ"></Column>
+    <Column header="シナリオ">
+      <template #body="slotProps">
+        <NuxtLink :to="`/scenarios/${slotProps.data.scenario.id}`">
+          {{ slotProps.data.scenario.name }}
+        </NuxtLink>
+      </template>
+    </Column>
+    <Column v-if="!canModify" header="ユーザー">
+      <template #body="slotProps">
+        <NuxtLink :to="`/users/${slotProps.data.user.id}`">
+          {{ slotProps.data.user.name }}
+        </NuxtLink>
+      </template>
+    </Column>
     <Column
       v-if="type.value === ScenarioType.Trpg.value"
       field="scenario.rule_book.name"
       header="ルールブック"
-    ></Column>
+    >
+      <template #body="slotProps">
+        <span
+          v-for="(ruleBook, idx) in slotProps.data.rule_books"
+          :key="ruleBook.id"
+        >
+          <NuxtLink :to="`/rule-books/${ruleBook.id}`">{{
+            ruleBook.name
+          }}</NuxtLink
+          ><span v-if="idx < slotProps.data.rule_books.length - 1"><br /></span>
+        </span>
+      </template>
+    </Column>
     <Column field="role_types" header="役割">
       <template #body="slotProps">
         {{ roleLabels(slotProps.data.role_types) }}
@@ -50,22 +75,19 @@
     </Column>
   </DataTable>
   <ParticipateModal
+    v-if="canModify"
     v-model:show="isShowParticipateModal"
     :type="type"
-    :all-scenarios="allScenarios"
     @save="reload"
   />
   <ParticipateModifyModal
+    v-if="canModify"
     ref="modifyModal"
     v-model:show="isShowModifyModal"
+    :type="type"
     @save="reload"
   />
-  <ImpressionModal
-    ref="impressionModal"
-    v-model:show="isShowImpressionModal"
-    :user="user"
-    :myself="myself"
-  />
+  <ImpressionModal ref="impressionModal" v-model:show="isShowImpressionModal" />
 </template>
 
 <script setup lang="ts">
@@ -82,11 +104,8 @@ import ParticipateModifyModal from '~/components/pages/participates/participate-
 import ImpressionModal from '~/components/pages/participates/impression-modal.vue'
 
 interface Props {
-  allScenarios: ScenariosResponse
   type: ScenarioType
   canModify: boolean
-  user: User
-  myself: User | null
 }
 
 defineProps<Props>()
@@ -96,10 +115,10 @@ const emit = defineEmits<{
   (e: 'delete', participate: ParticipateResponse): void
 }>()
 
-const scenarios: Ref<Array<ParticipateResponse>> = ref([])
-const orgScenarios: Ref<Array<ParticipateResponse>> = ref([])
-const init = (participates: Array<ParticipateResponse>) => {
-  scenarios.value = participates
+const participates: Ref<Array<ParticipateResponse>> = ref([])
+const orgParticipates: Ref<Array<ParticipateResponse>> = ref([])
+const init = (target: Array<ParticipateResponse>) => {
+  participates.value = target
 }
 
 const roleLabels = (types: Array<string>): string => {
@@ -144,18 +163,17 @@ const openImpressionModal = (participate: ParticipateResponse) => {
 
 // reorder
 const reorder = async (event: any) => {
-  orgScenarios.value = [...scenarios.value]
-  scenarios.value = event.value
+  orgParticipates.value = [...participates.value]
+  participates.value = event.value
 
-  for (let i = 0; i < scenarios.value.length; i++) {
-    const p = scenarios.value[i]
-    const org = orgScenarios.value[i]
-    console.log(p)
-    console.log(org)
+  for (let i = 0; i < participates.value.length; i++) {
+    const p = participates.value[i]
+    const org = orgParticipates.value[i]
     if (p.id != org.id) {
       await putParticipates({
         id: p.id,
         scenario_id: p.scenario.id,
+        rule_book_ids: p.rule_books.map((rb) => rb.id),
         role_types: p.role_types,
         disp_order: org.disp_order,
         impression: p.impression

@@ -38,8 +38,8 @@ interface Props {
     name: string
     dictionaryNames: string
     type: string
-    ruleBook: RuleBook | null
     url: string | null
+    gameSystem: GameSystem | null
     authors: Array<Author>
   }
 }
@@ -81,8 +81,8 @@ const items = computed(() => {
   ]
   if (props.scenario.type === ScenarioType.Trpg.value) {
     list.push({
-      name: 'ルールブック',
-      value: props.scenario.ruleBook?.name
+      name: 'ゲームシステム',
+      value: props.scenario.gameSystem?.name
     })
   }
   return list
@@ -102,7 +102,7 @@ const save = async () => {
     name: props.scenario.name,
     dictionary_names: [...new Set(dictionaryNames)],
     type: props.scenario.type,
-    rule_book_id: props.scenario.ruleBook?.id,
+    game_system_id: props.scenario.gameSystem?.id,
     url: props.scenario.url,
     author_ids: props.scenario.authors.map((a) => a.id)
   } as Scenario)

@@ -1,7 +1,9 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label class="field-label" for="scenario-authors">シナリオ製作者</label>
+      <label class="field-label" for="scenario-authors"
+        >シナリオ製作者 <span class="text-red-500">*</span></label
+      >
     </div>
     <div>
       <div class="p-inputgroup mx-auto w-20rem">
@@ -9,12 +11,12 @@
         <ButtonPrimary label="選択" @click="openMasterSelectModal" />
       </div>
     </div>
-    <ScenarioSelectModal v-model:show="isShowSelectModel" @decide="decide" />
+    <AuthorsSelectModal v-model:show="isShowSelectModel" @decide="decide" />
   </div>
 </template>
 
 <script setup lang="ts">
-import ScenarioSelectModal from '~/components/pages/scenarios/form/author-select-modal.vue'
+import AuthorsSelectModal from '~/components/pages/authors/authors-select-modal.vue'
 
 interface Props {
   value: Array<Author>

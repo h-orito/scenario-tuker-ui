@@ -1,0 +1,3 @@
+type GameSystemQuery = {
+  name: string
+}

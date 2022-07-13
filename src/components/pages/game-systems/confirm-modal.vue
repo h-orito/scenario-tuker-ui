@@ -1,7 +1,7 @@
 <template>
   <Modal
     v-model:show="isShow"
-    header="ルールブック登録確認"
+    header="ゲームシステム登録確認"
     class="text-sm"
     submit-button-name="登録する"
     :submit-disabled="submitting"
@@ -28,17 +28,13 @@
 </template>
 
 <script setup lang="ts">
-import { postRuleBook } from '~/components/api/rule-book-api'
-import { RuleBookType } from '~/@types/rule-book-type'
+import { postGameSystem } from '~/components/api/game-system-api'
 
 // props
 interface Props {
   show: boolean
-  ruleBook: {
+  gameSystem: {
     name: string
-    dictionaryNames: string
-    type: RuleBookType
-    gameSystem: GameSystem
   }
 }
 const props = defineProps<Props>()
@@ -56,20 +52,8 @@ const isShow = computed({
 const items = computed(() => {
   return [
     {
-      name: 'ルールブック名',
-      value: props.ruleBook.name
-    },
-    {
-      name: '検索用ワード',
-      value: props.ruleBook.dictionaryNames
-    },
-    {
-      name: 'ゲームシステム',
-      value: props.ruleBook.gameSystem.name
-    },
-    {
-      name: '種別',
-      value: props.ruleBook.type.label
+      name: 'ゲームシステム名',
+      value: props.gameSystem.name
     }
   ]
 })
@@ -78,21 +62,12 @@ const closeModal = () => (isShow.value = false)
 const submitting = ref(false)
 const save = async () => {
   submitting.value = true
-  const dictionaryNames = props.ruleBook.dictionaryNames
-    .trim()
-    .replace('\r\n', '\n')
-    .split('\n')
-    .filter((n) => n.length > 0)
-  dictionaryNames.unshift(props.ruleBook.name)
-  await postRuleBook({
-    name: props.ruleBook.name,
-    dictionary_names: [...new Set(dictionaryNames)],
-    game_system_id: props.ruleBook.gameSystem.id,
-    type: props.ruleBook.type.value
-  } as RuleBook)
+  await postGameSystem({
+    name: props.gameSystem.name
+  } as GameSystem)
 
   useRouter().push({
-    path: '/rule-books'
+    path: '/game-systems'
   })
 }
 </script>

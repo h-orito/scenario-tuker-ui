@@ -70,9 +70,14 @@ import { searchUser } from '~/components/api/user-api'
 const name = ref('')
 const twitterUserName = ref('')
 const users: Ref<Array<User>> = ref([])
-const searchByName = async () => await search(name.value, null)
-const searchByTwitterUserName = async () =>
+const searchByName = async () => {
+  if (name.value.length <= 1) return
+  await search(name.value, null)
+}
+const searchByTwitterUserName = async () => {
+  if (twitterUserName.value.length <= 1) return
   await search(null, twitterUserName.value)
+}
 
 const hasSearched = ref(false)
 const search = async (name: string | null, twitterUserName: string | null) => {

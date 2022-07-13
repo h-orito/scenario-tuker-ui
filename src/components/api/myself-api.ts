@@ -42,6 +42,7 @@ export const putParticipates = async (
 type ParticipatePostRequest = {
   id?: number
   scenario_id: number
+  rule_book_ids: Array<number>
   role_types: Array<string>
   disp_order?: number
   impression: ParticipateImpression | null

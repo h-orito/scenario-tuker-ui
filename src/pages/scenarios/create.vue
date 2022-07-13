@@ -7,14 +7,13 @@
       :has-error="v$.dictionaryNames.$error"
     />
     <ScenarioTypeSelect v-model:value="type" :has-error="v$.type.$error" />
-    <ScenarioRuleBook
-      v-if="isTrpg"
-      v-model:value="ruleBook"
-      :has-error="v$.ruleBook.$error"
-      :rule-books="ruleBooks"
-    />
     <ScenarioUrl v-model:value="url" :has-error="v$.url.$error" />
-    <ScenarioAuthors v-model:value="authors" />
+    <GameSystemSelect
+      v-if="isTrpg"
+      v-model:value="gameSystem"
+      :has-error="v$.gameSystem.$error"
+    />
+    <AuthorsSelect v-model:value="authors" />
     <ButtonPrimary label="確認画面へ" @click="confirm" />
     <ConfirmModal v-model:show="isConfirmModalShow" :scenario="inputScenario" />
     <div class="mt-4">
@@ -36,26 +35,24 @@ import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
 import { availableDomains } from '~/components/pages/scenarios/form/scenario-url-domain'
-import { fetchRuleBooks } from '~/components/api/rule-book-api'
 import { searchScenarios } from '~/components/api/scenario-api'
 import ScenarioName from '~/components/pages/scenarios/form/scenario-name.vue'
 import ScenarioDictionaryNames from '~/components/pages/scenarios/form/scenario-dictionary-names.vue'
 import ScenarioTypeSelect from '~/components/pages/scenarios/form/scenario-type.vue'
-import ScenarioRuleBook from '~/components/pages/scenarios/form/scenario-rule-book.vue'
+import GameSystemSelect from '~/components/pages/game-systems/form/game-system-select.vue'
 import ScenarioUrl from '~/components/pages/scenarios/form/scenario-url.vue'
-import ScenarioAuthors from '~/components/pages/scenarios/form/scenario-authors.vue'
+import AuthorsSelect from '~/components/pages/authors/form/authors-select.vue'
 import ConfirmModal from '~/components/pages/scenarios/confirm-modal.vue'
 const { withAsync } = helpers
 
 const name = ref('')
 const dictionaryNames = ref('')
 const type: Ref<string> = ref(ScenarioType.MurderMystery.value)
-const ruleBook: Ref<RuleBook | null> = ref(null)
+const gameSystem: Ref<GameSystem | null> = ref(null)
 const url = ref('')
 const authors: Ref<Array<Author>> = ref([])
 
 const isTrpg = computed(() => type.value == ScenarioType.Trpg.value)
-const ruleBooks = await fetchRuleBooks()
 
 const rules = {
   name: {
@@ -65,7 +62,7 @@ const rules = {
     asyncValidator: withAsync(async () => {
       const scenarios = await searchScenarios({
         name: name.value,
-        rule_book_id: null,
+        game_system_id: gameSystem.value?.id || null,
         type: type.value
       })
       return scenarios.list.every((s) => s.name !== name.value)
@@ -93,9 +90,11 @@ const rules = {
       return AllScenarioType.some((st) => st.value === type.value)
     }
   },
-  ruleBook: {
+  gameSystem: {
     trpg: () => {
-      return type.value === ScenarioType.MurderMystery.value || !!ruleBook.value
+      return (
+        type.value === ScenarioType.MurderMystery.value || !!gameSystem.value
+      )
     }
   },
   url: {
@@ -110,7 +109,7 @@ const v$ = useVuelidate(rules, {
   name,
   dictionaryNames,
   type,
-  ruleBook,
+  gameSystem,
   url
 })
 
@@ -127,10 +126,10 @@ const inputScenario = computed(() => ({
   name: name.value,
   dictionaryNames: dictionaryNames.value,
   type: type.value,
-  ruleBook:
-    type.value !== ScenarioType.Trpg.value || !ruleBook.value
+  gameSystem:
+    type.value !== ScenarioType.Trpg.value || !gameSystem.value
       ? null
-      : ruleBook.value,
+      : gameSystem.value,
   url: url.value,
   authors: authors.value
 }))
