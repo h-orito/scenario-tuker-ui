@@ -12,6 +12,10 @@
     <div>
       <UserName v-model:value="name" :has-error="v$.name.$error" />
       <p>他の方からユーザー名であなたを検索することができます。</p>
+      <UserIntroduction
+        v-model:value="introduction"
+        :has-error="v$.introduction.$error"
+      />
     </div>
   </Modal>
 </template>
@@ -20,6 +24,7 @@
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength } from '@vuelidate/validators'
 import UserName from './form/user-name.vue'
+import UserIntroduction from './form/user-introduction.vue'
 import { putMyself } from '~/components/api/myself-api'
 
 // props
@@ -31,7 +36,7 @@ const props = defineProps<Props>()
 // emits
 const emit = defineEmits<{
   (e: 'update:show', value: boolean): boolean
-  (e: 'save', name: string): void
+  (e: 'save'): void
 }>()
 
 const isShow = computed({
@@ -40,19 +45,26 @@ const isShow = computed({
 })
 
 onMounted(async () => {
-  name.value = (await useAuth()).value.myself?.name || ''
+  const myself = (await useAuth()).value.myself
+  name.value = myself?.name || ''
+  introduction.value = myself?.introduction || ''
 })
 
 const name = ref('')
+const introduction = ref('')
 const rules = {
   name: {
     required,
     minLength: minLength(1),
     maxLength: maxLength(50)
+  },
+  introduction: {
+    maxLength: maxLength(10000)
   }
 }
 const v$ = useVuelidate(rules, {
-  name
+  name,
+  introduction
 })
 
 const closeModal = () => (isShow.value = false)
@@ -61,9 +73,12 @@ const save = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
   submitting.value = true
-  await putMyself(name.value)
+  await putMyself({
+    name: name.value,
+    introduction: introduction.value
+  })
   submitting.value = false
-  emit('save', name.value)
+  emit('save')
   isShow.value = false
 }
 </script>

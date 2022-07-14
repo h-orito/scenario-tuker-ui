@@ -53,3 +53,9 @@ const isShow = computed({
 
 const openWindow = (url: string) => window.open(url)
 </script>
+
+<style lang="scss" scoped>
+ul > li {
+  list-style: none;
+}
+</style>

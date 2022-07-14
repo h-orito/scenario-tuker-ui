@@ -8,11 +8,16 @@ export const fetchMyself = async (): Promise<User | null> => {
   return await useApi<void, User | null>(`users/myself`)
 }
 
-export const putMyself = async (name: string): Promise<User> => {
-  return await useApi<any, User>(`users/myself`, {
+export const putMyself = async (request: PutRequest): Promise<User> => {
+  return await useApi<PutRequest, User>(`users/myself`, {
     method: 'PUT',
-    body: { name }
+    body: request
   })
+}
+
+type PutRequest = {
+  name: string
+  introduction: string
 }
 
 export const postParticipates = async (

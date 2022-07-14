@@ -10,6 +10,7 @@
     "@nuxtjs/eslint-config": "^8.0.0",
     "@nuxtjs/eslint-config-typescript": "^8.0.0",
     "@nuxtjs/eslint-module": "^3.1.0",
+    "@types/marked": "^4.0.3",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "autoprefixer": "^10.4.7",
@@ -31,6 +32,8 @@
     "@vuelidate/core": "^2.0.0-alpha.41",
     "@vuelidate/validators": "^2.0.0-alpha.29",
     "dayjs": "^1.10.8",
-    "firebase": "^9.8.2"
+    "firebase": "^9.8.2",
+    "marked": "^4.0.18",
+    "vue-dompurify-html": "^3.0.0"
   }
 }

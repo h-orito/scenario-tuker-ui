@@ -14,6 +14,11 @@
       <div class="mt-2">
         <LinkTwitter :user="user" />
       </div>
+      <div
+        v-if="markedIntroduction"
+        v-dompurify-html="markedIntroduction"
+        class="introduction"
+      ></div>
       <div>
         <h2>通過したマーダーミステリー</h2>
         <ParticipateTable
@@ -34,7 +39,7 @@
       </div>
       <UserModifyModal
         v-model:show="isShowUserModifyModel"
-        @save="updateName"
+        @save="reloadUser"
       />
     </div>
     <div v-else>
@@ -56,6 +61,7 @@
 
 <script setup lang="ts">
 import { Ref } from 'vue'
+import { marked } from 'marked'
 import { fetchUser, fetchUserParticipates } from '~/components/api/user-api'
 import { ScenarioType } from '~/@types/scenario-type'
 import ParticipateTable from '~/components/pages/participates/participate-table.vue'
@@ -66,7 +72,6 @@ const userId = parseInt(route.params.id as string)
 const authState: Ref<AuthState> = await useAuth()
 
 const user: Ref<User | null> = ref(await fetchUser(userId))
-
 const myself: Ref<User | null> = ref(null)
 
 const canModify = computed(() => {
@@ -75,6 +80,19 @@ const canModify = computed(() => {
 
 const murderParticipatesTable = ref()
 const trpgParticipatesTable = ref()
+
+// modal
+const isShowUserModifyModel = ref(false)
+const openUserMofifyModal = () => (isShowUserModifyModel.value = true)
+
+const reloadUser = async () => {
+  user.value = await fetchUser(userId)
+}
+
+onMounted(async () => {
+  myself.value = authState.value.myself
+  await reload()
+})
 
 const reload = async () => {
   const userParticipates = await fetchUserParticipates(userId)
@@ -88,18 +106,9 @@ const reload = async () => {
   trpgParticipatesTable.value.init(trpgParticipates)
 }
 
-const reloadUser = async () => {
-  user.value = await fetchUser(userId)
-}
-
-const isShowUserModifyModel = ref(false)
-const openUserMofifyModal = () => (isShowUserModifyModel.value = true)
-const updateName = async () => {
-  await reloadUser()
-}
-
-onMounted(async () => {
-  myself.value = authState.value.myself
-  await reload()
+const markedIntroduction = computed(() => {
+  const intro = user.value?.introduction
+  if (!intro || intro.length <= 0) return null
+  return marked(intro)
 })
 </script>
