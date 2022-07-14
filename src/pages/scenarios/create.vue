@@ -64,7 +64,8 @@ const rules = {
         name: name.value,
         game_system_id: gameSystem.value?.id || null,
         game_system_name: null,
-        type: type.value
+        type: type.value,
+        author_name: null
       })
       return scenarios.list.every((s) => s.name !== name.value)
     }),
