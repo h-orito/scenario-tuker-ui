@@ -4,22 +4,22 @@
       <Title>Scenario Tuker | ユーザー情報 {{ user.name }}</Title>
       <h1>
         {{ user.name }}
+        <LinkTwitter :user="user" />
+      </h1>
+      <div class="mt-2">
         <ButtonPrimary
           v-if="canModify"
-          label=""
+          label="ユーザ名・自己紹介編集"
           icon="pencil"
           @click="openUserMofifyModal"
         />
-      </h1>
-      <div class="mt-2">
-        <LinkTwitter :user="user" />
       </div>
       <div
         v-if="markedIntroduction"
         v-dompurify-html="markedIntroduction"
         class="introduction"
       ></div>
-      <div>
+      <div class="mt-5">
         <h2>通過したマーダーミステリー</h2>
         <ParticipateTable
           ref="murderParticipatesTable"

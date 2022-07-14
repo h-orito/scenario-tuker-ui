@@ -11,7 +11,6 @@
   >
     <div>
       <UserName v-model:value="name" :has-error="v$.name.$error" />
-      <p>他の方からユーザー名であなたを検索することができます。</p>
       <UserIntroduction
         v-model:value="introduction"
         :has-error="v$.introduction.$error"

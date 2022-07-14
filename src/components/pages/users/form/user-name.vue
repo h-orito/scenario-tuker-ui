@@ -1,8 +1,11 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label for="user-name">ユーザー名</label>
+      <label class="field-label" for="user-name"
+        >ユーザー名 <span class="text-red-500">*</span></label
+      >
     </div>
+    <p>他の方からユーザー名であなたを検索することができます。</p>
     <FormText
       id="user-name"
       v-model:value="value"
