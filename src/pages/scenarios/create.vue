@@ -63,6 +63,7 @@ const rules = {
       const scenarios = await searchScenarios({
         name: name.value,
         game_system_id: gameSystem.value?.id || null,
+        game_system_name: null,
         type: type.value
       })
       return scenarios.list.every((s) => s.name !== name.value)

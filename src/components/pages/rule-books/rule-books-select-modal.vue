@@ -9,53 +9,59 @@
     @submit="decide"
     @close="closeModal"
   >
-    <div class="grid p-fluid mb-2">
-      <div class="col-12">
-        <div class="p-inputgroup">
-          <FormText
-            v-model:value="name"
-            :has-error="false"
-            placeholder="ルールブック名"
-            @keyup.enter="search"
-          />
-          <Button
-            icon="pi pi-search"
-            :disabled="name.length <= 1"
-            @click="search"
-          />
-        </div>
+    <label class="field-label">検索条件</label>
+    <div class="field my-2">
+      <div><label>ルールブック名</label></div>
+      <FormText v-model:value="name" :has-error="false" @keyup.enter="search" />
+    </div>
+    <div v-if="!gameSystemId" class="field my-2">
+      <div><label>ゲームシステム名</label></div>
+      <FormText
+        v-model:value="gameSystemName"
+        :has-error="false"
+        @keyup.enter="search"
+      />
+    </div>
+    <div class="my-4">
+      <div>
+        <ButtonPrimary
+          label="検索"
+          icon="pi pi-search"
+          :disabled="!canSearch"
+          @click="search"
+        />
       </div>
-      <div class="col-12">
-        <p>{{ selecting }}</p>
-        <DataTable
-          :value="items"
-          :scrollable="true"
-          class="p-datatable-sm text-xs sm:text-sm"
-        >
-          <Column field="name" header="ルールブック" />
-          <Column field="gameSystem" header="ゲームシステム" />
-          <Column field="type" header="ゲームシステム" />
-          <Column header="">
-            <template #body="slotProps">
-              <ButtonPrimary label="追加" @click="add(slotProps.data)" />
-            </template>
-          </Column>
-          <template #empty>{{
-            hasSearched
-              ? 'ルールブックが見つかりません。'
-              : 'ルールブック名で検索してください。'
-          }}</template>
-        </DataTable>
-      </div>
-      <div class="col-12">
-        <p>
-          見つからない場合はお手数ですが<br />ルールブックを<NuxtLink
-            to="/rule-books/create"
-            target="_blank"
-            >新規登録</NuxtLink
-          >してください。
-        </p>
-      </div>
+    </div>
+    <div class="col-12">
+      <p>{{ selecting }}</p>
+      <DataTable
+        :value="items"
+        :scrollable="true"
+        class="p-datatable-sm text-xs sm:text-sm"
+      >
+        <Column field="name" header="ルールブック" />
+        <Column field="gameSystem" header="ゲームシステム" />
+        <Column field="type" header="種別" />
+        <Column header="" class="flex justify-content-end">
+          <template #body="slotProps">
+            <ButtonPrimary label="追加" @click="add(slotProps.data)" />
+          </template>
+        </Column>
+        <template #empty>{{
+          hasSearched
+            ? 'ルールブックが見つかりません。'
+            : '検索してください（2文字以上）。'
+        }}</template>
+      </DataTable>
+    </div>
+    <div class="col-12">
+      <p>
+        見つからない場合はお手数ですが<br />ルールブックを<NuxtLink
+          to="/rule-books/create"
+          target="_blank"
+          >新規登録</NuxtLink
+        >してください。
+      </p>
     </div>
   </Modal>
 </template>
@@ -87,8 +93,16 @@ const closeModal = () => (isShow.value = false)
 
 // data
 const name = ref('')
+const gameSystemName = ref('')
 const searchedRuleBooks: Ref<Array<RuleBookResponse>> = ref([])
 const ruleBooks: Ref<Array<RuleBook>> = ref([])
+
+const canSearch = computed(
+  () =>
+    name.value.length > 1 ||
+    gameSystemName.value.length > 1 ||
+    !!props.gameSystemId
+)
 
 const hasSearched = ref(false)
 const search = async () => {
@@ -97,6 +111,7 @@ const search = async () => {
     await searchRuleBooks({
       name: name.value,
       game_system_id: props.gameSystemId,
+      game_system_name: gameSystemName.value,
       rule_book_type: null
     })
   ).list

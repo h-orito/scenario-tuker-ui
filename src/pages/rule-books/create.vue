@@ -10,7 +10,7 @@
       v-model:value="gameSystem"
       :has-error="v$.gameSystem.$error"
     />
-    <RuleBookType v-model:value="type" />
+    <RuleBookTypeSelect v-model:value="type" :has-error="false" />
     <ButtonPrimary label="確認画面へ" @click="confirm" />
     <ConfirmModal
       v-model:show="isConfirmModalShow"
@@ -37,6 +37,7 @@ import { searchRuleBooks } from '~/components/api/rule-book-api'
 import { RuleBookType, AllRuleBookType } from '~/@types/rule-book-type'
 import RuleBookName from '~/components/pages/rule-books/form/rule-book-name.vue'
 import GameSystemSelect from '~/components/pages/game-systems/form/game-system-select.vue'
+import RuleBookTypeSelect from '~/components/pages/rule-books/form/rule-book-type.vue'
 import RuleBookDictionaryNames from '~/components/pages/rule-books/form/rule-book-dictionary-names.vue'
 import ConfirmModal from '~/components/pages/rule-books/confirm-modal.vue'
 const { withAsync } = helpers
@@ -55,6 +56,7 @@ const rules = {
       const ruleBooks = await searchRuleBooks({
         name: name.value,
         game_system_id: gameSystem.value?.id || null,
+        game_system_name: null,
         rule_book_type: type.value
       })
       return ruleBooks.list.every((s) => s.name !== name.value)
