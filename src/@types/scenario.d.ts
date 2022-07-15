@@ -1,5 +1,5 @@
 type Scenario = {
-  id: number | null
+  id: number
   name: string
   dictionary_names: Array<string>
   type: string

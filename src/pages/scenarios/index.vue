@@ -2,7 +2,15 @@
   <div>
     <Title>Scenario Tuker | シナリオ一覧</Title>
     <h1>シナリオ一覧</h1>
-    <ScenariosTable :scenarios="scenarios.list" :can-modify="canModify" />
+    <ScenariosTable :scenarios="scenarios.list">
+      <template v-if="canModify" #header>
+        <div class="flex justify-content-end">
+          <NuxtLink to="/scenarios/create">
+            <ButtonPrimary label="追加" icon="plus" />
+          </NuxtLink>
+        </div>
+      </template>
+    </ScenariosTable>
     <div class="mt-4">
       <NuxtLink to="/">
         <ButtonSecondary label="トップページ" />

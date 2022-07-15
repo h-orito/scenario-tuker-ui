@@ -47,7 +47,6 @@ const signIn = async (auth: Auth, provider: TwitterAuthProvider) => {
     const credential = TwitterAuthProvider.credentialFromResult(result)
     if (!credential) return
     const user = result.user
-    console.log(credential)
     await useApi<User, User>('users', {
       method: 'POST',
       body: {

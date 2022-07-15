@@ -5,7 +5,7 @@
       <h1>{{ author.name }}</h1>
       <div>
         <h2>製作したシナリオ</h2>
-        <ScenariosTable :scenarios="scenarios.list" :can-modify="false" />
+        <ScenariosTable :scenarios="scenarios.list" />
       </div>
     </div>
     <div v-else>

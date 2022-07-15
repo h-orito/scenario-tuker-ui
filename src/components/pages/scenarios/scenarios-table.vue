@@ -4,12 +4,8 @@
     :scrollable="true"
     class="p-datatable-sm text-xs sm:text-sm"
   >
-    <template v-if="canModify" #header>
-      <div class="flex justify-content-end">
-        <NuxtLink to="/scenarios/create">
-          <ButtonPrimary label="追加" icon="plus" />
-        </NuxtLink>
-      </div>
+    <template v-if="$slots.header" #header>
+      <slot name="header" />
     </template>
     <Column header="シナリオ名">
       <template #body="slotProps">
@@ -43,6 +39,15 @@
         </span>
       </template>
     </Column>
+    <Column v-if="deletable" class="flex justify-content-end">
+      <template #body="slotProps">
+        <ButtonDanger
+          icon="trash"
+          label=""
+          @click="deleteScenario(slotProps.data.id)"
+        />
+      </template>
+    </Column>
     <template #empty>シナリオが登録されていません。</template>
   </DataTable>
 </template>
@@ -54,9 +59,14 @@ import { AllScenarioType } from '~/@types/scenario-type'
 // props
 interface Props {
   scenarios: Array<ScenarioResponse>
-  canModify: boolean
+  deletable?: boolean
 }
 const props = defineProps<Props>()
+
+// emits
+const emit = defineEmits<{
+  (e: 'delete', id: number): void
+}>()
 
 const items = computed(() =>
   props.scenarios.map((s) => ({
@@ -70,6 +80,17 @@ const items = computed(() =>
 )
 
 const confirm = useConfirm()
+const deleteScenario = (id: number) => {
+  confirm.require({
+    message: '所有シナリオを削除しますか？',
+    header: '削除確認',
+    icon: 'pi pi-exclamation-triangle',
+    accept: async () => {
+      emit('delete', id)
+    }
+  })
+}
+
 const confirmToMoveExternal = (url: string) => {
   confirm.require({
     message: `外部サイト（${url}）に遷移します。`,
