@@ -39,12 +39,25 @@
         </span>
       </template>
     </Column>
-    <Column v-if="deletable" class="flex justify-content-end">
+    <Column v-if="modifiable || deletable" class="flex justify-content-end">
       <template #body="slotProps">
+        <ButtonPrimary
+          v-if="modifiable"
+          icon="pencil"
+          label=""
+          @click="openModifyScenarioModal(slotProps.data.id)"
+        />
         <ButtonDanger
+          v-if="deletable"
           icon="trash"
           label=""
           @click="deleteScenario(slotProps.data.id)"
+        />
+        <ScenarioModifyModal
+          v-if="modifiable"
+          ref="scenarioModifyModal"
+          v-model:show="isShowScenarioModifyModel"
+          @save="$emit('modify')"
         />
       </template>
     </Column>
@@ -55,17 +68,20 @@
 <script setup lang="ts">
 import { useConfirm } from 'primevue/useconfirm'
 import { AllScenarioType } from '~/@types/scenario-type'
+import ScenarioModifyModal from '~/components/pages/scenarios/scenario-modify-modal.vue'
 
 // props
 interface Props {
   scenarios: Array<ScenarioResponse>
   deletable?: boolean
+  modifiable?: boolean
 }
 const props = defineProps<Props>()
 
 // emits
 const emit = defineEmits<{
   (e: 'delete', id: number): void
+  (e: 'modify'): void
 }>()
 
 const items = computed(() =>
@@ -78,6 +94,13 @@ const items = computed(() =>
     authors: s.authors
   }))
 )
+
+const scenarioModifyModal = ref()
+const isShowScenarioModifyModel = ref(false)
+const openModifyScenarioModal = (id: number) => {
+  scenarioModifyModal.value.init(props.scenarios.find((s) => s.id === id))
+  isShowScenarioModifyModel.value = true
+}
 
 const confirm = useConfirm()
 const deleteScenario = (id: number) => {

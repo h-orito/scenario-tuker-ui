@@ -25,6 +25,17 @@ export const postGameSystem = async (
   })
 }
 
+export const putGameSystem = async (
+  gameSystem: GameSystem
+): Promise<GameSystem> => {
+  return await useApi<GameSystem, GameSystem>(`game-systems`, {
+    method: 'PUT',
+    body: {
+      ...gameSystem
+    }
+  })
+}
+
 export const fetchGameSystemScenarios = async (
   id: number
 ): Promise<ScenariosResponse> => {

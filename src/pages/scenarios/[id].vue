@@ -3,7 +3,7 @@
     <div v-if="scenario">
       <Title>Scenario Tuker | シナリオ情報 | {{ scenario.name }}</Title>
       <h1>
-        {{ scenario.name }}
+        シナリオ: {{ scenario.name }}
         <span v-if="scenario.url">
           &nbsp;
           <NuxtLink @click="confirmToMoveExternal()">

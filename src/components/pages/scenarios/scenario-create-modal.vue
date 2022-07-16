@@ -1,6 +1,14 @@
 <template>
-  <div>
-    <Title>Scenario Tuker | シナリオ登録</Title>
+  <Modal
+    v-model:show="isShow"
+    header="シナリオ登録"
+    class="text-sm"
+    submit-button-name="登録する"
+    close-button-name="キャンセル"
+    :submit-disabled="submitting"
+    @submit="save"
+    @close="closeModal"
+  >
     <ScenarioName v-model:value="name" :has-error="v$.name.$error" />
     <ScenarioDictionaryNames
       v-model:value="dictionaryNames"
@@ -14,19 +22,7 @@
       :has-error="v$.gameSystem.$error"
     />
     <AuthorsSelect v-model:value="authors" />
-    <ButtonPrimary label="確認画面へ" @click="confirm" />
-    <ConfirmModal v-model:show="isConfirmModalShow" :scenario="inputScenario" />
-    <div class="mt-4">
-      <NuxtLink to="/scenarios">
-        <ButtonSecondary label="シナリオ一覧" />
-      </NuxtLink>
-    </div>
-    <div class="mt-2">
-      <NuxtLink to="/">
-        <ButtonSecondary label="トップページ" />
-      </NuxtLink>
-    </div>
-  </div>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -35,16 +31,35 @@ import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
 import { availableDomains } from '~/components/pages/scenarios/form/scenario-url-domain'
-import { searchScenarios } from '~/components/api/scenario-api'
+import { searchScenarios, postScenario } from '~/components/api/scenario-api'
 import ScenarioName from '~/components/pages/scenarios/form/scenario-name.vue'
 import ScenarioDictionaryNames from '~/components/pages/scenarios/form/scenario-dictionary-names.vue'
 import ScenarioTypeSelect from '~/components/pages/scenarios/form/scenario-type.vue'
 import GameSystemSelect from '~/components/pages/game-systems/form/game-system-select.vue'
 import ScenarioUrl from '~/components/pages/scenarios/form/scenario-url.vue'
 import AuthorsSelect from '~/components/pages/authors/form/authors-select.vue'
-import ConfirmModal from '~/components/pages/scenarios/confirm-modal.vue'
 const { withAsync } = helpers
 
+// props
+interface Props {
+  show: boolean
+}
+const props = defineProps<Props>()
+
+// emits
+const emit = defineEmits<{
+  (e: 'update:show', value: boolean): boolean
+  (e: 'save', scenario: ScenarioResponse): void
+}>()
+
+// modal
+const isShow = computed({
+  get: () => props.show,
+  set: (value: boolean | undefined) => emit('update:show', value ?? false)
+})
+const closeModal = () => (isShow.value = false)
+
+// data
 const name = ref('')
 const dictionaryNames = ref('')
 const type: Ref<string> = ref(ScenarioType.MurderMystery.value)
@@ -115,24 +130,38 @@ const v$ = useVuelidate(rules, {
   url
 })
 
-const confirm = async () => {
+const submitting = ref(false)
+const save = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
-  openConfirmModal()
+  submitting.value = true
+  const dicNames = dictionaryNames.value
+    .trim()
+    .replace('\r\n', '\n')
+    .split('\n')
+    .filter((n) => n.length > 0)
+  dicNames.unshift(name.value)
+  const saved = await postScenario({
+    id: 0,
+    name: name.value,
+    dictionary_names: [...new Set(dicNames)],
+    type: type.value,
+    game_system_id:
+      type.value !== ScenarioType.Trpg.value || !gameSystem.value
+        ? null
+        : gameSystem.value.id,
+    url: url.value,
+    author_ids: authors.value.map((a) => a.id)
+  } as Scenario)
+  submitting.value = false
+  name.value = ''
+  dictionaryNames.value = ''
+  type.value = ScenarioType.MurderMystery.value
+  gameSystem.value = null
+  url.value = ''
+  authors.value = []
+  v$.value.$reset()
+  closeModal()
+  emit('save', saved)
 }
-
-const isConfirmModalShow = ref(false)
-const openConfirmModal = () => (isConfirmModalShow.value = true)
-
-const inputScenario = computed(() => ({
-  name: name.value,
-  dictionaryNames: dictionaryNames.value,
-  type: type.value,
-  gameSystem:
-    type.value !== ScenarioType.Trpg.value || !gameSystem.value
-      ? null
-      : gameSystem.value,
-  url: url.value,
-  authors: authors.value
-}))
 </script>

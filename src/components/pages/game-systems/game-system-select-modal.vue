@@ -42,12 +42,13 @@
     </div>
     <div class="col-12">
       <p>
-        見つからない場合はお手数ですが<br />ゲームシステムを<NuxtLink
-          to="/game-systems/create"
-          target="_blank"
-          >新規登録</NuxtLink
+        見つからない場合は、お手数ですが<br />ゲームシステムを<a
+          href="#"
+          @click.prevent.stop="openCreateModal"
+          >新規登録</a
         >してください。
       </p>
+      <GameSystemCreateModal v-model:show="isShowCreateModal" @save="decide" />
     </div>
   </Modal>
 </template>
@@ -55,6 +56,7 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { searchGameSystems } from '~/components/api/game-system-api'
+import GameSystemCreateModal from './game-system-create-modal.vue'
 
 // props
 interface Props {
@@ -95,4 +97,7 @@ const decide = (gameSystem: GameSystem) => {
   emit('decide', gameSystem)
   closeModal()
 }
+
+const isShowCreateModal = ref(false)
+const openCreateModal = () => (isShowCreateModal.value = true)
 </script>

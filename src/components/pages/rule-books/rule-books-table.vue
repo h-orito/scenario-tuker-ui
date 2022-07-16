@@ -26,12 +26,24 @@
       </template>
     </Column>
     <Column field="type" header="種別"></Column>
-    <Column v-if="deletable" class="flex justify-content-end">
+    <Column v-if="modifiable || deletable" class="flex justify-content-end">
       <template #body="slotProps">
+        <ButtonPrimary
+          v-if="modifiable"
+          icon="pencil"
+          label=""
+          @click="openModifyModal(slotProps.data.id)"
+        />
         <ButtonDanger
+          v-if="deletable"
           icon="trash"
           label=""
           @click="deleteRuleBook(slotProps.data.id)"
+        />
+        <RuleBookModifyModal
+          ref="modifyModal"
+          v-model:show="isShowModifyModel"
+          @save="$emit('modify')"
         />
       </template>
     </Column>
@@ -42,17 +54,20 @@
 <script setup lang="ts">
 import { AllRuleBookType } from '~/@types/rule-book-type'
 import { useConfirm } from 'primevue/useconfirm'
+import RuleBookModifyModal from '~/components/pages/rule-books/rule-book-modify-modal.vue'
 
 // props
 interface Props {
   ruleBooks: RuleBooksResponse
   deletable?: boolean
+  modifiable?: boolean
 }
 const props = defineProps<Props>()
 
 // emits
 const emit = defineEmits<{
   (e: 'delete', id: number): void
+  (e: 'modify'): void
 }>()
 
 const items = computed(() => {
@@ -63,6 +78,13 @@ const items = computed(() => {
     type: AllRuleBookType.find((rbt) => rbt.value === r.type)?.label
   }))
 })
+
+const modifyModal = ref()
+const isShowModifyModel = ref(false)
+const openModifyModal = (id: number) => {
+  modifyModal.value.init(props.ruleBooks.list.find((r) => r.id === id))
+  isShowModifyModel.value = true
+}
 
 const confirm = useConfirm()
 const deleteRuleBook = (id: number) => {

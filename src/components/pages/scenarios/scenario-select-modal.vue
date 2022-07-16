@@ -63,12 +63,16 @@
     </div>
     <div class="col-12">
       <p>
-        見つからない場合はお手数ですが<br />シナリオを<NuxtLink
-          to="/scenarios/create"
-          target="_blank"
-          >新規登録</NuxtLink
+        見つからない場合は、お手数ですが<br />シナリオを<a
+          href="#"
+          @click.prevent.stop="openCreateModal"
+          >新規登録</a
         >してください。
       </p>
+      <ScenarioCreateModal
+        v-model:show="isShowCreateModal"
+        @save="decideIfNeeded"
+      />
     </div>
   </Modal>
 </template>
@@ -77,6 +81,7 @@
 import { Ref } from 'vue'
 import { searchScenarios } from '~/components/api/scenario-api'
 import { ScenarioType } from '~/@types/scenario-type'
+import ScenarioCreateModal from './scenario-create-modal.vue'
 
 // props
 interface Props {
@@ -137,5 +142,11 @@ const decide = (scenario: ScenarioResponse) => {
   authorName.value = ''
   searchedScenarios.value = []
   closeModal()
+}
+
+const isShowCreateModal = ref(false)
+const openCreateModal = () => (isShowCreateModal.value = true)
+const decideIfNeeded = (scenario: ScenarioResponse) => {
+  if (props.type.value === scenario.type) decide(scenario)
 }
 </script>

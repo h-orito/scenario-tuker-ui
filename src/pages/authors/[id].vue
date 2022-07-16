@@ -2,7 +2,7 @@
   <div>
     <div v-if="author">
       <Title>Scenario Tuker | シナリオ製作者情報 | {{ author.name }}</Title>
-      <h1>{{ author.name }}</h1>
+      <h1>シナリオ製作者: {{ author.name }}</h1>
       <div>
         <h2>製作したシナリオ</h2>
         <ScenariosTable :scenarios="scenarios.list" />

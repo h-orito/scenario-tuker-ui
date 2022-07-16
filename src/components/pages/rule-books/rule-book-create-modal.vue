@@ -1,6 +1,14 @@
 <template>
-  <div>
-    <Title>Scenario Tuker | ルールブック登録</Title>
+  <Modal
+    v-model:show="isShow"
+    header="ルールブック登録"
+    class="text-sm"
+    submit-button-name="登録する"
+    close-button-name="キャンセル"
+    :submit-disabled="submitting"
+    @submit="save"
+    @close="closeModal"
+  >
     <RuleBookName v-model:value="name" :has-error="v$.name.$error" />
     <RuleBookDictionaryNames
       v-model:value="dictionaryNames"
@@ -11,36 +19,39 @@
       :has-error="v$.gameSystem.$error"
     />
     <RuleBookTypeSelect v-model:value="type" :has-error="false" />
-    <ButtonPrimary label="確認画面へ" @click="confirm" />
-    <ConfirmModal
-      v-model:show="isConfirmModalShow"
-      :rule-book="inputRuleBook"
-    />
-    <div class="mt-4">
-      <NuxtLink to="/rule-books">
-        <ButtonSecondary label="ルールブック一覧" />
-      </NuxtLink>
-    </div>
-    <div class="mt-2">
-      <NuxtLink to="/">
-        <ButtonSecondary label="トップページ" />
-      </NuxtLink>
-    </div>
-  </div>
+  </Modal>
 </template>
 
 <script setup lang="ts">
 import { Ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
-import { searchRuleBooks } from '~/components/api/rule-book-api'
-import { RuleBookType, AllRuleBookType } from '~/@types/rule-book-type'
+import { searchRuleBooks, postRuleBook } from '~/components/api/rule-book-api'
+import { RuleBookType } from '~/@types/rule-book-type'
 import RuleBookName from '~/components/pages/rule-books/form/rule-book-name.vue'
 import GameSystemSelect from '~/components/pages/game-systems/form/game-system-select.vue'
 import RuleBookTypeSelect from '~/components/pages/rule-books/form/rule-book-type.vue'
 import RuleBookDictionaryNames from '~/components/pages/rule-books/form/rule-book-dictionary-names.vue'
-import ConfirmModal from '~/components/pages/rule-books/confirm-modal.vue'
 const { withAsync } = helpers
+
+// props
+interface Props {
+  show: boolean
+}
+const props = defineProps<Props>()
+
+// emits
+const emit = defineEmits<{
+  (e: 'update:show', value: boolean): boolean
+  (e: 'save', ruleBook: RuleBookResponse): void
+}>()
+
+// modal
+const isShow = computed({
+  get: () => props.show,
+  set: (value: boolean | undefined) => emit('update:show', value ?? false)
+})
+const closeModal = () => (isShow.value = false)
 
 const name = ref('')
 const dictionaryNames = ref('')
@@ -89,19 +100,26 @@ const v$ = useVuelidate(rules, {
   gameSystem
 })
 
-const confirm = async () => {
+const submitting = ref(false)
+const save = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
-  openConfirmModal()
+  submitting.value = true
+  const dicNames = dictionaryNames.value
+    .trim()
+    .replace('\r\n', '\n')
+    .split('\n')
+    .filter((n) => n.length > 0)
+  dicNames.unshift(name.value)
+  const saved = await postRuleBook({
+    name: name.value,
+    dictionary_names: [...new Set(dicNames)],
+    game_system_id: gameSystem.value?.id,
+    type: type.value
+  } as RuleBook)
+  submitting.value = false
+  name.value = ''
+  closeModal()
+  emit('save', saved)
 }
-
-const isConfirmModalShow = ref(false)
-const openConfirmModal = () => (isConfirmModalShow.value = true)
-
-const inputRuleBook = computed(() => ({
-  name: name.value,
-  dictionaryNames: dictionaryNames.value,
-  type: AllRuleBookType.find((rbt) => rbt.value === type.value)!,
-  gameSystem: gameSystem.value!
-}))
 </script>

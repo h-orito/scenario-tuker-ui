@@ -47,12 +47,13 @@
       </div>
       <div class="col-12">
         <p>
-          見つからない場合はお手数ですが<br />シナリオ製作者を<NuxtLink
-            to="/authors/create"
-            target="_blank"
-            >新規登録</NuxtLink
+          見つからない場合は、お手数ですが<br />シナリオ製作者を<a
+            href="#"
+            @click.prevent.stop="openCreateModal"
+            >新規登録</a
           >してください。
         </p>
+        <AuthorCreateModal v-model:show="isShowCreateModal" @save="add" />
       </div>
     </div>
   </Modal>
@@ -61,6 +62,7 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { searchAuthors } from '~/components/api/author-api'
+import AuthorCreateModal from './author-create-modal.vue'
 
 // props
 interface Props {
@@ -109,4 +111,7 @@ const decide = () => {
   emit('decide', authors.value)
   closeModal()
 }
+
+const isShowCreateModal = ref(false)
+const openCreateModal = () => (isShowCreateModal.value = true)
 </script>

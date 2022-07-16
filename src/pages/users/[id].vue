@@ -3,7 +3,7 @@
     <div v-if="user">
       <Title>Scenario Tuker | ユーザー情報 {{ user.name }}</Title>
       <h1>
-        {{ user.name }}
+        ユーザー: {{ user.name }}
         <LinkTwitter :user="user" />
       </h1>
       <div class="mt-2">

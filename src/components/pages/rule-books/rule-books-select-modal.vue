@@ -40,7 +40,7 @@
         class="p-datatable-sm text-xs sm:text-sm"
       >
         <Column field="name" header="ルールブック" />
-        <Column field="gameSystem" header="ゲームシステム" />
+        <Column field="gameSystem.name" header="ゲームシステム" />
         <Column field="type" header="種別" />
         <Column header="" class="flex justify-content-end">
           <template #body="slotProps">
@@ -56,12 +56,13 @@
     </div>
     <div class="col-12">
       <p>
-        見つからない場合はお手数ですが<br />ルールブックを<NuxtLink
-          to="/rule-books/create"
-          target="_blank"
-          >新規登録</NuxtLink
+        見つからない場合はお手数ですが<br />ルールブックを<a
+          href="#"
+          @click.prevent.stop="openCreateModal"
+          >新規登録</a
         >してください。
       </p>
+      <RuleBookCreateModal v-model:show="isShowCreateModal" @save="add" />
     </div>
   </Modal>
 </template>
@@ -70,6 +71,7 @@
 import { Ref } from 'vue'
 import { searchRuleBooks } from '~/components/api/rule-book-api'
 import { AllRuleBookType } from '~/@types/rule-book-type'
+import RuleBookCreateModal from './rule-book-create-modal.vue'
 
 // props
 interface Props {
@@ -121,7 +123,7 @@ const items = computed(() => {
   return searchedRuleBooks.value.map((r) => ({
     id: r.id,
     name: r.name,
-    gameSystem: r.game_system.name,
+    gameSystem: r.game_system,
     type: AllRuleBookType.find((rbt) => rbt.value === r.type)?.label
   }))
 })
@@ -132,15 +134,25 @@ const selecting = computed(() => {
 })
 const add = (ruleBook: RuleBookResponse) => {
   if (ruleBooks.value.some((a) => a.id === ruleBook.id)) return
-  const r = searchedRuleBooks.value.find((rb) => rb.id === ruleBook.id)!
-  ruleBooks.value.push({
-    ...r,
-    game_system_id: r.game_system.id
-  })
+  const r = searchedRuleBooks.value.find((rb) => rb.id === ruleBook.id)
+  if (r) {
+    ruleBooks.value.push({
+      ...r,
+      game_system_id: r.game_system.id
+    })
+  } else {
+    ruleBooks.value.push({
+      ...ruleBook,
+      game_system_id: ruleBook.game_system.id
+    })
+  }
 }
 
 const decide = () => {
   emit('decide', ruleBooks.value)
   closeModal()
 }
+
+const isShowCreateModal = ref(false)
+const openCreateModal = () => (isShowCreateModal.value = true)
 </script>
