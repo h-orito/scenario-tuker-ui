@@ -102,8 +102,10 @@ const init = (target: ParticipateResponse) => {
 const rules = {
   ruleBooks: {
     trpg: () => {
-      props.type.value === ScenarioType.MurderMystery.value ||
+      return (
+        props.type.value === ScenarioType.MurderMystery.value ||
         ruleBooks.value.length > 0
+      )
     }
   },
   roleTypes: {
