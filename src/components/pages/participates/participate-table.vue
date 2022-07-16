@@ -12,7 +12,7 @@
     </template>
     <template #empty>通過したシナリオが登録されていません。</template>
     <Column v-if="canModify" :row-reorder="true" header-style="width: 3rem" />
-    <Column header="シナリオ">
+    <Column header="シナリオ" field="name" :sortable="true">
       <template #body="slotProps">
         <NuxtLink :to="`/scenarios/${slotProps.data.scenario.id}`">
           {{ slotProps.data.scenario.name }}
@@ -28,8 +28,9 @@
     </Column>
     <Column
       v-if="type.value === ScenarioType.Trpg.value"
-      field="scenario.rule_book.name"
+      field="scenario.rule_books"
       header="ルールブック"
+      :sortable="true"
     >
       <template #body="slotProps">
         <span

@@ -7,7 +7,7 @@
     <template v-if="$slots.header" #header>
       <slot name="header" />
     </template>
-    <Column header="シナリオ名">
+    <Column header="シナリオ名" field="name" :sortable="true">
       <template #body="slotProps">
         <NuxtLink :to="`/scenarios/${slotProps.data.id}`">
           {{ slotProps.data.name }}
@@ -20,8 +20,8 @@
         </span>
       </template>
     </Column>
-    <Column field="type" header="種別"></Column>
-    <Column header="ゲームシステム">
+    <Column field="type" header="種別" :sortable="true"></Column>
+    <Column header="ゲームシステム" field="gameSystem.name" :sortable="true">
       <template #body="slotProps">
         <NuxtLink
           v-if="slotProps.data.gameSystem"
@@ -31,7 +31,7 @@
         </NuxtLink>
       </template>
     </Column>
-    <Column field="authors" header="製作者">
+    <Column field="authors" header="製作者" :sortable="true">
       <template #body="slotProps">
         <span v-for="(author, idx) in slotProps.data.authors" :key="author.id">
           <NuxtLink :to="`/authors/${author.id}`">{{ author.name }}</NuxtLink

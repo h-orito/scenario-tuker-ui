@@ -8,14 +8,14 @@
       <slot name="header" />
     </template>
 
-    <Column field="name" header="ルールブック名">
+    <Column field="name" header="ルールブック名" :sortable="true">
       <template #body="slotProps">
         <NuxtLink :to="`/rule-books/${slotProps.data.id}`" target="_blank">
           {{ slotProps.data.name }}
         </NuxtLink>
       </template>
     </Column>
-    <Column field="gameSystem" header="ゲームシステム">
+    <Column field="gameSystem.name" header="ゲームシステム" :sortable="true">
       <template #body="slotProps">
         <NuxtLink
           :to="`/game-systems/${slotProps.data.gameSystem.id}`"
@@ -25,7 +25,7 @@
         </NuxtLink>
       </template>
     </Column>
-    <Column field="type" header="種別"></Column>
+    <Column field="type" header="種別" :sortable="true"></Column>
     <Column v-if="modifiable || deletable" class="flex justify-content-end">
       <template #body="slotProps">
         <ButtonPrimary
