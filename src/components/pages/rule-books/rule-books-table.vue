@@ -10,7 +10,7 @@
 
     <Column field="name" header="ルールブック名" :sortable="true">
       <template #body="slotProps">
-        <NuxtLink :to="`/rule-books/${slotProps.data.id}`" target="_blank">
+        <NuxtLink :to="`/rule-books/${slotProps.data.id}`">
           {{ slotProps.data.name }}
         </NuxtLink>
       </template>

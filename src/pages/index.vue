@@ -73,11 +73,16 @@
         </div>
       </div>
     </div>
+    <div class="my-2 w-full p-5">
+      <ButtonPrimary label="更新履歴" @click="openReleaseNoteModal" />
+      <ReleaseNoteModal v-model:show="isShowReleaseNoteModal" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import SignInModal from '~/components/firebase/sign-in-modal.vue'
+import ReleaseNoteModal from '~/components/pages/index/release-note-modal.vue'
 
 const isShowSignInModal = ref(false)
 const openSignInModal = () => (isShowSignInModal.value = true)
@@ -89,6 +94,9 @@ const signOut = async () => {
 }
 
 const authState = await useAuth()
+
+const isShowReleaseNoteModal = ref(false)
+const openReleaseNoteModal = () => (isShowReleaseNoteModal.value = true)
 </script>
 
 <style lang="scss" scoped>

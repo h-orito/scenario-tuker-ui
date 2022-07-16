@@ -4,15 +4,28 @@
       <Title>Scenario Tuker | シナリオ情報 | {{ scenario.name }}</Title>
       <h1>
         シナリオ: {{ scenario.name }}
-        <span v-if="scenario.url">
-          &nbsp;
-          <NuxtLink @click="confirmToMoveExternal()">
-            <i class="pi pi-external-link"></i>
-          </NuxtLink>
+        <span v-if="canModify" class="ml-2">
+          <ButtonPrimary label="" icon="pencil" @click="openModifyModal()" />
+          <ScenarioModifyModal
+            ref="modifyModal"
+            v-model:show="isShowModifyModel"
+            @save="refresh"
+          />
         </span>
       </h1>
       <p>{{ scenarioType }}</p>
-      <div>
+      <p v-if="scenario.url">
+        <NuxtLink href="#" @click.prevent.stop="confirmToMoveExternal()">
+          {{ scenario.url }}&nbsp;<i class="pi pi-external-link"></i>
+        </NuxtLink>
+      </p>
+      <div v-if="scenario.authors.length > 0">
+        <span v-for="(author, idx) in scenario.authors" :key="author.id">
+          <NuxtLink :to="`/authors/${author.id}`">{{ author.name }}</NuxtLink
+          ><span v-if="idx < scenario.authors.length - 1">、</span>
+        </span>
+      </div>
+      <div class="mt-4">
         <h2>{{ scenario.name }} の通過記録</h2>
         <ParticipateTable
           ref="participatesTable"
@@ -46,10 +59,13 @@ import {
   fetchScenario,
   fetchScenarioParticipates
 } from '~/components/api/scenario-api'
-import ParticipateTable from '~/components/pages/participates/participate-table.vue'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
+import ParticipateTable from '~/components/pages/participates/participate-table.vue'
+import ScenarioModifyModal from '~/components/pages/scenarios/scenario-modify-modal.vue'
 
 const route = useRoute()
+const authState = await useAuth()
+const canModify = computed(() => authState.value.isSignedIn)
 const participatesTable = ref()
 const scenarioId = parseInt(route.params.id as string)
 const scenario: Ref<ScenarioResponse | null> = ref(
@@ -63,6 +79,16 @@ const participates = await fetchScenarioParticipates(scenarioId)
 onMounted(() => {
   participatesTable.value.init(participates.list)
 })
+
+const modifyModal = ref()
+const isShowModifyModel = ref(false)
+const openModifyModal = () => {
+  modifyModal.value.init(scenario.value)
+  isShowModifyModel.value = true
+}
+const refresh = async () => {
+  scenario.value = await fetchScenario(scenarioId)
+}
 
 const confirm = useConfirm()
 const confirmToMoveExternal = () => {

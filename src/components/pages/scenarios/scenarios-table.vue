@@ -3,6 +3,7 @@
     :value="items"
     :scrollable="true"
     class="p-datatable-sm text-xs sm:text-sm"
+    responsive-layout="scroll"
   >
     <template v-if="$slots.header" #header>
       <slot name="header" />
@@ -34,8 +35,8 @@
     <Column field="authors" header="製作者" :sortable="true">
       <template #body="slotProps">
         <span v-for="(author, idx) in slotProps.data.authors" :key="author.id">
-          <NuxtLink :to="`/authors/${author.id}`">{{ author.name }}</NuxtLink
-          ><span v-if="idx < slotProps.data.authors.length - 1">、</span>
+          <NuxtLink :to="`/authors/${author.id}`">{{ author.name }}</NuxtLink>
+          <span v-if="idx < slotProps.data.authors.length - 1">、</span>
         </span>
       </template>
     </Column>

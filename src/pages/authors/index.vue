@@ -15,7 +15,7 @@
       </template>
       <Column field="name" header="シナリオ製作者名">
         <template #body="slotProps">
-          <NuxtLink :to="`/authors/${slotProps.data.id}`" target="_blank">{{
+          <NuxtLink :to="`/authors/${slotProps.data.id}`">{{
             slotProps.data.name
           }}</NuxtLink>
         </template>

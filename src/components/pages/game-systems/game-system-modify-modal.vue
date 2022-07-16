@@ -78,7 +78,7 @@ const save = async () => {
     id: id.value,
     name: name.value
   } as GameSystem)
-  submitting.value = true
+  submitting.value = false
   v$.value.$reset()
   closeModal()
   emit('modify', saved)
