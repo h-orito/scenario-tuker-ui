@@ -3,5 +3,6 @@ export const availableDomains = [
   'https://talto.cc/',
   'https://www.pixiv.net/',
   'http://character-sheets.appspot.com/',
+  'https://character-sheets.appspot.com/',
   'https://twitter.com/'
 ]
