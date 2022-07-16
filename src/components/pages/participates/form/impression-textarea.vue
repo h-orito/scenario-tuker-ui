@@ -11,9 +11,14 @@
   <div v-if="hasError" class="p-error text-xs">
     感想は10000文字以内で入力してください。
   </div>
+  <div class="mt-4">
+    <label>感想プレビュー</label>
+  </div>
+  <div v-dompurify-html="markedImpression" class="introduction"></div>
 </template>
 
 <script setup lang="ts">
+import { marked } from 'marked'
 interface Props {
   value: string
   hasError: boolean
@@ -35,4 +40,8 @@ const counter = computed(() => {
   return `${count} / 10000`
 })
 const over = computed(() => value.value.length > 10000)
+
+const markedImpression = computed(() => {
+  return marked(value.value)
+})
 </script>

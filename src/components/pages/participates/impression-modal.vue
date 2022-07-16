@@ -10,9 +10,11 @@
       <p v-if="role">役割: {{ role }}</p>
       <p v-if="range">公開範囲: {{ range }}</p>
     </div>
-    <div v-if="impression" class="text-left pre-wrap break-word line-height-3">
-      {{ impression.content }}
-    </div>
+    <div
+      v-if="impression"
+      class="introduction"
+      v-dompurify-html="markedImpression"
+    ></div>
     <div v-else>
       <p v-if="failureMessage">{{ failureMessage }}</p>
       <ButtonPrimary
@@ -26,6 +28,7 @@
 
 <script setup lang="ts">
 import { Ref } from 'vue'
+import { marked } from 'marked'
 import { useConfirm } from 'primevue/useconfirm'
 import { fetchParticipateImpression } from '~/components/api/participate-api'
 import { AllRoleType } from '~/@types/role-type'
@@ -52,6 +55,11 @@ const closeModal = () => (isShow.value = false)
 // data
 const participate: Ref<ParticipateResponse | null> = ref(null)
 const impression: Ref<ParticipateImpression | null> = ref(null)
+
+const markedImpression = computed(() => {
+  if (!impression.value) return null
+  return marked(impression.value.content)
+})
 
 const role = computed(() => {
   if (!participate.value) return null
