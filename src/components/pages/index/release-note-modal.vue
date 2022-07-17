@@ -8,6 +8,8 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>2022/07/17 役割「PL」を追加、TRPGに「GM可」も追加</li>
+        <li>2022/07/17 ネタバレ区分が常に「未通過NG」に見える不具合を修正</li>
         <li>2022/07/17 許可URLにDLSiteとBooth個人ショップを追加</li>
         <li>
           2022/07/17

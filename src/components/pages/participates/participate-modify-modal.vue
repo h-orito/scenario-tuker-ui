@@ -91,7 +91,7 @@ const init = (target: ParticipateResponse) => {
   participate.value = target
   ruleBooks.value = [...target.rule_books]
   roleTypes.value = [...target.role_types]
-  hasSpoiler.value = target.impression?.has_spoiler || true
+  hasSpoiler.value = target.impression?.has_spoiler ?? true
   disclosureRange.value =
     target.impression?.disclosure_range || DisclosureRange.Everyone.value
 

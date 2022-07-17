@@ -7,6 +7,10 @@ export const RoleType = {
     label: 'KP',
     value: 'Keeper'
   } as LabelValue,
+  Player: {
+    label: 'PL',
+    value: 'Player'
+  } as LabelValue,
   HandOut1: {
     label: 'HO1',
     value: 'HandOut1'
@@ -132,6 +136,7 @@ export const RoleType = {
 export type RoleType = typeof RoleType[keyof typeof RoleType]
 export const AllMuderMysteryRoleType: LabelValue[] = [
   RoleType.GameMaster,
+  RoleType.Player,
   RoleType.PlayerCharacter1,
   RoleType.PlayerCharacter2,
   RoleType.PlayerCharacter3,
@@ -153,6 +158,7 @@ export const AllMuderMysteryRoleType: LabelValue[] = [
 export const AllTrpgRoleType: LabelValue[] = [
   RoleType.GameMaster,
   RoleType.Keeper,
+  RoleType.Player,
   RoleType.HandOut1,
   RoleType.HandOut2,
   RoleType.HandOut3,
@@ -169,6 +175,7 @@ export const AllTrpgRoleType: LabelValue[] = [
   RoleType.Participating,
   RoleType.Participant,
   RoleType.PlanningToParticipate,
+  RoleType.AbleToGameMaster,
   RoleType.AbleToKeeper
 ]
 export const AllRoleType: LabelValue[] = Object.values(RoleType)
