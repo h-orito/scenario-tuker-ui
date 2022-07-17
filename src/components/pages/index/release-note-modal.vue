@@ -8,6 +8,7 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>2022/07/17 ゲームシステムに検索用キーワードを追加</li>
         <li>
           2022/07/17 マダミスの役割にPC9~12を追加、TRPGの役割にGMとHO9~12を追加
         </li>

@@ -10,6 +10,10 @@
     @close="closeModal"
   >
     <GameSystemName v-model:value="name" :has-error="v$.name.$error" />
+    <GameSystemDictionaryNames
+      v-model:value="dictionaryNames"
+      :has-error="v$.dictionaryNames.$error"
+    />
   </Modal>
 </template>
 
@@ -20,7 +24,8 @@ import {
   searchGameSystems,
   putGameSystem
 } from '~/components/api/game-system-api'
-import GameSystemName from '~/components/pages/game-systems/form/game-system-name.vue'
+import GameSystemName from './form/game-system-name.vue'
+import GameSystemDictionaryNames from './form/game-system-dictionary-names.vue'
 const { withAsync } = helpers
 
 // props
@@ -44,10 +49,12 @@ const closeModal = () => (isShow.value = false)
 
 const id = ref(0)
 const name = ref('')
+const dictionaryNames = ref('')
 
 const init = (gameSystem: GameSystem) => {
   id.value = gameSystem.id
   name.value = gameSystem.name
+  dictionaryNames.value = gameSystem.dictionary_names.join('\n')
 }
 
 const rules = {
@@ -59,14 +66,33 @@ const rules = {
       const gameSystems = await searchGameSystems({
         name: name.value
       })
-      return gameSystems.list.every((s) => s.name !== name.value)
+      return gameSystems.list.every((g) => {
+        if (g.id === id.value) return true
+        return g.name !== name.value
+      })
     }),
     $lazy: true
+  },
+  dictionaryNames: {
+    len: () => {
+      const names = dictionaryNames.value.trim()
+      return (
+        names.length === 0 ||
+        names
+          .replace('\r\n', '\n')
+          .split('\n')
+          .every((dn) => {
+            const length = dn.length
+            return 0 < length && length <= 255
+          })
+      )
+    }
   }
 }
 
 const v$ = useVuelidate(rules, {
-  name
+  name,
+  dictionaryNames
 })
 
 const submitting = ref(false)
@@ -74,9 +100,16 @@ const save = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
   submitting.value = true
+  const dicNames = dictionaryNames.value
+    .trim()
+    .replace('\r\n', '\n')
+    .split('\n')
+    .filter((n) => n.length > 0)
+  dicNames.unshift(name.value)
   const saved = await putGameSystem({
     id: id.value,
-    name: name.value
+    name: name.value,
+    dictionary_names: dicNames
   } as GameSystem)
   submitting.value = false
   v$.value.$reset()

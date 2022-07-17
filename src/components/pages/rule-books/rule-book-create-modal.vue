@@ -119,6 +119,7 @@ const save = async () => {
   } as RuleBook)
   submitting.value = false
   name.value = ''
+  dictionaryNames.value = ''
   closeModal()
   emit('save', saved)
 }
