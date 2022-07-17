@@ -2,6 +2,29 @@
   <div>
     <Title>Scenario Tuker | ゲームシステム一覧</Title>
     <h1>ゲームシステム一覧</h1>
+    <div class="text-center bg-gray-200 p-2 md:p-5 my-2 md:my-5">
+      <label class="field-label">検索条件</label>
+      <div class="my-2 field">
+        <div class="p-inputgroup">
+          <FormText
+            v-model:value="name"
+            :has-error="false"
+            placeholder="ゲームシステム名"
+            @keyup.enter="search"
+          />
+        </div>
+      </div>
+      <div class="my-4">
+        <div>
+          <ButtonPrimary
+            label="検索"
+            icon="pi pi-search"
+            :disabled="searching"
+            @click="search"
+          />
+        </div>
+      </div>
+    </div>
     <DataTable
       :value="gameSystemItems"
       :scrollable="true"
@@ -49,7 +72,10 @@
 
 <script setup lang="ts">
 import { Ref } from 'vue'
-import { fetchGameSystems } from '~/components/api/game-system-api'
+import {
+  fetchGameSystems,
+  searchGameSystems
+} from '~/components/api/game-system-api'
 import GameSystemCreateModal from '~/components/pages/game-systems/game-system-create-modal.vue'
 import GameSystemModifyModal from '~/components/pages/game-systems/game-system-modify-modal.vue'
 
@@ -75,5 +101,20 @@ const isShowModifyModel = ref(false)
 const openModifyModal = (id: number) => {
   modifyModal.value.init(gameSystems.value.list.find((g) => g.id === id))
   isShowModifyModel.value = true
+}
+
+// search
+const name = ref('')
+const searching = ref(false)
+const search = async () => {
+  searching.value = true
+  if (name.value.length <= 0) {
+    await refresh()
+  } else {
+    gameSystems.value = await searchGameSystems({
+      name: name.value
+    })
+  }
+  searching.value = false
 }
 </script>

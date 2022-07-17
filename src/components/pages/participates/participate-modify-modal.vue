@@ -138,7 +138,8 @@ const save = async () => {
       has_spoiler: hasSpoiler.value,
       disclosure_range: disclosureRange.value,
       content: impression.value
-    }
+    },
+    disp_order: participate.value?.disp_order
   })
   emit('save')
   submitting.value = false
