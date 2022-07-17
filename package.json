@@ -27,7 +27,7 @@
     "sass": "^1.52.3",
     "typescript": "^4.7.3",
     "universal-cookie": "^4.0.4",
-    "vue-gtag-next": "^1.14.0"
+    "vue-gtag": "^2.0.1"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0-alpha.41",
