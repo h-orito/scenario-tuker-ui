@@ -39,6 +39,22 @@ export const RoleType = {
     label: 'HO8',
     value: 'HandOut8'
   } as LabelValue,
+  HandOut9: {
+    label: 'HO9',
+    value: 'HandOut9'
+  } as LabelValue,
+  HandOut10: {
+    label: 'HO10',
+    value: 'HandOut10'
+  } as LabelValue,
+  HandOut11: {
+    label: 'HO11',
+    value: 'HandOut11'
+  } as LabelValue,
+  HandOut12: {
+    label: 'HO12',
+    value: 'HandOut12'
+  } as LabelValue,
   PlayerCharacter1: {
     label: 'PC1',
     value: 'PlayerCharacter1'
@@ -70,6 +86,22 @@ export const RoleType = {
   PlayerCharacter8: {
     label: 'PC8',
     value: 'PlayerCharacter8'
+  } as LabelValue,
+  PlayerCharacter9: {
+    label: 'PC9',
+    value: 'PlayerCharacter9'
+  } as LabelValue,
+  PlayerCharacter10: {
+    label: 'PC10',
+    value: 'PlayerCharacter10'
+  } as LabelValue,
+  PlayerCharacter11: {
+    label: 'PC11',
+    value: 'PlayerCharacter11'
+  } as LabelValue,
+  PlayerCharacter12: {
+    label: 'PC12',
+    value: 'PlayerCharacter12'
   } as LabelValue,
   Audience: {
     label: '視聴',
@@ -108,6 +140,10 @@ export const AllMuderMysteryRoleType: LabelValue[] = [
   RoleType.PlayerCharacter6,
   RoleType.PlayerCharacter7,
   RoleType.PlayerCharacter8,
+  RoleType.PlayerCharacter9,
+  RoleType.PlayerCharacter10,
+  RoleType.PlayerCharacter11,
+  RoleType.PlayerCharacter12,
   RoleType.Audience,
   RoleType.Participating,
   RoleType.Participant,
@@ -115,6 +151,7 @@ export const AllMuderMysteryRoleType: LabelValue[] = [
   RoleType.AbleToGameMaster
 ]
 export const AllTrpgRoleType: LabelValue[] = [
+  RoleType.GameMaster,
   RoleType.Keeper,
   RoleType.HandOut1,
   RoleType.HandOut2,
@@ -124,6 +161,10 @@ export const AllTrpgRoleType: LabelValue[] = [
   RoleType.HandOut6,
   RoleType.HandOut7,
   RoleType.HandOut8,
+  RoleType.HandOut9,
+  RoleType.HandOut10,
+  RoleType.HandOut11,
+  RoleType.HandOut12,
   RoleType.Audience,
   RoleType.Participating,
   RoleType.Participant,
