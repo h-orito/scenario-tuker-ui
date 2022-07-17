@@ -3,6 +3,11 @@
     :value="items"
     :scrollable="true"
     class="p-datatable-sm text-xs sm:text-sm"
+    :paginator="true"
+    :rows="10"
+    paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+    :rows-per-page-options="[10, 20, 50]"
+    current-page-report-template="{first} - {last} / {totalRecords}"
   >
     <template v-if="$slots.header" #header>
       <slot name="header" />

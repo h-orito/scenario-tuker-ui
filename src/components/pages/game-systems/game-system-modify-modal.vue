@@ -109,7 +109,7 @@ const save = async () => {
   const saved = await putGameSystem({
     id: id.value,
     name: name.value,
-    dictionary_names: dicNames
+    dictionary_names: [...new Set(dicNames)]
   } as GameSystem)
   submitting.value = false
   v$.value.$reset()

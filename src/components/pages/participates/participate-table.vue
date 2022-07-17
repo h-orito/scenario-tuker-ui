@@ -3,6 +3,11 @@
     :value="participates"
     class="p-datatable-sm text-xs sm:text-sm"
     responsive-layout="scroll"
+    :paginator="true"
+    :rows="10"
+    paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+    :rows-per-page-options="[10, 20, 50]"
+    current-page-report-template="{first} - {last} / {totalRecords}"
     @row-reorder="reorder"
   >
     <template v-if="canModify" #header>
@@ -12,7 +17,7 @@
     </template>
     <template #empty>通過したシナリオが登録されていません。</template>
     <Column v-if="canModify" :row-reorder="true" header-style="width: 3rem" />
-    <Column header="シナリオ" field="name" :sortable="true">
+    <Column header="シナリオ" field="name">
       <template #body="slotProps">
         <NuxtLink :to="`/scenarios/${slotProps.data.scenario.id}`">
           {{ slotProps.data.scenario.name }}
@@ -30,7 +35,6 @@
       v-if="type.value === ScenarioType.Trpg.value"
       field="scenario.rule_books"
       header="ルールブック"
-      :sortable="true"
     >
       <template #body="slotProps">
         <span

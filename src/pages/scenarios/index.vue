@@ -91,7 +91,14 @@ import { AllScenarioType } from '~/@types/scenario-type'
 const route = useRoute()
 const queryType = route.query.type as string
 
-const scenarios: Ref<ScenariosResponse> = ref({ list: [] })
+const scenarios: Ref<ScenariosResponse> = ref({
+  list: [],
+  all_record_count: 0,
+  all_page_count: 0,
+  exist_pre_page: false,
+  exist_next_page: false,
+  current_page_num: 0
+})
 const authState = await useAuth()
 const canModify = computed(() => authState.value.isSignedIn)
 

@@ -98,7 +98,7 @@ const save = async () => {
   dicNames.unshift(name.value)
   const saved = await postGameSystem({
     name: name.value,
-    dictionary_names: dicNames
+    dictionary_names: [...new Set(dicNames)]
   } as GameSystem)
   submitting.value = true
   name.value = ''
