@@ -36,7 +36,7 @@ import { Ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
-import { availableDomains } from '~/components/pages/scenarios/form/scenario-url-domain'
+import { isAvailableUrl } from '~/components/pages/scenarios/form/scenario-url-domain'
 import { searchScenarios, putScenario } from '~/components/api/scenario-api'
 import ScenarioName from '~/components/pages/scenarios/form/scenario-name.vue'
 import ScenarioDictionaryNames from '~/components/pages/scenarios/form/scenario-dictionary-names.vue'
@@ -116,7 +116,7 @@ const rules = {
   url: {
     domain: () => {
       if (url.value === '') return true
-      return availableDomains.some((domain) => url.value.startsWith(domain))
+      return isAvailableUrl(url.value)
     }
   }
 }

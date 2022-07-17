@@ -1,8 +1,20 @@
-export const availableDomains = [
-  'https://booth.pm/',
-  'https://talto.cc/',
-  'https://www.pixiv.net/',
-  'http://character-sheets.appspot.com/',
-  'https://character-sheets.appspot.com/',
-  'https://twitter.com/'
+const availableDomains = [
+  'booth.pm',
+  'talto.cc',
+  'www.pixiv.net',
+  'character-sheets.appspot.com',
+  'twitter.com',
+  'www.dlsite.com'
 ]
+
+export const isAvailableUrl = (url: string): boolean => {
+  const domain = getDomain(url)
+  if (!domain) return false
+  return availableDomains.some((ad) => domain.endsWith(ad))
+}
+
+const getDomain = (url: string): string | null => {
+  const matches = url.match(/^https?:\/{2,}(.*?)(?:\/|\?|#|$)/)
+  if (!matches || matches.length < 2) return null
+  return matches[1]
+}

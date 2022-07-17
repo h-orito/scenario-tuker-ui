@@ -28,9 +28,6 @@ npm run dev
 * 通過PC
   * キャラシURL
 * 一覧にページングを追加
-* シナリオURL
-  * https://www.dlsite.com/
-  * https://hogehoge.booth.pm/
 * TRPGオンリーの場合に上に表示
   * もしくはタブ切り替えにする？
 * ルルブの種別にリプレイを追加

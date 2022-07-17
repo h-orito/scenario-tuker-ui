@@ -8,6 +8,7 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>2022/07/17 許可URLにDLSiteとBooth個人ショップを追加</li>
         <li>
           2022/07/17
           トップページからマダミスシナリオ一覧とTRPGシナリオ一覧で分岐
