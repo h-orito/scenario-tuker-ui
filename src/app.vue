@@ -2,6 +2,7 @@
   <div class="text-xs sm:text-sm">
     <client-only>
       <NuxtLayout>
+        <LayoutGoogleAds />
         <LayoutDefaultHeader />
         <NuxtPage class="p-2 sm:p-3 w-full max-w-lg mx-auto" />
         <LayoutDefaultFooter />
