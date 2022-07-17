@@ -100,6 +100,7 @@ const failureMessage = ref('')
 // init
 const init = (target: ParticipateResponse) => {
   participate.value = target
+  impression.value = null
 }
 
 defineExpose({
