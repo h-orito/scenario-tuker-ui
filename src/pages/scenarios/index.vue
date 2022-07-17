@@ -2,6 +2,61 @@
   <div>
     <Title>Scenario Tuker | シナリオ一覧</Title>
     <h1>シナリオ一覧</h1>
+    <div class="text-center bg-gray-200 p-2 md:p-5 my-2 md:my-5">
+      <label class="field-label">検索条件</label>
+      <div class="my-2 field">
+        <div class="p-inputgroup">
+          <SelectButton
+            id="scenario-type"
+            v-model="type"
+            :options="typeCandidates"
+            option-label="label"
+            option-value="value"
+            :has-error="false"
+          />
+        </div>
+      </div>
+      <div class="my-2 field">
+        <div class="p-inputgroup">
+          <FormText
+            v-model:value="name"
+            :has-error="false"
+            placeholder="シナリオ名"
+            @keyup.enter="search"
+          />
+        </div>
+      </div>
+      <div class="my-2 field">
+        <div class="p-inputgroup">
+          <FormText
+            v-model:value="gameSystemName"
+            :has-error="false"
+            placeholder="ゲームシステム名"
+            @keyup.enter="search"
+          />
+        </div>
+      </div>
+      <div class="my-2 field">
+        <div class="p-inputgroup">
+          <FormText
+            v-model:value="authorName"
+            :has-error="false"
+            placeholder="シナリオ製作者名"
+            @keyup.enter="search"
+          />
+        </div>
+      </div>
+      <div class="my-4">
+        <div>
+          <ButtonPrimary
+            label="検索"
+            icon="pi pi-search"
+            :disabled="searching"
+            @click="search"
+          />
+        </div>
+      </div>
+    </div>
     <ScenariosTable
       :scenarios="scenarios.list"
       :modifiable="canModify"
@@ -13,7 +68,11 @@
         </div>
       </template>
     </ScenariosTable>
-    <ScenarioCreateModal v-model:show="isShowCreateModal" @save="refresh" />
+    <ScenarioCreateModal
+      ref="createModal"
+      v-model:show="isShowCreateModal"
+      @save="refresh"
+    />
     <div class="mt-4">
       <NuxtLink to="/">
         <ButtonSecondary label="トップページ" />
@@ -24,17 +83,68 @@
 
 <script setup lang="ts">
 import { Ref } from 'vue'
-import { fetchScenarios } from '~/components/api/scenario-api'
+import { fetchScenarios, searchScenarios } from '~/components/api/scenario-api'
 import ScenariosTable from '~/components/pages/scenarios/scenarios-table.vue'
 import ScenarioCreateModal from '~~/src/components/pages/scenarios/scenario-create-modal.vue'
+import { AllScenarioType } from '~/@types/scenario-type'
 
-const scenarios: Ref<ScenariosResponse> = ref(await fetchScenarios())
+const route = useRoute()
+const queryType = route.query.type as string
+
+const scenarios: Ref<ScenariosResponse> = ref({ list: [] })
 const authState = await useAuth()
 const canModify = computed(() => authState.value.isSignedIn)
 
 const isShowCreateModal = ref(false)
-const openCreateModal = () => (isShowCreateModal.value = true)
+const createModal = ref()
+const openCreateModal = () => {
+  createModal.value.init(type.value)
+  isShowCreateModal.value = true
+}
 const refresh = async () => {
   scenarios.value = await fetchScenarios()
+}
+
+onMounted(async () => {
+  if (queryType !== '') {
+    type.value = queryType
+  }
+  await search()
+})
+
+// search
+const type = ref('')
+const name = ref('')
+const gameSystemName = ref('')
+const authorName = ref('')
+const isQueryEmpty = computed(() => {
+  return (
+    name.value.length <= 0 &&
+    gameSystemName.value.length <= 0 &&
+    type.value === '' &&
+    authorName.value.length <= 0
+  )
+})
+const typeCandidates = ref(
+  AllScenarioType.concat({
+    label: '両方',
+    value: ''
+  })
+)
+const searching = ref(false)
+const search = async () => {
+  searching.value = true
+  if (isQueryEmpty.value) {
+    await refresh()
+  } else {
+    scenarios.value = await searchScenarios({
+      name: name.value,
+      game_system_id: null,
+      game_system_name: gameSystemName.value,
+      type: type.value === '' ? null : type.value,
+      author_name: authorName.value
+    })
+  }
+  searching.value = false
 }
 </script>

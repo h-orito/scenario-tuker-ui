@@ -70,6 +70,7 @@
         >してください。
       </p>
       <ScenarioCreateModal
+        ref="createModal"
         v-model:show="isShowCreateModal"
         @save="decideIfNeeded"
       />
@@ -145,7 +146,11 @@ const decide = (scenario: ScenarioResponse) => {
 }
 
 const isShowCreateModal = ref(false)
-const openCreateModal = () => (isShowCreateModal.value = true)
+const createModal = ref()
+const openCreateModal = () => {
+  createModal.value.init(props.type.value)
+  isShowCreateModal.value = true
+}
 const decideIfNeeded = (scenario: ScenarioResponse) => {
   if (props.type.value === scenario.type) decide(scenario)
 }

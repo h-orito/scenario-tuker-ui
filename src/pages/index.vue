@@ -41,16 +41,42 @@
     </div>
     <div class="my-4 md:my-8 w-full p-5 bg-gray-200">
       <div class="grid">
-        <div class="col-12 md:col-6">
+        <div class="col-12">
           <p>ユーザーを検索して通過したシナリオを閲覧することができます。</p>
           <NuxtLink to="/users">
             <ButtonPrimary label="ユーザー検索" />
           </NuxtLink>
         </div>
+      </div>
+    </div>
+    <div class="my-4 md:my-8 w-full p-5 bg-gray-200">
+      <div class="grid">
+        <div class="col-12">
+          <p>
+            登録されているマーダーミステリーのシナリオを確認することができます。
+          </p>
+          <NuxtLink
+            :to="{
+              name: 'scenarios',
+              query: { type: ScenarioType.MurderMystery.value }
+            }"
+          >
+            <ButtonPrimary label="マーダーミステリーシナリオ一覧" />
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
+    <div class="my-4 md:my-8 w-full p-5 bg-gray-200">
+      <div class="grid">
         <div class="col-12 md:col-6">
-          <p>登録されているシナリオを確認することができます。</p>
-          <NuxtLink to="/scenarios">
-            <ButtonPrimary label="シナリオ一覧" />
+          <p>登録されているTRPGシナリオを確認することができます。</p>
+          <NuxtLink
+            :to="{
+              name: 'scenarios',
+              query: { type: ScenarioType.Trpg.value }
+            }"
+          >
+            <ButtonPrimary label="TRPGシナリオ一覧" />
           </NuxtLink>
         </div>
         <div class="col-12 md:col-6">
@@ -83,6 +109,7 @@
 <script setup lang="ts">
 import SignInModal from '~/components/firebase/sign-in-modal.vue'
 import ReleaseNoteModal from '~/components/pages/index/release-note-modal.vue'
+import { ScenarioType } from '~/@types/scenario-type'
 
 const isShowSignInModal = ref(false)
 const openSignInModal = () => (isShowSignInModal.value = true)

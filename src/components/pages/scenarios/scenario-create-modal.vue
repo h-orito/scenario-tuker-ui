@@ -164,4 +164,14 @@ const save = async () => {
   closeModal()
   emit('save', saved)
 }
+
+const init = (typeValue: string) => {
+  if (AllScenarioType.some((st) => st.value === typeValue)) {
+    type.value = typeValue
+  }
+}
+
+defineExpose({
+  init
+})
 </script>
