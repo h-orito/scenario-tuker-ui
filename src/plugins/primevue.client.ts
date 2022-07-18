@@ -18,6 +18,8 @@ import AutoComplete from 'primevue/autocomplete'
 import Checkbox from 'primevue/checkbox'
 import ConfirmationService from 'primevue/confirmationservice'
 import Tooltip from 'primevue/tooltip'
+import TabView from 'primevue/tabview'
+import TabPanel from 'primevue/tabpanel'
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, {
@@ -41,5 +43,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component('Fieldset', Fieldset)
   nuxtApp.vueApp.component('AutoComplete', AutoComplete)
   nuxtApp.vueApp.component('Checkbox', Checkbox)
+  nuxtApp.vueApp.component('TabView', TabView)
+  nuxtApp.vueApp.component('TabPanel', TabPanel)
   nuxtApp.vueApp.directive('tooltip', Tooltip)
 })

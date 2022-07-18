@@ -8,6 +8,10 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>
+          2022/07/20
+          ユーザーページの見た目を変更（マダミス/TRPGをタブ切り替え、参加数が多い方を初期表示）
+        </li>
         <li>2022/07/19 許可URLにクトゥルフ神話TRPGやろうずwikiを追加</li>
         <li>
           2022/07/18

@@ -20,78 +20,84 @@
         class="introduction"
       ></div>
       <div class="mt-5">
-        <h2>マーダーミステリー</h2>
-        <h3>参加記録</h3>
-        <ParticipateTable
-          ref="murderParticipatesTable"
-          :type="ScenarioType.MurderMystery"
-          :can-modify="canModify"
-          @reload="reloadParticipates"
-        />
-      </div>
-      <div class="mt-5">
-        <h3>所有シナリオ</h3>
-        <ScenariosTable
-          :scenarios="murderScenarios"
-          :deletable="canModify"
-          @delete="deleteScenario"
-        >
-          <template v-if="canModify" #header>
-            <div class="flex justify-content-end">
-              <ButtonPrimary
-                label="追加"
-                icon="plus"
-                @click="openMurderScenarioModal"
+        <TabView :active-index="activeIndex">
+          <TabPanel header="マーダーミステリー">
+            <div>
+              <h3>マーダーミステリー参加記録</h3>
+              <ParticipateTable
+                ref="murderParticipatesTable"
+                :type="ScenarioType.MurderMystery"
+                :can-modify="canModify"
+                @reload="reloadParticipates"
               />
             </div>
-          </template>
-        </ScenariosTable>
-      </div>
-      <div class="mt-5">
-        <h2>TRPG</h2>
-        <h3>参加記録</h3>
-        <ParticipateTable
-          ref="trpgParticipatesTable"
-          :type="ScenarioType.Trpg"
-          :can-modify="canModify"
-          @reload="reloadParticipates"
-        />
-      </div>
-      <div v-if="ruleBooks" class="mt-5">
-        <h3>所有ルールブック</h3>
-        <RuleBooksTable
-          :rule-books="ruleBooks"
-          :deletable="canModify"
-          @delete="deleteRuleBook"
-        >
-          <template v-if="canModify" #header>
-            <div class="flex justify-content-end">
-              <ButtonPrimary
-                label="追加"
-                icon="plus"
-                @click="openRuleBookModal"
+            <div class="mt-5">
+              <h3>所有シナリオ</h3>
+              <ScenariosTable
+                :scenarios="murderScenarios"
+                :deletable="canModify"
+                @delete="deleteScenario"
+              >
+                <template v-if="canModify" #header>
+                  <div class="flex justify-content-end">
+                    <ButtonPrimary
+                      label="追加"
+                      icon="plus"
+                      @click="openMurderScenarioModal"
+                    />
+                  </div>
+                </template>
+              </ScenariosTable>
+            </div>
+          </TabPanel>
+          <TabPanel header="TRPG">
+            <div>
+              <h3>TRPG参加記録</h3>
+              <ParticipateTable
+                ref="trpgParticipatesTable"
+                :type="ScenarioType.Trpg"
+                :can-modify="canModify"
+                @reload="reloadParticipates"
               />
             </div>
-          </template>
-        </RuleBooksTable>
-      </div>
-      <div class="mt-5">
-        <h3>所有シナリオ</h3>
-        <ScenariosTable
-          :scenarios="trpgScenarios"
-          :deletable="canModify"
-          @delete="deleteScenario"
-        >
-          <template v-if="canModify" #header>
-            <div class="flex justify-content-end">
-              <ButtonPrimary
-                label="追加"
-                icon="plus"
-                @click="openTrpgScenarioModal"
-              />
+            <div v-if="ruleBooks" class="mt-5">
+              <h3>所有ルールブック</h3>
+              <RuleBooksTable
+                :rule-books="ruleBooks"
+                :deletable="canModify"
+                @delete="deleteRuleBook"
+              >
+                <template v-if="canModify" #header>
+                  <div class="flex justify-content-end">
+                    <ButtonPrimary
+                      label="追加"
+                      icon="plus"
+                      @click="openRuleBookModal"
+                    />
+                  </div>
+                </template>
+              </RuleBooksTable>
             </div>
-          </template>
-        </ScenariosTable>
+            <div class="mt-5">
+              <h3>所有シナリオ</h3>
+              <ScenariosTable
+                :scenarios="trpgScenarios"
+                :deletable="canModify"
+                @delete="deleteScenario"
+              >
+                <template v-if="canModify" #header>
+                  <div class="flex justify-content-end">
+                    <ButtonPrimary
+                      label="追加"
+                      icon="plus"
+                      @click="openTrpgScenarioModal"
+                    />
+                  </div>
+                </template>
+              </ScenariosTable>
+            </div>
+          </TabPanel>
+        </TabView>
       </div>
       <UserModifyModal
         v-model:show="isShowUserModifyModel"
@@ -156,6 +162,9 @@ import ScenarioSelectModal from '~/components/pages/scenarios/scenario-select-mo
 const route = useRoute()
 const userId = parseInt(route.params.id as string)
 
+// tab
+const activeIndex = ref(0)
+
 // myself
 const authState: Ref<AuthState> = await useAuth()
 const myself: Ref<User | null> = ref(null)
@@ -180,16 +189,18 @@ const openUserMofifyModal = () => (isShowUserModifyModel.value = true)
 // participates
 const murderParticipatesTable = ref()
 const trpgParticipatesTable = ref()
+const murderParticipates: Ref<Array<ParticipateResponse>> = ref([])
+const trpgParticipates: Ref<Array<ParticipateResponse>> = ref([])
 const reloadParticipates = async () => {
   const userParticipates = await fetchUserParticipates(userId)
-  const murderParticipates = userParticipates.list.filter(
+  murderParticipates.value = userParticipates.list.filter(
     (p) => p.scenario.type === ScenarioType.MurderMystery.value
   )
-  murderParticipatesTable.value.init(murderParticipates)
-  const trpgParticipates = userParticipates.list.filter(
+  murderParticipatesTable.value.init(murderParticipates.value)
+  trpgParticipates.value = userParticipates.list.filter(
     (p) => p.scenario.type === ScenarioType.Trpg.value
   )
-  trpgParticipatesTable.value.init(trpgParticipates)
+  trpgParticipatesTable.value.init(trpgParticipates.value)
 }
 
 // rulebooks
@@ -244,8 +255,28 @@ const openTrpgScenarioModal = () => (isShowTrpgScenarioModel.value = true)
 
 onMounted(async () => {
   myself.value = authState.value.myself
-  reloadParticipates()
-  reloadRuleBooks()
-  reloadScenarios()
+  await Promise.all([
+    reloadParticipates(),
+    reloadRuleBooks(),
+    reloadScenarios()
+  ])
+
+  if (murderParticipates.value.length < trpgParticipates.value.length) {
+    activeIndex.value = 1
+  }
 })
 </script>
+
+<style lang="scss">
+.p-tabview-nav {
+  display: flex;
+
+  li {
+    flex: 1;
+
+    a.p-tabview-nav-link {
+      justify-content: center;
+    }
+  }
+}
+</style>
