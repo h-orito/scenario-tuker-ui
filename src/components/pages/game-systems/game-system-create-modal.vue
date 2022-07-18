@@ -103,6 +103,7 @@ const save = async () => {
   submitting.value = true
   name.value = ''
   dictionaryNames.value = ''
+  v$.value.$reset()
   closeModal()
   emit('save', saved)
 }

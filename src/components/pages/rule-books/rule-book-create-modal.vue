@@ -120,6 +120,8 @@ const save = async () => {
   submitting.value = false
   name.value = ''
   dictionaryNames.value = ''
+  gameSystem.value = null
+  v$.value.$reset()
   closeModal()
   emit('save', saved)
 }
