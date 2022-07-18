@@ -269,20 +269,19 @@ onMounted(async () => {
 
 <style lang="scss">
 .p-tabview {
-  .p-tabview-panels {
-    padding: 0;
+  .p-tabview-nav {
+    display: flex;
 
-    .p-tabview-nav {
-      display: flex;
+    li {
+      flex: 1;
 
-      li {
-        flex: 1;
-
-        a.p-tabview-nav-link {
-          justify-content: center;
-        }
+      a.p-tabview-nav-link {
+        justify-content: center;
       }
     }
+  }
+  .p-tabview-panels {
+    padding: 0;
   }
 }
 </style>
