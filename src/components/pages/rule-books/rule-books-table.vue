@@ -40,26 +40,39 @@
           @click="openModifyModal(slotProps.data.id)"
         />
         <ButtonDanger
+          v-if="modifiable"
+          class="ml-1"
+          icon="trash"
+          label=""
+          @click="openDeleteModal(slotProps.data.id)"
+        />
+        <ButtonDanger
           v-if="deletable"
           icon="trash"
           label=""
-          @click="deleteRuleBook(slotProps.data.id)"
-        />
-        <RuleBookModifyModal
-          ref="modifyModal"
-          v-model:show="isShowModifyModel"
-          @save="$emit('modify')"
+          @click="deleteUserRuleBook(slotProps.data.id)"
         />
       </template>
     </Column>
     <template #empty>ルールブックが登録されていません。</template>
   </DataTable>
+  <RuleBookModifyModal
+    ref="modifyModal"
+    v-model:show="isShowModifyModel"
+    @save="$emit('modify')"
+  />
+  <RuleBookDeleteModal
+    ref="deleteModal"
+    v-model:show="isShowDeleteModel"
+    @save="$emit('modify')"
+  />
 </template>
 
 <script setup lang="ts">
 import { AllRuleBookType } from '~/@types/rule-book-type'
 import { useConfirm } from 'primevue/useconfirm'
 import RuleBookModifyModal from '~/components/pages/rule-books/rule-book-modify-modal.vue'
+import RuleBookDeleteModal from '~/components/pages/rule-books/rule-book-delete-modal.vue'
 
 // props
 interface Props {
@@ -91,8 +104,15 @@ const openModifyModal = (id: number) => {
   isShowModifyModel.value = true
 }
 
+const deleteModal = ref()
+const isShowDeleteModel = ref(false)
+const openDeleteModal = (id: number) => {
+  deleteModal.value.init(props.ruleBooks.list.find((g) => g.id === id))
+  isShowDeleteModel.value = true
+}
+
 const confirm = useConfirm()
-const deleteRuleBook = (id: number) => {
+const deleteUserRuleBook = (id: number) => {
   confirm.require({
     message: '所有ルールブックを削除しますか？',
     header: '削除確認',

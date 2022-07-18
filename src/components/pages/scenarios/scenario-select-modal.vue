@@ -11,7 +11,10 @@
       <div><label>シナリオ名</label></div>
       <FormText v-model:value="name" :has-error="false" @keyup.enter="search" />
     </div>
-    <div v-if="type.value === ScenarioType.Trpg.value" class="field my-2">
+    <div
+      v-if="type.value === ScenarioType.Trpg.value && gameSystemId == null"
+      class="field my-2"
+    >
       <div><label>ゲームシステム名</label></div>
       <FormText
         v-model:value="gameSystemName"
@@ -88,6 +91,7 @@ import ScenarioCreateModal from './scenario-create-modal.vue'
 interface Props {
   show: boolean
   type: ScenarioType
+  gameSystemId?: number | null
 }
 const props = defineProps<Props>()
 
@@ -115,7 +119,8 @@ const canSearch = computed(
   () =>
     name.value.length > 1 ||
     gameSystemName.value.length > 1 ||
-    authorName.value.length > 1
+    authorName.value.length > 1 ||
+    !!props.gameSystemId
 )
 
 const search = async () => {
@@ -124,7 +129,7 @@ const search = async () => {
   searchedScenarios.value = (
     await searchScenarios({
       name: name.value,
-      game_system_id: null,
+      game_system_id: props.gameSystemId ?? null,
       game_system_name: gameSystemName.value,
       type: props.type.value,
       author_name: authorName.value

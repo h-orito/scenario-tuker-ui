@@ -17,6 +17,7 @@
     <ScenarioSelectModal
       v-model:show="isShowSelectModel"
       :type="type"
+      :game-system-id="gameSystemId"
       @decide="decide"
     />
   </div>
@@ -30,6 +31,7 @@ interface Props {
   value: Scenario | null
   type: ScenarioType
   hasError: boolean
+  gameSystemId?: number | null
 }
 
 const props = defineProps<Props>()

@@ -44,7 +44,7 @@ import { postParticipates } from '~/components/api/myself-api'
 import { ScenarioType } from '~/@types/scenario-type'
 import { DisclosureRange } from '~/@types/disclosure-range'
 import ScenarioSelect from '~/components/pages/scenarios/form/scenario-select.vue'
-import RuleBooksSelect from '~/components/pages/rule-books/form/rule-book-select.vue'
+import RuleBooksSelect from '~/components/pages/rule-books/form/rule-books-select.vue'
 import RoleTypeCheckbox from './form/role-type-checkbox.vue'
 import Impression from './form/impression.vue'
 

@@ -36,6 +36,32 @@ export const putScenario = async (
   })
 }
 
+export const deleteScenario = async (id: number): Promise<void> => {
+  return await useApi<void, void>(`scenarios/${id}`, {
+    method: 'DELETE'
+  })
+}
+
+export const deleteScenarioCheck = async (
+  id: number
+): Promise<CheckResponse> => {
+  return await useApi<void, CheckResponse>(`scenarios/${id}/check`, {
+    method: 'DELETE'
+  })
+}
+
+export const integrateDeleteScenario = async (
+  id: number,
+  destId: number
+): Promise<void> => {
+  return await useApi<void, void>(`scenarios/${id}/integrate`, {
+    method: 'PUT',
+    body: {
+      dest_id: destId
+    }
+  })
+}
+
 export const fetchScenarioParticipates = async (
   id: number
 ): Promise<ParticipatesResponse> => {

@@ -45,7 +45,7 @@ import { required, maxLength } from '@vuelidate/validators'
 import { putParticipates } from '~/components/api/myself-api'
 import { AllScenarioType, ScenarioType } from '~/@types/scenario-type'
 import { DisclosureRange } from '~/@types/disclosure-range'
-import RuleBooksSelect from '~/components/pages/rule-books/form/rule-book-select.vue'
+import RuleBooksSelect from '~/components/pages/rule-books/form/rule-books-select.vue'
 import RoleTypeCheckbox from './form/role-type-checkbox.vue'
 import Impression from './form/impression.vue'
 

@@ -14,7 +14,7 @@
     <div v-if="hasError" class="p-error text-xs">
       シナリオと同じゲームシステムのルールブックを選択してください。
     </div>
-    <RuleBookSelectModal
+    <RuleBooksSelectModal
       v-model:show="isShowSelectModel"
       :game-system-id="gameSystemId"
       @decide="decide"
@@ -23,10 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import RuleBookSelectModal from '~/components/pages/rule-books/rule-book-select-modal.vue'
+import RuleBooksSelectModal from '~/components/pages/rule-books/rule-books-select-modal.vue'
 
 interface Props {
-  value: RuleBookResponse | null
+  value: Array<RuleBook>
   hasError: boolean
   gameSystemId: number | null
 }
@@ -34,22 +34,22 @@ interface Props {
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'update:value', value: RuleBookResponse | null): RuleBookResponse | null
+  (e: 'update:value', value: Array<RuleBook>): Array<RuleBook>
 }>()
 
 const value = computed({
   get: () => props.value,
-  set: (value: RuleBookResponse | null) => emit('update:value', value)
+  set: (value: Array<RuleBook>) => emit('update:value', value)
 })
 
 const selecting = computed(() => {
-  if (!value.value) return '選択されていません'
-  return value.value.name
+  if (value.value.length <= 0) return '選択されていません'
+  return value.value.map((a) => a.name).join('、')
 })
 
 const isShowSelectModel = ref(false)
 const openMasterSelectModal = () => (isShowSelectModel.value = true)
-const decide = (ruleBook: RuleBookResponse) => {
-  value.value = ruleBook
+const decide = (ruleBooks: Array<RuleBook>) => {
+  value.value = ruleBooks
 }
 </script>

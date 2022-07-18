@@ -36,6 +36,32 @@ export const putGameSystem = async (
   })
 }
 
+export const deleteGameSystem = async (id: number): Promise<void> => {
+  return await useApi<void, void>(`game-systems/${id}`, {
+    method: 'DELETE'
+  })
+}
+
+export const deleteGameSystemCheck = async (
+  id: number
+): Promise<CheckResponse> => {
+  return await useApi<void, CheckResponse>(`game-systems/${id}/check`, {
+    method: 'DELETE'
+  })
+}
+
+export const integrateDeleteGameSystem = async (
+  id: number,
+  destId: number
+): Promise<void> => {
+  return await useApi<void, void>(`game-systems/${id}/integrate`, {
+    method: 'PUT',
+    body: {
+      dest_id: destId
+    }
+  })
+}
+
 export const fetchGameSystemScenarios = async (
   id: number
 ): Promise<ScenariosResponse> => {

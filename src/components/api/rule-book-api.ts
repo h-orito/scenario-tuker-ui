@@ -38,6 +38,32 @@ export const putRuleBook = async (
   })
 }
 
+export const deleteRuleBook = async (id: number): Promise<void> => {
+  return await useApi<void, void>(`rule-books/${id}`, {
+    method: 'DELETE'
+  })
+}
+
+export const deleteRuleBookCheck = async (
+  id: number
+): Promise<CheckResponse> => {
+  return await useApi<void, CheckResponse>(`rule-books/${id}/check`, {
+    method: 'DELETE'
+  })
+}
+
+export const integrateDeleteRuleBook = async (
+  id: number,
+  destId: number
+): Promise<void> => {
+  return await useApi<void, void>(`rule-books/${id}/integrate`, {
+    method: 'PUT',
+    body: {
+      dest_id: destId
+    }
+  })
+}
+
 export const fetchRuleBookParticipates = async (
   id: number
 ): Promise<ParticipatesResponse> => {

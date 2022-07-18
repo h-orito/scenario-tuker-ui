@@ -60,7 +60,7 @@
     <ScenariosTable
       :scenarios="scenarios.list"
       :modifiable="canModify"
-      @modify="refresh"
+      @modify="search"
     >
       <template v-if="canModify" #header>
         <div class="flex justify-content-end">
@@ -71,7 +71,7 @@
     <ScenarioCreateModal
       ref="createModal"
       v-model:show="isShowCreateModal"
-      @save="refresh"
+      @save="search"
     />
     <div class="mt-4">
       <NuxtLink to="/">
@@ -108,9 +108,6 @@ const openCreateModal = () => {
   createModal.value.init(type.value)
   isShowCreateModal.value = true
 }
-const refresh = async () => {
-  scenarios.value = await fetchScenarios()
-}
 
 onMounted(async () => {
   if (queryType !== '') {
@@ -142,7 +139,7 @@ const searching = ref(false)
 const search = async () => {
   searching.value = true
   if (isQueryEmpty.value) {
-    await refresh()
+    scenarios.value = await fetchScenarios()
   } else {
     scenarios.value = await searchScenarios({
       name: name.value,

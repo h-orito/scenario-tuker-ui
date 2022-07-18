@@ -58,10 +58,21 @@
             label=""
             @click="openModifyModal(slotProps.data.id)"
           />
+          <ButtonDanger
+            class="ml-1"
+            icon="trash"
+            label=""
+            @click="openDeleteModal(slotProps.data.id)"
+          />
           <GameSystemModifyModal
             ref="modifyModal"
             v-model:show="isShowModifyModel"
             @modify="refresh"
+          />
+          <GameSystemDeleteModal
+            ref="deleteModal"
+            v-model:show="isShowDeleteModel"
+            @save="refresh"
           />
         </template>
       </Column>
@@ -83,6 +94,7 @@ import {
 } from '~/components/api/game-system-api'
 import GameSystemCreateModal from '~/components/pages/game-systems/game-system-create-modal.vue'
 import GameSystemModifyModal from '~/components/pages/game-systems/game-system-modify-modal.vue'
+import GameSystemDeleteModal from '~/components/pages/game-systems/game-system-delete-modal.vue'
 
 const gameSystems: Ref<GameSystems> = ref(await fetchGameSystems())
 const gameSystemItems = computed(() => {
@@ -106,6 +118,13 @@ const isShowModifyModel = ref(false)
 const openModifyModal = (id: number) => {
   modifyModal.value.init(gameSystems.value.list.find((g) => g.id === id))
   isShowModifyModel.value = true
+}
+
+const deleteModal = ref()
+const isShowDeleteModel = ref(false)
+const openDeleteModal = (id: number) => {
+  deleteModal.value.init(gameSystems.value.list.find((g) => g.id === id))
+  isShowDeleteModel.value = true
 }
 
 // search

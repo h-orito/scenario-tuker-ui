@@ -54,27 +54,41 @@
           @click="openModifyScenarioModal(slotProps.data.id)"
         />
         <ButtonDanger
+          v-if="modifiable"
+          class="ml-1"
+          icon="trash"
+          label=""
+          @click="openDeleteModal(slotProps.data.id)"
+        />
+        <ButtonDanger
           v-if="deletable"
           icon="trash"
           label=""
-          @click="deleteScenario(slotProps.data.id)"
-        />
-        <ScenarioModifyModal
-          v-if="modifiable"
-          ref="scenarioModifyModal"
-          v-model:show="isShowScenarioModifyModel"
-          @save="$emit('modify')"
+          @click="deleteUserScenario(slotProps.data.id)"
         />
       </template>
     </Column>
     <template #empty>シナリオが登録されていません。</template>
   </DataTable>
+  <ScenarioModifyModal
+    v-if="modifiable"
+    ref="scenarioModifyModal"
+    v-model:show="isShowScenarioModifyModel"
+    @save="$emit('modify')"
+  />
+  <ScenarioDeleteModal
+    v-if="modifiable"
+    ref="scenarioDeleteModal"
+    v-model:show="isShowScenarioDeleteModel"
+    @save="$emit('modify')"
+  />
 </template>
 
 <script setup lang="ts">
 import { useConfirm } from 'primevue/useconfirm'
 import { AllScenarioType } from '~/@types/scenario-type'
 import ScenarioModifyModal from '~/components/pages/scenarios/scenario-modify-modal.vue'
+import ScenarioDeleteModal from '~/components/pages/scenarios/scenario-delete-modal.vue'
 
 // props
 interface Props {
@@ -108,8 +122,15 @@ const openModifyScenarioModal = (id: number) => {
   isShowScenarioModifyModel.value = true
 }
 
+const scenarioDeleteModal = ref()
+const isShowScenarioDeleteModel = ref(false)
+const openDeleteModal = (id: number) => {
+  scenarioDeleteModal.value.init(props.scenarios.find((s) => s.id === id))
+  isShowScenarioDeleteModel.value = true
+}
+
 const confirm = useConfirm()
-const deleteScenario = (id: number) => {
+const deleteUserScenario = (id: number) => {
   confirm.require({
     message: '所有シナリオを削除しますか？',
     header: '削除確認',
