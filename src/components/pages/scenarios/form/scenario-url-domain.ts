@@ -4,7 +4,8 @@ const availableDomains = [
   'www.pixiv.net',
   'character-sheets.appspot.com',
   'twitter.com',
-  'www.dlsite.com'
+  'www.dlsite.com',
+  'seesaawiki.jp'
 ]
 
 export const isAvailableUrl = (url: string): boolean => {

@@ -8,6 +8,7 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>2022/07/19 許可URLにクトゥルフ神話TRPGやろうずwikiを追加</li>
         <li>
           2022/07/18
           ゲームシステム、ルールブック、シナリオの削除・統合削除機能を追加
