@@ -22,11 +22,11 @@
         :has-error="v$.ruleBooks.$error"
         :game-system-id="scenarioGameSystemId"
       />
-      <RoleTypeCheckbox
+      <RoleNames
         v-if="type"
-        v-model:role-types="roleTypes"
+        v-model:role-names="roleNames"
         :type="type"
-        :has-error="v$.roleTypes.$error"
+        :has-error="v$.roleNames.$error"
       />
       <Impression
         v-model:has-spoiler="hasSpoiler"
@@ -46,7 +46,7 @@ import { putParticipates } from '~/components/api/myself-api'
 import { AllScenarioType, ScenarioType } from '~/@types/scenario-type'
 import { DisclosureRange } from '~/@types/disclosure-range'
 import RuleBooksSelect from '~/components/pages/rule-books/form/rule-books-select.vue'
-import RoleTypeCheckbox from './form/role-type-checkbox.vue'
+import RoleNames from './form/role-names.vue'
 import Impression from './form/impression.vue'
 
 // props
@@ -72,7 +72,7 @@ const closeModal = () => (isShow.value = false)
 // data
 const participate: Ref<ParticipateResponse | null> = ref(null)
 const ruleBooks: Ref<Array<RuleBook>> = ref([])
-const roleTypes: Ref<Array<string>> = ref([])
+const roleNames: Ref<Array<string>> = ref([])
 const hasSpoiler: Ref<boolean> = ref(true)
 const disclosureRange: Ref<string> = ref(DisclosureRange.Everyone.value)
 const impression: Ref<string> = ref('')
@@ -90,7 +90,7 @@ const type = computed(() => {
 const init = (target: ParticipateResponse) => {
   participate.value = target
   ruleBooks.value = [...target.rule_books]
-  roleTypes.value = [...target.role_types]
+  roleNames.value = [...target.role_names]
   hasSpoiler.value = target.impression?.has_spoiler ?? true
   disclosureRange.value =
     target.impression?.disclosure_range || DisclosureRange.Everyone.value
@@ -108,9 +108,12 @@ const rules = {
       )
     }
   },
-  roleTypes: {
+  roleNames: {
     required,
-    notEmpty: () => roleTypes.value.length > 0
+    notEmpty: () => roleNames.value.length > 0,
+    length: () => {
+      return roleNames.value.every((rn) => 0 < rn.length && rn.length <= 50)
+    }
   },
   impression: {
     maxLength: maxLength(10000)
@@ -119,7 +122,7 @@ const rules = {
 
 const v$ = useVuelidate(rules, {
   ruleBooks,
-  roleTypes,
+  roleNames,
   impression
 })
 
@@ -133,7 +136,7 @@ const save = async () => {
     id: participate.value?.id,
     scenario_id: participate.value?.scenario.id || 0,
     rule_book_ids: ruleBooks.value.map((r) => r.id),
-    role_types: roleTypes.value,
+    role_names: roleNames.value,
     impression: {
       has_spoiler: hasSpoiler.value,
       disclosure_range: disclosureRange.value,

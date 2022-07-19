@@ -1,5 +1,5 @@
 <template>
-  <div class="field mb-4">
+  <div class="field mb-6">
     <div>
       <label class="field-label" for="scenario"
         >シナリオ <span class="text-red-500">*</span></label

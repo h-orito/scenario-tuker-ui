@@ -53,9 +53,9 @@
         </span>
       </template>
     </Column>
-    <Column field="role_types" header="役割">
+    <Column field="role_names" header="役割">
       <template #body="slotProps">
-        {{ roleLabels(slotProps.data.role_types) }}
+        {{ slotProps.data.role_names.join('、') }}
       </template>
     </Column>
     <Column v-if="canModify" class="justify-content-end text-right">
@@ -108,7 +108,6 @@ import {
   putParticipates
 } from '~/components/api/myself-api'
 import { ScenarioType } from '~/@types/scenario-type'
-import { AllRoleType } from '~/@types/role-type'
 import ParticipateModal from '~/components/pages/participates/participate-modal.vue'
 import ParticipateModifyModal from '~/components/pages/participates/participate-modify-modal.vue'
 import ImpressionModal from '~/components/pages/participates/impression-modal.vue'
@@ -129,12 +128,6 @@ const participates: Ref<Array<ParticipateResponse>> = ref([])
 const orgParticipates: Ref<Array<ParticipateResponse>> = ref([])
 const init = (target: Array<ParticipateResponse>) => {
   participates.value = target
-}
-
-const roleLabels = (types: Array<string>): string => {
-  return AllRoleType.filter((rt) => types.some((type) => type === rt.value))
-    .map((rt) => rt.label)
-    .join('、')
 }
 
 // add
@@ -184,7 +177,7 @@ const reorder = async (event: any) => {
         id: p.id,
         scenario_id: p.scenario.id,
         rule_book_ids: p.rule_books.map((rb) => rb.id),
-        role_types: p.role_types,
+        role_names: p.role_names,
         disp_order: org.disp_order,
         impression: p.impression
       })

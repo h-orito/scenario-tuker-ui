@@ -31,7 +31,6 @@ import { Ref } from 'vue'
 import { marked } from 'marked'
 import { useConfirm } from 'primevue/useconfirm'
 import { fetchParticipateImpression } from '~/components/api/participate-api'
-import { AllRoleType } from '~/@types/role-type'
 import { AllDisclosureRange } from '~/@types/disclosure-range'
 
 // props
@@ -63,9 +62,7 @@ const markedImpression = computed(() => {
 
 const role = computed(() => {
   if (!participate.value) return null
-  return participate.value.role_types
-    .map((value) => AllRoleType.find((rt) => rt.value === value)?.label)
-    .join('、')
+  return participate.value.role_names.join('、')
 })
 
 const range = computed(() => {
