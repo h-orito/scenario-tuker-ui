@@ -37,7 +37,12 @@
         </NuxtLink>
       </template>
     </Column>
-    <Column field="authors" header="製作者" :sortable="true">
+    <Column
+      field="authors"
+      sort-field="autorsSort"
+      header="製作者"
+      :sortable="true"
+    >
       <template #body="slotProps">
         <span v-for="(author, idx) in slotProps.data.authors" :key="author.id">
           <NuxtLink :to="`/authors/${author.id}`">{{ author.name }}</NuxtLink>
@@ -111,7 +116,8 @@ const items = computed(() =>
     url: s.url,
     type: AllScenarioType.find((st) => st.value === s.type)?.label,
     gameSystem: s.game_system,
-    authors: s.authors
+    authors: s.authors,
+    autorsSort: s.authors.map((a) => a.name).join(',')
   }))
 )
 
