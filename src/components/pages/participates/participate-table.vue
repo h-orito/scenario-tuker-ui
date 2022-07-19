@@ -6,7 +6,7 @@
     :paginator="true"
     :rows="10"
     paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-    :rows-per-page-options="[10, 20, 50]"
+    :rows-per-page-options="[10, 20, 50, 100, 200, 500, 1000]"
     current-page-report-template="{first} - {last} / {totalRecords}"
     @row-reorder="reorder"
   >
