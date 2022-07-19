@@ -34,3 +34,9 @@ p {
 .introduction {
   @include styleclass('my-4 bg-gray-200 p-4 text-left list-disc')
 }
+
+@media (max-width: $sm) {
+  .hidden-sm {
+    display: none !important;
+  }
+}

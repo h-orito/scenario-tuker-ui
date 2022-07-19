@@ -16,7 +16,12 @@
       </div>
     </template>
     <template #empty>通過したシナリオが登録されていません。</template>
-    <Column v-if="canModify" :row-reorder="true" header-style="width: 3rem" />
+    <Column
+      v-if="canModify"
+      :row-reorder="true"
+      class="hidden-sm"
+      header-style="width: 3rem"
+    />
     <Column header="シナリオ" field="name">
       <template #body="slotProps">
         <NuxtLink :to="`/scenarios/${slotProps.data.scenario.id}`">
