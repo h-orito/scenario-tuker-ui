@@ -277,7 +277,12 @@ onMounted(async () => {
 
       a.p-tabview-nav-link {
         justify-content: center;
+        color: #6c757d !important;
       }
+    }
+
+    li.p-highlight a.p-tabview-nav-link {
+      color: #3b82f6 !important;
     }
   }
   .p-tabview-panels {
