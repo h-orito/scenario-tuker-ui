@@ -50,6 +50,7 @@ import { required } from '@vuelidate/validators'
 import { postParticipates } from '~/components/api/myself-api'
 import { ScenarioType } from '~/@types/scenario-type'
 import ScenariosSelect from '~/components/pages/scenarios/form/scenarios-select.vue'
+import RuleBooksSelect from '~/components/pages/rule-books/form/rule-books-select.vue'
 import RoleNames from './form/role-names.vue'
 
 // props
