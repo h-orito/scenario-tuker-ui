@@ -108,15 +108,15 @@
         :game-system-id="null"
         @decide="registerRuleBook"
       />
-      <ScenarioSelectModal
+      <ScenariosSelectModal
         v-model:show="isShowMurderScenarioModel"
         :type="ScenarioType.MurderMystery"
-        @decide="registerScenario"
+        @decide="registerScenarios"
       />
-      <ScenarioSelectModal
+      <ScenariosSelectModal
         v-model:show="isShowTrpgScenarioModel"
         :type="ScenarioType.Trpg"
-        @decide="registerScenario"
+        @decide="registerScenarios"
       />
     </div>
     <div v-else>
@@ -157,7 +157,7 @@ import RuleBooksTable from '~/components/pages/rule-books/rule-books-table.vue'
 import ScenariosTable from '~/components/pages/scenarios/scenarios-table.vue'
 import UserModifyModal from '~/components/pages/users/user-modify-modal.vue'
 import RuleBooksSelectModal from '~/components/pages/rule-books/rule-books-select-modal.vue'
-import ScenarioSelectModal from '~/components/pages/scenarios/scenario-select-modal.vue'
+import ScenariosSelectModal from '~/components/pages/scenarios/scenarios-select-modal.vue'
 
 const route = useRoute()
 const userId = parseInt(route.params.id as string)
@@ -237,10 +237,12 @@ const reloadScenarios = async () => {
 const murderScenarios: Ref<Array<ScenarioResponse>> = ref([])
 const trpgScenarios: Ref<Array<ScenarioResponse>> = ref([])
 
-const registerScenario = async (scenario: Scenario) => {
-  await postScenarios({
-    scenario_id: scenario.id
-  })
+const registerScenarios = async (scenarios: Array<Scenario>) => {
+  for (let scenario of scenarios) {
+    await postScenarios({
+      scenario_id: scenario.id
+    })
+  }
   await reloadScenarios()
 }
 const deleteScenario = async (id: number) => {

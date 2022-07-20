@@ -1,7 +1,7 @@
 <template>
   <Modal
     v-model:show="isShow"
-    header="通過したシナリオ登録"
+    header="通過したシナリオ一括登録"
     class="text-sm"
     submit-button-name="登録する"
     close-button-name="キャンセル"
@@ -10,10 +10,14 @@
     @close="closeModal"
   >
     <div>
-      <ScenarioSelect
-        v-model:value="scenario"
+      <p v-if="type.value === ScenarioType.Trpg.value" class="mb-4">
+        同一ゲームシステムのシナリオを一括登録することができます。
+      </p>
+      <ScenariosSelect
+        v-model:value="scenarios"
         :type="type"
-        :has-error="v$.scenario.$error"
+        :has-error="v$.scenarios.$error"
+        :same-game-system="true"
       />
       <RuleBooksSelect
         v-if="type.value === ScenarioType.Trpg.value"
@@ -26,12 +30,15 @@
         :type="type"
         :has-error="v$.roleNames.$error"
       />
-      <Impression
-        v-model:has-spoiler="hasSpoiler"
-        v-model:disclosure-range="disclosureRange"
-        v-model:impression="impression"
-        :has-impression-error="v$.impression.$error"
-      />
+      <div class="field mb-4">
+        <div>
+          <label class="field-label" for="scenario-name">感想</label>
+        </div>
+        <p>
+          一括追加では感想は登録できません。<br />
+          追加後に個別に編集して感想を登録してください。
+        </p>
+      </div>
     </div>
   </Modal>
 </template>
@@ -39,14 +46,11 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
-import { required, maxLength } from '@vuelidate/validators'
+import { required } from '@vuelidate/validators'
 import { postParticipates } from '~/components/api/myself-api'
 import { ScenarioType } from '~/@types/scenario-type'
-import { DisclosureRange } from '~/@types/disclosure-range'
-import ScenarioSelect from '~/components/pages/scenarios/form/scenario-select.vue'
-import RuleBooksSelect from '~/components/pages/rule-books/form/rule-books-select.vue'
+import ScenariosSelect from '~/components/pages/scenarios/form/scenarios-select.vue'
 import RoleNames from './form/role-names.vue'
-import Impression from './form/impression.vue'
 
 // props
 interface Props {
@@ -69,29 +73,31 @@ const isShow = computed({
 const closeModal = () => (isShow.value = false)
 
 // data
-const scenario: Ref<Scenario | null> = ref(null)
+const scenarios: Ref<Array<Scenario>> = ref([])
 const ruleBooks: Ref<Array<RuleBook>> = ref([])
 const roleNames: Ref<Array<string>> = ref([])
-const hasSpoiler: Ref<boolean> = ref(true)
-const disclosureRange: Ref<string> = ref(DisclosureRange.Everyone.value)
-const impression: Ref<string> = ref('')
 
-const scenarioGameSystemId = computed(
-  () => scenario.value?.game_system_id || null
-)
+const scenarioGameSystemId = computed(() => {
+  if (scenarios.value.length <= 0) return null
+  return scenarios.value[0].game_system_id
+})
 
 // validation
 const rules = {
-  scenario: {
-    required
+  scenarios: {
+    notEmpty: () => scenarios.value.length > 0,
+    gameSystemId: () => {
+      return scenarios.value.every(
+        (s) => s.game_system_id === scenarioGameSystemId.value
+      )
+    }
   },
   ruleBooks: {
     trpg: () => {
       if (props.type.value === ScenarioType.MurderMystery.value) return true
-      if (ruleBooks.value.length <= 0) return false
-      if (!scenario.value) return true
+      if (!scenarioGameSystemId.value) return true
       return ruleBooks.value.every(
-        (r) => r.game_system_id === scenario.value?.game_system_id
+        (r) => r.game_system_id === scenarioGameSystemId.value
       )
     }
   },
@@ -101,17 +107,13 @@ const rules = {
     length: () => {
       return roleNames.value.every((rn) => 0 < rn.length && rn.length <= 50)
     }
-  },
-  impression: {
-    maxLength: maxLength(10000)
   }
 }
 
 const v$ = useVuelidate(rules, {
-  scenario,
+  scenarios,
   ruleBooks,
-  roleNames,
-  impression
+  roleNames
 })
 
 // submit
@@ -120,23 +122,18 @@ const save = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
   submitting.value = true
-  await postParticipates({
-    scenario_id: scenario.value?.id || 0,
-    rule_book_ids: ruleBooks.value.map((r) => r.id),
-    role_names: roleNames.value,
-    impression: {
-      has_spoiler: hasSpoiler.value,
-      disclosure_range: disclosureRange.value,
-      content: impression.value
-    }
-  })
+  for (let scenario of scenarios.value) {
+    await postParticipates({
+      scenario_id: scenario.id || 0,
+      rule_book_ids: ruleBooks.value.map((r) => r.id),
+      role_names: roleNames.value,
+      impression: null
+    })
+  }
   emit('save')
-  scenario.value = null
+  scenarios.value = []
   ruleBooks.value = []
   roleNames.value = []
-  hasSpoiler.value = true
-  disclosureRange.value = DisclosureRange.Everyone.value
-  impression.value = ''
   submitting.value = false
   v$.value.$reset()
   closeModal()

@@ -1,9 +1,7 @@
 <template>
   <div class="field mb-4">
     <div>
-      <label class="field-label" for="rule-books"
-        >ルールブック <span class="text-red-500">*</span></label
-      >
+      <label class="field-label" for="rule-books">ルールブック</label>
     </div>
     <div>
       <div class="p-inputgroup mx-auto w-20rem">

@@ -12,7 +12,17 @@
   >
     <template v-if="canModify" #header>
       <div class="flex justify-content-end">
-        <ButtonPrimary label="追加" icon="plus" @click="openParticipateModal" />
+        <ButtonPrimary
+          label="一括追加"
+          icon="plus"
+          @click="openMultipleCreateModal"
+        />
+        <ButtonPrimary
+          class="ml-2"
+          label="追加"
+          icon="plus"
+          @click="openParticipateModal"
+        />
       </div>
     </template>
     <template #empty>通過したシナリオが登録されていません。</template>
@@ -90,6 +100,12 @@
     :type="type"
     @save="reload"
   />
+  <ParticipateMultipleCreateModal
+    v-if="canModify"
+    v-model:show="isShowMultipleCreateModal"
+    :type="type"
+    @save="reload"
+  />
   <ParticipateModifyModal
     v-if="canModify"
     ref="modifyModal"
@@ -108,7 +124,8 @@ import {
   putParticipates
 } from '~/components/api/myself-api'
 import { ScenarioType } from '~/@types/scenario-type'
-import ParticipateModal from '~/components/pages/participates/participate-modal.vue'
+import ParticipateModal from '~/components/pages/participates/participate-create-modal.vue'
+import ParticipateMultipleCreateModal from '~/components/pages/participates/participate-multiple-create-modal.vue'
 import ParticipateModifyModal from '~/components/pages/participates/participate-modify-modal.vue'
 import ImpressionModal from '~/components/pages/participates/impression-modal.vue'
 
@@ -133,6 +150,10 @@ const init = (target: Array<ParticipateResponse>) => {
 // add
 const isShowParticipateModal = ref(false)
 const openParticipateModal = () => (isShowParticipateModal.value = true)
+
+// multiple create
+const isShowMultipleCreateModal = ref(false)
+const openMultipleCreateModal = () => (isShowMultipleCreateModal.value = true)
 
 // modify
 const isShowModifyModal = ref(false)
