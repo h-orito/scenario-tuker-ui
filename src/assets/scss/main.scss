@@ -23,7 +23,11 @@ p {
 }
 
 .field-label {
-  @include styleclass('font-semibold')
+  @include styleclass('font-semibold text-base')
+}
+
+.field-hr {
+  @include styleclass('my-5 mx-4 md:mx-8 border-gray-100')
 }
 
 .title-font {

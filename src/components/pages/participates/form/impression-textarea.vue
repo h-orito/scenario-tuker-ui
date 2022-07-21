@@ -2,7 +2,7 @@
   <FormTextarea
     id="impression"
     v-model:value="value"
-    class="w-full"
+    class="w-full md:w-8"
     :has-error="hasError"
     :auto-resize="true"
     placeholder="感想を1万字以内で記入できます。"
@@ -14,7 +14,12 @@
   <div class="mt-4">
     <label>感想プレビュー</label>
   </div>
-  <div v-dompurify-html="markedImpression" class="introduction"></div>
+  <div class="flex justify-content-center">
+    <div
+      v-dompurify-html="markedImpression"
+      class="introduction w-full md:w-8"
+    ></div>
+  </div>
 </template>
 
 <script setup lang="ts">

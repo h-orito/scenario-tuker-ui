@@ -1,6 +1,8 @@
 <template>
   <DataTable
+    v-model:expanded-rows="expandedRows"
     :value="participates"
+    data-key="id"
     class="p-datatable-sm text-xs sm:text-sm"
     responsive-layout="scroll"
     :paginator="true"
@@ -32,6 +34,7 @@
       class="hidden-sm"
       header-style="width: 3rem"
     />
+    <Column :expander="true" header-style="width: 3rem" />
     <Column header="シナリオ" field="name">
       <template #body="slotProps">
         <NuxtLink :to="`/scenarios/${slotProps.data.scenario.id}`">
@@ -93,6 +96,17 @@
         />
       </template>
     </Column>
+    <template #expansion="slotProps">
+      <div class="ml-5 md:ml-7">
+        <p v-if="terms(slotProps.data)">{{ terms(slotProps.data) }}</p>
+        <p v-if="players(slotProps.data)">
+          {{ players(slotProps.data) }}
+        </p>
+        <p v-if="slotProps.data.memo">
+          ひとことメモ: {{ slotProps.data.memo }}
+        </p>
+      </div>
+    </template>
   </DataTable>
   <ParticipateModal
     v-if="canModify"
@@ -141,6 +155,31 @@ const emit = defineEmits<{
   (e: 'delete', participate: ParticipateResponse): void
 }>()
 
+// table
+const expandedRows = ref([])
+const terms = (p: ParticipateResponse): string | null => {
+  if (!p.term && !p.required_hours) return null
+  const arr = []
+  if (p.term) arr.push(term(p.term))
+  if (p.required_hours) arr.push(`プレイ時間: ${p.required_hours}時間`)
+  return arr.join(' / ')
+}
+const term = (term: ParticipateTerm): string => {
+  if (term.from === term.to) return `日程: ${term.from}` || ''
+  if (!term.from) return `日程: ～ ${term.to}`
+  if (!term.to) return `日程: ${term.from} ～`
+  return `日程: ${term.from} ～ ${term.to}`
+}
+const players = (p: ParticipateResponse): string | null => {
+  if (!p.player_num && !p.game_master && !p.player_names) return null
+  const arr = []
+  if (p.player_num) arr.push(`PL人数: ${p.player_num}`)
+  if (p.game_master) arr.push(`GM: ${p.game_master}`)
+  if (p.player_names) arr.push(`参加PL: ${p.player_names}`)
+  return arr.join(' / ')
+}
+
+// participates
 const participates: Ref<Array<ParticipateResponse>> = ref([])
 const orgParticipates: Ref<Array<ParticipateResponse>> = ref([])
 const init = (target: Array<ParticipateResponse>) => {
@@ -200,7 +239,10 @@ const reorder = async (event: any) => {
         rule_book_ids: p.rule_books.map((rb) => rb.id),
         role_names: p.role_names,
         disp_order: org.disp_order,
-        impression: p.impression
+        impression: p.impression,
+        term_from: p.term?.from ?? null,
+        term_to: p.term?.to ?? null,
+        player_num: p.player_num
       })
     }
   }

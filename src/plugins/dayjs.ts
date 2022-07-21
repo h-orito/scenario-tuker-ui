@@ -18,5 +18,6 @@ declare module '#app' {
 export default defineNuxtPlugin((nuxtApp) => {
   dayjs.extend(isBetween)
   dayjs.extend(isSameOrAfter)
+  dayjs.locale('ja')
   nuxtApp.provide('dayjs', dayjs)
 })

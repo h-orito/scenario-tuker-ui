@@ -13,30 +13,34 @@
       <p v-if="type.value === ScenarioType.Trpg.value" class="mb-4">
         同一ゲームシステムのシナリオを一括登録することができます。
       </p>
+      <hr v-if="type.value === ScenarioType.Trpg.value" class="field-hr" />
       <ScenariosSelect
         v-model:value="scenarios"
         :type="type"
         :has-error="v$.scenarios.$error"
         :same-game-system="true"
       />
+      <hr v-if="type.value === ScenarioType.Trpg.value" class="field-hr" />
       <RuleBooksSelect
         v-if="type.value === ScenarioType.Trpg.value"
         v-model:value="ruleBooks"
         :has-error="v$.ruleBooks.$error"
         :game-system-id="scenarioGameSystemId"
       />
+      <hr class="field-hr" />
       <RoleNames
         v-model:role-names="roleNames"
         :type="type"
         :has-error="v$.roleNames.$error"
       />
+      <hr class="field-hr" />
       <div class="field mb-4">
         <div>
-          <label class="field-label" for="scenario-name">感想</label>
+          <label class="field-label" for="scenario-name">その他</label>
         </div>
         <p>
-          一括追加では感想は登録できません。<br />
-          追加後に個別に編集して感想を登録してください。
+          一括追加では感想などの任意項目は登録できません。<br />
+          追加後に個別に編集して登録してください。
         </p>
       </div>
     </div>
@@ -128,7 +132,14 @@ const save = async () => {
       scenario_id: scenario.id || 0,
       rule_book_ids: ruleBooks.value.map((r) => r.id),
       role_names: roleNames.value,
-      impression: null
+      impression: null,
+      term_from: null,
+      term_to: null,
+      player_num: null,
+      game_master: null,
+      player_names: null,
+      required_hours: null,
+      memo: null
     })
   }
   emit('save')

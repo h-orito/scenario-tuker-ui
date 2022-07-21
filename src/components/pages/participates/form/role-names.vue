@@ -19,31 +19,33 @@
         @click="remove(roleName)"
       />
     </div>
-    <div class="bg-gray-200 mt-2 pt-2 pb-4">
-      <div>
-        <p>役割追加</p>
-        <div class="p-inputgroup mx-auto w-20rem">
-          <FormText
-            v-model:value="roleText"
-            :has-error="false"
-            placeholder="役割（50字以内）"
-          />
-          <ButtonPrimary
-            label="追加"
-            :disabled="roleText.length <= 0 || 50 <= roleText.length"
-            @click="add"
+    <div class="flex justify-content-center">
+      <div class="bg-gray-200 mt-2 pt-2 pb-4 w-full md:w-9">
+        <div>
+          <p>役割追加</p>
+          <div class="p-inputgroup mx-auto w-20rem">
+            <FormText
+              v-model:value="roleText"
+              :has-error="false"
+              placeholder="役割（50字以内）"
+            />
+            <ButtonPrimary
+              label="追加"
+              :disabled="roleText.length <= 0 || 50 <= roleText.length"
+              @click="add"
+            />
+          </div>
+        </div>
+        <div class="mt-2">
+          <Button
+            v-for="roleName in candidates"
+            :key="roleName"
+            :label="roleName"
+            icon="pi pi-plus"
+            class="p-button-primary p-button-sm ml-2 py-1 px-2"
+            @click="addText(roleName)"
           />
         </div>
-      </div>
-      <div class="mt-2">
-        <Button
-          v-for="roleName in candidates"
-          :key="roleName"
-          :label="roleName"
-          icon="pi pi-plus"
-          class="p-button-primary p-button-sm ml-2 py-1 px-2"
-          @click="addText(roleName)"
-        />
       </div>
     </div>
   </div>

@@ -5,6 +5,7 @@ import Dialog from 'primevue/dialog'
 import Card from 'primevue/card'
 import Tag from 'primevue/tag'
 import InputText from 'primevue/inputtext'
+import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
 import SelectButton from 'primevue/selectbutton'
 import Dropdown from 'primevue/dropdown'
@@ -32,6 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component('Dialog', Dialog)
   nuxtApp.vueApp.component('Card', Card)
   nuxtApp.vueApp.component('Tag', Tag)
+  nuxtApp.vueApp.component('InputNumber', InputNumber)
   nuxtApp.vueApp.component('InputText', InputText)
   nuxtApp.vueApp.component('Textarea', Textarea)
   nuxtApp.vueApp.component('Dropdown', Dropdown)
