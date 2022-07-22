@@ -51,7 +51,7 @@
     </div>
     <div class="my-4 md:my-8 w-full p-5 bg-gray-200">
       <div class="grid">
-        <div class="col-12">
+        <div class="col-12 md:col-6">
           <p>
             登録されているマーダーミステリーのシナリオを確認することができます。
           </p>
@@ -62,6 +62,19 @@
             }"
           >
             <ButtonPrimary label="マーダーミステリーシナリオ一覧" />
+          </NuxtLink>
+        </div>
+        <div class="col-12 md:col-6">
+          <p>
+            よく通過されているマーダーミステリーのシナリオを確認することができます。
+          </p>
+          <NuxtLink
+            :to="{
+              path: '/scenarios/trend',
+              query: { type: ScenarioType.MurderMystery.value }
+            }"
+          >
+            <ButtonPrimary label="人気のマーダーミステリーシナリオ" />
           </NuxtLink>
         </div>
       </div>
@@ -77,6 +90,17 @@
             }"
           >
             <ButtonPrimary label="TRPGシナリオ一覧" />
+          </NuxtLink>
+        </div>
+        <div class="col-12 md:col-6">
+          <p>よく通過されているTRPGのシナリオを確認することができます。</p>
+          <NuxtLink
+            :to="{
+              path: '/scenarios/trend',
+              query: { type: ScenarioType.Trpg.value }
+            }"
+          >
+            <ButtonPrimary label="人気のTRPGシナリオ" />
           </NuxtLink>
         </div>
         <div class="col-12 md:col-6">

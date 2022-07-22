@@ -60,6 +60,7 @@
     <ScenariosTable
       :scenarios="scenarios.list"
       :modifiable="canModify"
+      :show-type="true"
       @modify="search"
     >
       <template v-if="canModify" #header>

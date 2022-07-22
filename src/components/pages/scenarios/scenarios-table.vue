@@ -28,7 +28,12 @@
         </span>
       </template>
     </Column>
-    <Column field="type" header="種別" :sortable="true"></Column>
+    <Column
+      v-if="showType"
+      field="type"
+      header="種別"
+      :sortable="true"
+    ></Column>
     <Column header="ゲームシステム" field="gameSystem.name" :sortable="true">
       <template #body="slotProps">
         <NuxtLink
@@ -78,6 +83,15 @@
         />
       </template>
     </Column>
+    <Column
+      v-if="showParticipateCount"
+      field="particicipateCount"
+      header="通過数"
+    >
+      <template #body="slotProps">
+        {{ slotProps.data.participateCount }}
+      </template>
+    </Column>
     <template #expansion="slotProps">
       <div class="ml-5 md:ml-7">
         <p v-if="slotProps.data.gameMaster">
@@ -119,6 +133,8 @@ interface Props {
   scenarios: Array<ScenarioResponse>
   deletable?: boolean
   modifiable?: boolean
+  showType?: boolean
+  showParticipateCount?: boolean
 }
 const props = defineProps<Props>()
 
@@ -146,7 +162,8 @@ const items = computed(() =>
           )?.label
         : null,
       playerNum: playerNum(s),
-      requiredHour: s.required_hours
+      requiredHour: s.required_hours,
+      participateCount: s.participate_count
     }
   })
 )

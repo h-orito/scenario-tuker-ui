@@ -25,7 +25,7 @@
           ><span v-if="idx < scenario.authors.length - 1">、</span>
         </span>
       </div>
-      <div class="mt-4">
+      <div class="mt-6">
         <h2>{{ scenario.name }} の通過記録</h2>
         <ParticipateTable
           ref="participatesTable"
@@ -33,13 +33,17 @@
           :can-modify="false"
           @reload="() => {}"
         />
+        <div v-if="alsoScenarios && alsoScenarios.list.length > 0" class="mt-6">
+          <h2>このシナリオを通過した人が通過しているシナリオ</h2>
+          <ScenariosTable :scenarios="alsoScenarios.list" />
+        </div>
       </div>
     </div>
     <div v-else>
       <Title>Scenario Tuker | シナリオ情報</Title>
       存在しないシナリオです。
     </div>
-    <div class="mt-4">
+    <div class="mt-8">
       <NuxtLink to="/scenarios">
         <ButtonSecondary label="シナリオ一覧" />
       </NuxtLink>
@@ -57,11 +61,13 @@ import { Ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 import {
   fetchScenario,
-  fetchScenarioParticipates
+  fetchScenarioParticipates,
+  fetchScenarioAlso
 } from '~/components/api/scenario-api'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
 import ParticipateTable from '~/components/pages/participates/participate-table.vue'
 import ScenarioModifyModal from '~/components/pages/scenarios/scenario-modify-modal.vue'
+import ScenariosTable from '~/components/pages/scenarios/scenarios-table.vue'
 
 const route = useRoute()
 const authState = await useAuth()
@@ -75,9 +81,11 @@ const scenarioType = computed(
   () => AllScenarioType.find((st) => st.value === scenario.value?.type)?.label
 )
 const participates = await fetchScenarioParticipates(scenarioId)
+const alsoScenarios: Ref<ScenariosResponse | null> = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   participatesTable.value.init(participates.list)
+  if (scenario.value) alsoScenarios.value = await fetchScenarioAlso(scenarioId)
 })
 
 const modifyModal = ref()

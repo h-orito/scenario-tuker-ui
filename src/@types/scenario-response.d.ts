@@ -10,4 +10,5 @@ type ScenarioResponse = {
   player_num_min: number | null
   player_num_max: number | null
   required_hours: number | null
+  participate_count: number | null
 }

@@ -2,8 +2,20 @@ export const fetchScenarios = async (): Promise<ScenariosResponse> => {
   return await useApi<void, ScenariosResponse>(`scenarios`)
 }
 
+export const fetchPopularScenarios = async (
+  type: string
+): Promise<ScenariosResponse> => {
+  return await useApi<void, ScenariosResponse>(`scenarios/popular/${type}`)
+}
+
 export const fetchScenario = async (id: number): Promise<ScenarioResponse> => {
   return await useApi<void, ScenarioResponse>(`scenarios/${id}`)
+}
+
+export const fetchScenarioAlso = async (
+  id: number
+): Promise<ScenariosResponse> => {
+  return await useApi<void, ScenariosResponse>(`scenarios/${id}/also`)
 }
 
 export const searchScenarios = async (
