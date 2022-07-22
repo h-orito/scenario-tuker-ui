@@ -1,5 +1,6 @@
 <template>
   <DataTable
+    v-model:expanded-rows="expandedRows"
     :value="items"
     :scrollable="true"
     class="p-datatable-sm text-xs sm:text-sm"
@@ -13,6 +14,7 @@
     <template v-if="$slots.header" #header>
       <slot name="header" />
     </template>
+    <Column :expander="true" />
     <Column header="シナリオ名" field="name" :sortable="true">
       <template #body="slotProps">
         <NuxtLink :to="`/scenarios/${slotProps.data.id}`">
@@ -50,7 +52,10 @@
         </span>
       </template>
     </Column>
-    <Column v-if="modifiable || deletable" class="flex justify-content-end">
+    <Column
+      v-if="modifiable || deletable"
+      body-class="flex flex-column justify-content-center md:flex md:flex-row md:justify-content-end"
+    >
       <template #body="slotProps">
         <ButtonPrimary
           v-if="modifiable"
@@ -60,7 +65,7 @@
         />
         <ButtonDanger
           v-if="modifiable"
-          class="ml-1"
+          class="md:ml-1"
           icon="trash"
           label=""
           @click="openDeleteModal(slotProps.data.id)"
@@ -73,6 +78,19 @@
         />
       </template>
     </Column>
+    <template #expansion="slotProps">
+      <div class="ml-5 md:ml-7">
+        <p v-if="slotProps.data.gameMaster">
+          GM: {{ slotProps.data.gameMaster }}
+        </p>
+        <p v-if="slotProps.data.playerNum">
+          PL人数: {{ slotProps.data.playerNum }}
+        </p>
+        <p v-if="slotProps.data.requiredHour">
+          プレイ時間目安: {{ slotProps.data.requiredHour }}時間
+        </p>
+      </div>
+    </template>
     <template #empty>シナリオが登録されていません。</template>
   </DataTable>
   <ScenarioModifyModal
@@ -94,6 +112,7 @@ import { useConfirm } from 'primevue/useconfirm'
 import { AllScenarioType } from '~/@types/scenario-type'
 import ScenarioModifyModal from '~/components/pages/scenarios/scenario-modify-modal.vue'
 import ScenarioDeleteModal from '~/components/pages/scenarios/scenario-delete-modal.vue'
+import { AllGameMasterRequirementType } from '~/@types/game-master-requirement-type'
 
 // props
 interface Props {
@@ -109,17 +128,37 @@ const emit = defineEmits<{
   (e: 'modify'): void
 }>()
 
+// table
+const expandedRows = ref([])
 const items = computed(() =>
-  props.scenarios.map((s) => ({
-    id: s.id,
-    name: s.name,
-    url: s.url,
-    type: AllScenarioType.find((st) => st.value === s.type)?.label,
-    gameSystem: s.game_system,
-    authors: s.authors,
-    autorsSort: s.authors.map((a) => a.name).join(',')
-  }))
+  props.scenarios.map((s) => {
+    return {
+      id: s.id,
+      name: s.name,
+      url: s.url,
+      type: AllScenarioType.find((st) => st.value === s.type)?.label,
+      gameSystem: s.game_system,
+      authors: s.authors,
+      autorsSort: s.authors.map((a) => a.name).join(','),
+      gameMaster: s.game_master_requirement
+        ? AllGameMasterRequirementType.find(
+            (gm) => gm.value === s.game_master_requirement
+          )?.label
+        : null,
+      playerNum: playerNum(s),
+      requiredHour: s.required_hours
+    }
+  })
 )
+const playerNum = (s: ScenarioResponse): string | null => {
+  const min = s.player_num_min
+  const max = s.player_num_max
+  if (!min && !max) return null
+  if (min === max) return `${min}人`
+  if (!max) return `${min}人～`
+  if (!min) return `～${max}`
+  return `${min}～${max}人`
+}
 
 const scenarioModifyModal = ref()
 const isShowScenarioModifyModel = ref(false)

@@ -27,21 +27,47 @@
       </div>
       <div>{{ gameSystemName }}</div>
     </div>
-    <AuthorsSelect v-model:value="authors" />
+    <hr class="field-hr" />
+    <p>以下は任意項目です</p>
+    <hr class="field-hr" />
+    <LasyScenarioUrl v-model:value="url" :has-error="v$.url.$error" />
+    <LazyAuthorsSelect v-model:value="authors" />
+    <LazyGameMasterType
+      v-model:value="gameMasterRequirement"
+      :has-error="false"
+    />
+    <LazyPlayerNum
+      v-model:min="playerNumMin"
+      v-model:max="playerNumMax"
+      :has-error="v$.playerNumMin.$error || v$.playerNumMax.$error"
+    />
+    <LazyRequiredHours
+      v-model:value="requiredHours"
+      :has-error="v$.requiredHours.$error"
+    />
   </Modal>
 </template>
 
 <script setup lang="ts">
 import { Ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
-import { required, minLength, maxLength, helpers } from '@vuelidate/validators'
+import {
+  required,
+  minLength,
+  maxLength,
+  maxValue,
+  helpers
+} from '@vuelidate/validators'
 import { ScenarioType, AllScenarioType } from '~/@types/scenario-type'
 import { isAvailableUrl } from '~/components/pages/scenarios/form/scenario-url-domain'
 import { searchScenarios, putScenario } from '~/components/api/scenario-api'
 import ScenarioName from '~/components/pages/scenarios/form/scenario-name.vue'
 import ScenarioDictionaryNames from '~/components/pages/scenarios/form/scenario-dictionary-names.vue'
-import ScenarioUrl from '~/components/pages/scenarios/form/scenario-url.vue'
-import AuthorsSelect from '~/components/pages/authors/form/authors-select.vue'
+import LasyScenarioUrl from './form/scenario-url.vue'
+import LazyAuthorsSelect from '~/components/pages/authors/form/authors-select.vue'
+import LazyGameMasterType from './form/game-master-type.vue'
+import LazyPlayerNum from './form/player-num.vue'
+import LazyRequiredHours from './form/required-hour.vue'
 const { withAsync } = helpers
 
 // props
@@ -71,6 +97,10 @@ const type: Ref<string> = ref(ScenarioType.MurderMystery.value)
 const gameSystem: Ref<GameSystem | null> = ref(null)
 const url = ref('')
 const authors: Ref<Array<Author>> = ref([])
+const gameMasterRequirement: Ref<string> = ref('')
+const playerNumMin: Ref<number | null> = ref(null)
+const playerNumMax: Ref<number | null> = ref(null)
+const requiredHours: Ref<number | null> = ref(null)
 
 const gameSystemName = computed(() => gameSystem.value?.name || null)
 const scenarioTypeName = computed(
@@ -118,13 +148,25 @@ const rules = {
       if (url.value === '') return true
       return isAvailableUrl(url.value)
     }
+  },
+  playerNumMin: {
+    maxValue: maxValue(100)
+  },
+  playerNumMax: {
+    maxValue: maxValue(100)
+  },
+  requiredHours: {
+    maxValue: maxValue(1000)
   }
 }
 
 const v$ = useVuelidate(rules, {
   name,
   dictionaryNames,
-  url
+  url,
+  playerNumMin,
+  playerNumMax,
+  requiredHours
 })
 
 const init = (current: ScenarioResponse) => {
@@ -135,6 +177,10 @@ const init = (current: ScenarioResponse) => {
   gameSystem.value = current.game_system
   url.value = current.url || ''
   authors.value = current.authors
+  gameMasterRequirement.value = current.game_master_requirement || ''
+  playerNumMin.value = current.player_num_min
+  playerNumMax.value = current.player_num_max
+  requiredHours.value = current.required_hours
 }
 
 const submitting = ref(false)
@@ -155,7 +201,11 @@ const save = async () => {
     type: type.value,
     game_system_id: gameSystem.value?.id || null,
     url: url.value,
-    author_ids: authors.value.map((a) => a.id)
+    author_ids: authors.value.map((a) => a.id),
+    game_master_requirement: gameMasterRequirement.value,
+    player_num_min: playerNumMin.value,
+    player_num_max: playerNumMax.value,
+    required_hours: requiredHours.value
   } as Scenario)
   submitting.value = false
   v$.value.$reset()

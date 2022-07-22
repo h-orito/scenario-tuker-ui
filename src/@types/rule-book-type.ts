@@ -6,6 +6,10 @@ export const RuleBookType = {
   Supplement: {
     label: 'サプリメント',
     value: 'Supplement'
+  } as LabelValue,
+  Replay: {
+    label: 'リプレイ',
+    value: 'Replay'
   } as LabelValue
 }
 
