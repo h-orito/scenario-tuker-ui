@@ -267,6 +267,17 @@ onMounted(async () => {
     activeIndex.value = 1
   }
 })
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | ユーザー情報${
+        user.value ? ' | ' + user.value.name : ''
+      }`
+    }
+  ]
+})
 </script>
 
 <style lang="scss">

@@ -116,4 +116,13 @@ const search = async () => {
   }
   searching.value = false
 }
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | シナリオ製作者一覧`
+    }
+  ]
+})
 </script>

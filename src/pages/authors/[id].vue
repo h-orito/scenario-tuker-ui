@@ -57,4 +57,15 @@ const openModifyModal = () => {
 const refresh = async () => {
   author.value = await fetchAuthor(authorId)
 }
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | シナリオ製作者情報${
+        author.value ? ' | ' + author.value.name : ''
+      }`
+    }
+  ]
+})
 </script>

@@ -62,4 +62,15 @@ const openModifyModal = () => {
 const refresh = async () => {
   gameSystem.value = await fetchGameSystem(gameSystemId)
 }
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | ゲームシステム情報${
+        gameSystem.value ? ' | ' + gameSystem.value.name : ''
+      }`
+    }
+  ]
+})
 </script>

@@ -141,4 +141,13 @@ const search = async () => {
   }
   searching.value = false
 }
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | ゲームシステム一覧`
+    }
+  ]
+})
 </script>

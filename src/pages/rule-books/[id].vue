@@ -78,4 +78,15 @@ const openModifyModal = () => {
 const refresh = async () => {
   ruleBook.value = await fetchRuleBook(ruleBookId)
 }
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | ルールブック情報${
+        ruleBook.value ? ' | ' + ruleBook.value.name : ''
+      }`
+    }
+  ]
+})
 </script>

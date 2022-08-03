@@ -48,4 +48,13 @@ onMounted(async () => {
 const typeLabel = computed(
   () => AllScenarioType.find((st) => st.value === type.value)?.label
 )
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | よく通過されているシナリオ`
+    }
+  ]
+})
 </script>

@@ -111,4 +111,15 @@ const confirmToMoveExternal = () => {
     }
   })
 }
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | シナリオ情報${
+        scenario.value ? ' | ' + scenario.value.name : ''
+      }`
+    }
+  ]
+})
 </script>

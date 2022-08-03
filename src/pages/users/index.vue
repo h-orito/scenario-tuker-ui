@@ -110,4 +110,13 @@ const search = async () => {
   searching.value = false
   hasSearched.value = true
 }
+
+useHead({
+  meta: [
+    {
+      name: 'og:title',
+      content: `Scenario Tuker | ユーザー検索`
+    }
+  ]
+})
 </script>
