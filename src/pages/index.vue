@@ -15,7 +15,21 @@
         Scenario Tukerは<br />マーダーミステリーや<br />TRPGで通過したシナリオを<br />管理・共有できるサービスです
       </p>
     </div>
-    <div class="my-4 md:my-8 bg-gray-200 w-full p-5">
+    <div class="my-4 w-full p-5">
+      <h2>通過記録や所持シナリオ・ルールブックを一括管理</h2>
+      <p>
+        通過したシナリオだけでなく、<br />持っているシナリオやルールブックを管理したり、<br />閲覧制限付きで感想も登録できます。
+      </p>
+      <h2 class="mt-5">マダミス・TRPGデータベース</h2>
+      <p>
+        シナリオやルールブック、<br />製作者のデータベースとしても利用できます。
+      </p>
+      <h2 class="mt-5">ランキングやレコメンドも</h2>
+      <p>
+        人気のシナリオや、<br />一緒によく通過されているシナリオを探せます。
+      </p>
+    </div>
+    <div class="my-4 md:mb-8 bg-gray-200 w-full p-5">
       <h2>ログイン</h2>
       <div v-if="authState.myself" class="grid align-content-center">
         <div class="col-12 mb-2 md:mb-4">
