@@ -8,6 +8,7 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>2022/08/08 ユーザー削除機能追加</li>
         <li>2022/08/04 デザイン調整</li>
         <li>
           2022/07/22

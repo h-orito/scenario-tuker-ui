@@ -14,6 +14,12 @@ type PutRequest = {
   introduction: string
 }
 
+export const deleteMyself = async (): Promise<void> => {
+  return await useApi<void, void>(`users/myself`, {
+    method: 'DELETE'
+  })
+}
+
 export const postParticipates = async (
   request: ParticipatePostRequest
 ): Promise<ParticipateResponse> => {

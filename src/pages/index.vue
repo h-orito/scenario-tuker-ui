@@ -161,7 +161,12 @@
             <ButtonPrimary label="ゲームシステム一覧" />
           </NuxtLink>
         </div>
-        <div class="col-12 md:col-6 flex flex-column justify-content-end">
+      </div>
+    </div>
+    <div class="my-4 md:my-8 w-full p-5 bg-gray-200">
+      <h2>シナリオ製作者</h2>
+      <div class="grid">
+        <div class="col-12 flex flex-column justify-content-end">
           <p>
             登録されているシナリオ製作者を確認することができます。<br />
             シナリオ製作者詳細では、その製作者が製作したシナリオも確認できます。

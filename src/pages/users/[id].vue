@@ -99,6 +99,9 @@
           </TabPanel>
         </TabView>
       </div>
+      <div v-if="canModify" class="mt-8">
+        <ButtonDanger label="ユーザー削除" @click="confirmToDelete" />
+      </div>
       <UserModifyModal
         v-model:show="isShowUserModifyModel"
         @save="reloadUser"
@@ -139,6 +142,7 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { marked } from 'marked'
+import { useConfirm } from 'primevue/useconfirm'
 import {
   fetchUser,
   fetchUserParticipates,
@@ -146,6 +150,7 @@ import {
   fetchUserScenarios
 } from '~/components/api/user-api'
 import {
+  deleteMyself,
   postRuleBooks,
   postScenarios,
   deleteRuleBooks,
@@ -254,6 +259,20 @@ const isShowMurderScenarioModel = ref(false)
 const openMurderScenarioModal = () => (isShowMurderScenarioModel.value = true)
 const isShowTrpgScenarioModel = ref(false)
 const openTrpgScenarioModal = () => (isShowTrpgScenarioModel.value = true)
+
+// delete
+const confirm = useConfirm()
+const confirmToDelete = () => {
+  confirm.require({
+    message: 'ユーザーを削除しますか？この操作は取り消せません。',
+    header: '削除確認',
+    icon: 'pi pi-exclamation-triangle',
+    accept: async () => {
+      await deleteMyself()
+      location.reload()
+    }
+  })
+}
 
 onMounted(async () => {
   myself.value = authState.value.myself
