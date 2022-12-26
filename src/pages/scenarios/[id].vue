@@ -27,6 +27,21 @@
       </div>
       <div class="mt-6">
         <h2>{{ scenario.name }} の通過記録</h2>
+        <div v-if="canTwitterSearch" class="field-checkbox my-2 mx-auto">
+          <Checkbox
+            id="twitter-following"
+            v-model="isTwitterFollowing"
+            value="true"
+            @change="fetchParticipates"
+          />
+          <label for="twitter-following"
+            >Twitterでフォローしている人に絞る</label
+          >
+          （<a v-tooltip.bottom="caution" href="#" @click.prevent.stop=""
+            >注意点</a
+          >）
+        </div>
+
         <ParticipateTable
           ref="participatesTable"
           :type="ScenarioType.Trpg"
@@ -80,11 +95,20 @@ const scenario: Ref<ScenarioResponse | null> = ref(
 const scenarioType = computed(
   () => AllScenarioType.find((st) => st.value === scenario.value?.type)?.label
 )
-const participates = await fetchScenarioParticipates(scenarioId)
+
+const isTwitterFollowing = ref(false)
+const fetchParticipates = async () => {
+  const participates = await fetchScenarioParticipates({
+    scenario_id: scenarioId,
+    is_twitter_following: isTwitterFollowing.value
+  })
+  participatesTable.value.init(participates.list)
+}
+
 const alsoScenarios: Ref<ScenariosResponse | null> = ref(null)
 
 onMounted(async () => {
-  participatesTable.value.init(participates.list)
+  await fetchParticipates()
   if (scenario.value) alsoScenarios.value = await fetchScenarioAlso(scenarioId)
 })
 
@@ -111,6 +135,10 @@ const confirmToMoveExternal = () => {
     }
   })
 }
+
+const canTwitterSearch = computed(() => authState.value.isSignedIn)
+const caution =
+  'Twitter APIの制限により、感想閲覧と合わせて15分に15回までしか利用できないため、ご利用は計画的に。'
 
 useHead({
   meta: [

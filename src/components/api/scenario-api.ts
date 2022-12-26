@@ -75,9 +75,19 @@ export const integrateDeleteScenario = async (
 }
 
 export const fetchScenarioParticipates = async (
-  id: number
+  request: ParticipatesFetchRequest
 ): Promise<ParticipatesResponse> => {
   return await useApi<void, ParticipatesResponse>(
-    `scenarios/${id}/participates`
+    `scenarios/${request.scenario_id}/participates`,
+    {
+      params: {
+        is_twitter_following: request.is_twitter_following
+      }
+    }
   )
+}
+
+type ParticipatesFetchRequest = {
+  scenario_id: number
+  is_twitter_following: boolean
 }
