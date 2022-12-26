@@ -42,7 +42,7 @@
         </NuxtLink>
       </template>
     </Column>
-    <Column v-if="!canModify" header="ユーザー">
+    <Column v-if="!canModify && (!hideUser ?? true)" header="ユーザー">
       <template #body="slotProps">
         <NuxtLink :to="`/users/${slotProps.data.user.id}`">
           {{ slotProps.data.user.name }}
@@ -146,6 +146,7 @@ import ImpressionModal from '~/components/pages/participates/impression-modal.vu
 interface Props {
   type: ScenarioType
   canModify: boolean
+  hideUser?: boolean
 }
 
 defineProps<Props>()
@@ -242,7 +243,11 @@ const reorder = async (event: any) => {
         impression: p.impression,
         term_from: p.term?.from ?? null,
         term_to: p.term?.to ?? null,
-        player_num: p.player_num
+        player_num: p.player_num,
+        game_master: p.game_master,
+        player_names: p.player_names,
+        required_hours: p.required_hours,
+        memo: p.memo
       })
     }
   }

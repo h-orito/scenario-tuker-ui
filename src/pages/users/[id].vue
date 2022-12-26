@@ -28,6 +28,7 @@
                 ref="murderParticipatesTable"
                 :type="ScenarioType.MurderMystery"
                 :can-modify="canModify"
+                :hide-user="true"
                 @reload="reloadParticipates"
               />
             </div>
@@ -57,6 +58,7 @@
                 ref="trpgParticipatesTable"
                 :type="ScenarioType.Trpg"
                 :can-modify="canModify"
+                :hide-user="true"
                 @reload="reloadParticipates"
               />
             </div>
