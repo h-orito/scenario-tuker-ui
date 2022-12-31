@@ -13,7 +13,13 @@
           />
         </span>
       </h1>
-      <p>{{ scenarioType }}</p>
+      <p>{{ scenarioType?.label }}</p>
+      <p v-if="scenario.game_system">
+        ゲームシステム:
+        <NuxtLink :to="`/game-systems/${scenario.game_system.id}`">
+          {{ scenario.game_system.name }}
+        </NuxtLink>
+      </p>
       <p v-if="scenario.url">
         <NuxtLink href="#" @click.prevent.stop="confirmToMoveExternal()">
           {{ scenario.url }}&nbsp;<i class="pi pi-external-link"></i>
@@ -44,8 +50,9 @@
 
         <ParticipateTable
           ref="participatesTable"
-          :type="ScenarioType.Trpg"
+          :type="scenarioType ?? ScenarioType.Trpg"
           :can-modify="false"
+          :hide-scenario-name="true"
           @reload="() => {}"
         />
         <div v-if="alsoScenarios && alsoScenarios.list.length > 0" class="mt-6">
@@ -92,8 +99,8 @@ const scenarioId = parseInt(route.params.id as string)
 const scenario: Ref<ScenarioResponse | null> = ref(
   await fetchScenario(scenarioId)
 )
-const scenarioType = computed(
-  () => AllScenarioType.find((st) => st.value === scenario.value?.type)?.label
+const scenarioType = computed(() =>
+  AllScenarioType.find((st) => st.value === scenario.value?.type)
 )
 
 const isTwitterFollowing = ref(false)

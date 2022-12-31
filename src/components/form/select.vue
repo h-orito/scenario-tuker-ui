@@ -3,10 +3,11 @@
     :id="id"
     v-model="value"
     :options="options"
-    option-label="name"
+    option-label="label"
     option-value="value"
     class="p-inputtext-sm"
     :class="hasError && 'p-invalid'"
+    @change="$emit('change')"
   />
 </template>
 
@@ -14,7 +15,7 @@
 interface Props {
   id?: string
   value: string
-  options: Option[]
+  options: LabelValue[]
   hasError: boolean
 }
 
@@ -22,6 +23,7 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:value', value: string): string
+  (e: 'change'): void
 }>()
 
 const value = computed({

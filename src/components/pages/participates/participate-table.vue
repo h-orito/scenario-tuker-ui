@@ -10,11 +10,12 @@
     paginator-template="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
     :rows-per-page-options="[10, 20, 50, 100, 200, 500, 1000]"
     current-page-report-template="{first} - {last} / {totalRecords}"
-    @row-reorder="reorder"
   >
     <template v-if="canModify" #header>
       <div class="flex justify-content-end">
+        <ButtonPrimary label="並び替え" icon="sort" @click="openSortModal" />
         <ButtonPrimary
+          class="ml-2"
           label="一括追加"
           icon="plus"
           @click="openMultipleCreateModal"
@@ -28,21 +29,43 @@
       </div>
     </template>
     <template #empty>通過したシナリオが登録されていません。</template>
-    <Column
-      v-if="canModify"
-      :row-reorder="true"
-      class="hidden-sm"
-      header-style="width: 3rem"
-    />
     <Column :expander="true" header-style="width: 3rem" />
-    <Column header="シナリオ" field="name">
+    <Column
+      v-if="!hideScenarioName ?? true"
+      header="シナリオ"
+      field="name"
+      :sortable="true"
+      sort-field="scenario.name"
+    >
       <template #body="slotProps">
         <NuxtLink :to="`/scenarios/${slotProps.data.scenario.id}`">
           {{ slotProps.data.scenario.name }}
         </NuxtLink>
       </template>
     </Column>
-    <Column v-if="!canModify && (!hideUser ?? true)" header="ユーザー">
+    <Column
+      v-if="
+        type.value === ScenarioType.Trpg.value && (!hideScenarioName ?? true)
+      "
+      header="ゲームシステム"
+      field="gameSystem"
+      :sortable="true"
+      sort-field="scenario.game_system.name"
+    >
+      <template #body="slotProps">
+        <NuxtLink
+          :to="`/game-systems/${slotProps.data.scenario.game_system.id}`"
+        >
+          {{ slotProps.data.scenario.game_system.name }}
+        </NuxtLink>
+      </template>
+    </Column>
+    <Column
+      v-if="!canModify && (!hideUser ?? true)"
+      header="ユーザー"
+      :sortable="true"
+      sort-field="user.name"
+    >
       <template #body="slotProps">
         <NuxtLink :to="`/users/${slotProps.data.user.id}`">
           {{ slotProps.data.user.name }}
@@ -66,7 +89,12 @@
         </span>
       </template>
     </Column>
-    <Column field="role_names" header="役割">
+    <Column
+      field="role_names"
+      header="役割"
+      :sortable="true"
+      sort-field="role_names"
+    >
       <template #body="slotProps">
         {{ slotProps.data.role_names.join('、') }}
       </template>
@@ -127,6 +155,13 @@
     :type="type"
     @save="reload"
   />
+  <ParticipateSortModal
+    v-if="canModify"
+    ref="sortModal"
+    v-model:show="isShowSortModal"
+    :type="type"
+    @save="reload"
+  />
   <ImpressionModal ref="impressionModal" v-model:show="isShowImpressionModal" />
 </template>
 
@@ -141,11 +176,13 @@ import { ScenarioType } from '~/@types/scenario-type'
 import ParticipateModal from '~/components/pages/participates/participate-create-modal.vue'
 import ParticipateMultipleCreateModal from '~/components/pages/participates/participate-multiple-create-modal.vue'
 import ParticipateModifyModal from '~/components/pages/participates/participate-modify-modal.vue'
+import ParticipateSortModal from '~/components/pages/participates/participate-sort-modal.vue'
 import ImpressionModal from '~/components/pages/participates/impression-modal.vue'
 
 interface Props {
   type: ScenarioType
   canModify: boolean
+  hideScenarioName?: boolean
   hideUser?: boolean
 }
 
@@ -195,6 +232,13 @@ const openParticipateModal = () => (isShowParticipateModal.value = true)
 const isShowMultipleCreateModal = ref(false)
 const openMultipleCreateModal = () => (isShowMultipleCreateModal.value = true)
 
+const isShowSortModal = ref(false)
+const sortModal = ref()
+const openSortModal = () => {
+  sortModal.value.init(participates.value)
+  isShowSortModal.value = true
+}
+
 // modify
 const isShowModifyModal = ref(false)
 const modifyModal = ref()
@@ -223,34 +267,6 @@ const impressionModal = ref()
 const openImpressionModal = (participate: ParticipateResponse) => {
   impressionModal.value.init(participate)
   isShowImpressionModal.value = true
-}
-
-// reorder
-const reorder = async (event: any) => {
-  orgParticipates.value = [...participates.value]
-  participates.value = event.value
-
-  for (let i = 0; i < participates.value.length; i++) {
-    const p = participates.value[i]
-    const org = orgParticipates.value[i]
-    if (p.id != org.id) {
-      await putParticipates({
-        id: p.id,
-        scenario_id: p.scenario.id,
-        rule_book_ids: p.rule_books.map((rb) => rb.id),
-        role_names: p.role_names,
-        disp_order: org.disp_order,
-        impression: p.impression,
-        term_from: p.term?.from ?? null,
-        term_to: p.term?.to ?? null,
-        player_num: p.player_num,
-        game_master: p.game_master,
-        player_names: p.player_names,
-        required_hours: p.required_hours,
-        memo: p.memo
-      })
-    }
-  }
 }
 
 const reload = () => emit('reload')
