@@ -8,6 +8,7 @@ import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
 import SelectButton from 'primevue/selectbutton'
+import SplitButton from 'primevue/splitbutton'
 import Dropdown from 'primevue/dropdown'
 import Calendar from 'primevue/calendar'
 import FileUpload from 'primevue/fileupload'
@@ -30,6 +31,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(ConfirmationService)
   nuxtApp.vueApp.component('Button', Button)
   nuxtApp.vueApp.component('SelectButton', SelectButton)
+  nuxtApp.vueApp.component('SplitButton', SplitButton)
   nuxtApp.vueApp.component('Dialog', Dialog)
   nuxtApp.vueApp.component('Card', Card)
   nuxtApp.vueApp.component('Tag', Tag)

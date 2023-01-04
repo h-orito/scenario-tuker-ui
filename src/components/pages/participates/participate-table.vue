@@ -101,16 +101,10 @@
     </Column>
     <Column v-if="canModify" class="justify-content-end text-right">
       <template #body="slotProps">
-        <ButtonPrimary
-          icon="pencil"
-          label=""
+        <SplitButton
+          icon="pi pi-pencil"
+          :model="editItems(slotProps.data)"
           @click="openModifyModal(slotProps.data)"
-        />
-        <ButtonDanger
-          class="ml-1"
-          icon="trash"
-          label=""
-          @click="deleteParticipate(slotProps.data)"
         />
       </template>
     </Column>
@@ -168,11 +162,9 @@
 <script setup lang="ts">
 import { Ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
-import {
-  deleteParticipates,
-  putParticipates
-} from '~/components/api/myself-api'
+import { deleteParticipates } from '~/components/api/myself-api'
 import { ScenarioType } from '~/@types/scenario-type'
+import { AllDisclosureRange } from '~/@types/disclosure-range'
 import ParticipateModal from '~/components/pages/participates/participate-create-modal.vue'
 import ParticipateMultipleCreateModal from '~/components/pages/participates/participate-multiple-create-modal.vue'
 import ParticipateModifyModal from '~/components/pages/participates/participate-modify-modal.vue'
@@ -267,6 +259,54 @@ const impressionModal = ref()
 const openImpressionModal = (participate: ParticipateResponse) => {
   impressionModal.value.init(participate)
   isShowImpressionModal.value = true
+}
+
+// edit buttons
+const editItems = (participate: ParticipateResponse) => {
+  const items = [
+    {
+      label: '削除',
+      icon: 'pi pi-trash',
+      command: () => {
+        deleteParticipate(participate)
+      }
+    }
+  ]
+
+  if (!!participate.impression) {
+    items.push({
+      label: '感想',
+      icon: 'pi pi-comment',
+      command: () => {
+        openImpressionModal(participate)
+      }
+    })
+    items.push({
+      label: '感想URL共有',
+      icon: 'pi pi-twitter',
+      command: () => {
+        const scenarioName = participate.scenario.name
+        const range = participate.impression?.disclosure_range
+        const rangeText = AllDisclosureRange.find(
+          (dr) => dr.value === range
+        )!.label
+        const hasSpoiler = participate.impression?.has_spoiler
+          ? 'ネタバレ含む'
+          : 'ネタバレなし'
+        let url = 'https://twitter.com/share?text='
+        url += encodeURIComponent(
+          `${scenarioName}\n感想公開範囲: ${rangeText}（${hasSpoiler}）\n`
+        )
+        url += `&url=${encodeURIComponent(
+          `https://scenario-tuker.netlify.app/participates/${participate.id}`
+        )}`
+        url += `&hashtags=${encodeURIComponent('ScenarioTuker')}`
+        window.open(url)
+      }
+    })
+  }
+
+  return items
 }
 
 const reload = () => emit('reload')
