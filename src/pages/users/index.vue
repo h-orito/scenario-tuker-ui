@@ -28,17 +28,6 @@
           />
         </div>
       </div>
-      <div v-if="canTwitterSearch" class="field-checkbox my-4">
-        <Checkbox
-          id="twitter-following"
-          v-model="isTwitterFollowing"
-          value="true"
-        />
-        <label for="twitter-following">Twitterでフォローしている人に絞る</label>
-        （<a v-tooltip.bottom="caution" href="#" @click.prevent.stop=""
-          >注意点</a
-        >）
-      </div>
       <div class="my-4">
         <div>
           <ButtonPrimary
@@ -90,10 +79,6 @@ const canSearch = computed(() => {
     isTwitterFollowing.value
   )
 })
-const authState = await useAuth()
-const canTwitterSearch = computed(() => authState.value.isSignedIn)
-const caution =
-  'Twitter APIの制限により、感想閲覧と合わせて15分に15回までしか利用できないため、ご利用は計画的に。'
 
 const hasSearched = ref(false)
 const searching = ref(false)

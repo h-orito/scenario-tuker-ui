@@ -54,8 +54,7 @@
       <div v-else>
         <p>
           ログインするとあなたが通過したシナリオを管理したり、<br />
-          閲覧制限付きの感想を参照することができます。<br />
-          ユーザー検索でTwitterのフォロー/フォロワーの方を探すこともできます。
+          閲覧制限付きの感想を参照することができます。
         </p>
         <ButtonPrimary label="ログイン" @click="openSignInModal" />
         <SignInModal v-model:show="isShowSignInModal" />
@@ -65,10 +64,7 @@
       <h2>ユーザー</h2>
       <div class="grid">
         <div class="col-12">
-          <p>
-            ユーザーを検索して通過したシナリオを閲覧することができます。<br />
-            ログインしていると、Twitterのフォロー/フォロワーの方を探すこともできます。
-          </p>
+          <p>ユーザーを検索して通過したシナリオを閲覧することができます。</p>
           <NuxtLink to="/users">
             <ButtonPrimary label="ユーザー検索" />
           </NuxtLink>
