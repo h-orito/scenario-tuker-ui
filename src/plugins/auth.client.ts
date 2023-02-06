@@ -4,6 +4,7 @@ import {
   Auth,
   getAuth,
   TwitterAuthProvider,
+  GoogleAuthProvider,
   signInWithPopup,
   signOut
 } from 'firebase/auth'
@@ -30,12 +31,16 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.provide('firebaseAuth', auth)
   nuxtApp.provide(
     'signInTwitter',
-    async () => await signIn(auth, new TwitterAuthProvider())
+    async () => await signInWithTwitter(auth, new TwitterAuthProvider())
+  )
+  nuxtApp.provide(
+    'signInGoogle',
+    async () => await signInWithGoogle(auth, new GoogleAuthProvider())
   )
   nuxtApp.provide('signOut', async () => signOut(auth))
 })
 
-const signIn = async (auth: Auth, provider: TwitterAuthProvider) => {
+const signInWithTwitter = async (auth: Auth, provider: TwitterAuthProvider) => {
   let result = null
   try {
     result = await signInWithPopup(auth, provider)
@@ -57,6 +62,24 @@ const signIn = async (auth: Auth, provider: TwitterAuthProvider) => {
         token_secret: credential.secret
       }
     })
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+const signInWithGoogle = async (auth: Auth, provider: GoogleAuthProvider) => {
+  let result = null
+  try {
+    result = await signInWithPopup(auth, provider)
+  } catch ({ code, message }) {
+    console.log(code, message)
+  }
+  if (!result) return
+  try {
+    const credential = GoogleAuthProvider.credentialFromResult(result)
+    if (!credential) return
+    const user = result.user
+    console.log(user)
   } catch (e) {
     console.log(e)
   }
