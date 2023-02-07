@@ -46,6 +46,13 @@
           </NuxtLink>
         </div>
         <div class="col-12 md:col-6 flex flex-column justify-content-end">
+          <div class="mb-3">
+            <ButtonPrimary
+              label="他SNSアカウント連携"
+              @click="openAccountLinkModal"
+            />
+            <AccountLinkModal v-model:show="isShowAccountLinkModal" />
+          </div>
           <div>
             <ButtonDanger label="ログアウト" @click="signOut" />
           </div>
@@ -182,11 +189,15 @@
 
 <script setup lang="ts">
 import SignInModal from '~/components/firebase/sign-in-modal.vue'
+import AccountLinkModal from '~/components/firebase/account-link-modal.vue'
 import ReleaseNoteModal from '~/components/pages/index/release-note-modal.vue'
 import { ScenarioType } from '~/@types/scenario-type'
 
 const isShowSignInModal = ref(false)
 const openSignInModal = () => (isShowSignInModal.value = true)
+
+const isShowAccountLinkModal = ref(false)
+const openAccountLinkModal = () => (isShowAccountLinkModal.value = true)
 
 const signOut = async () => {
   const { $signOut } = useNuxtApp()

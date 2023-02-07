@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="twitterUrl" target="_blank">
+  <NuxtLink v-if="user.twitter" :to="twitterUrl" target="_blank">
     <ButtonPrimary icon="twitter" label="" />
   </NuxtLink>
 </template>

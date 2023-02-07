@@ -15,6 +15,18 @@
             )
           "
         />
+        <p class="mt-5 mb-2 text-lg">Amazonギフト券（Eメールタイプ）を送る</p>
+        <ul class="text-bluegray-600">
+          <li>
+            受取人に「wolfortあっとgooglegroups.com」を指定してください（あっとのところは@に変えてください）。
+          </li>
+          <li>金額は15円以上で自由に変更できます。</li>
+        </ul>
+        <ButtonPrimary
+          class="my-2"
+          label="Amazonギフト券を送る"
+          @click="openWindow('https://www.amazon.co.jp/dp/B004N3APGO')"
+        />
         <p class="mt-5 mb-2 text-lg">Amazonアソシエイト経由で買い物をする</p>
         <ul class="text-bluegray-600">
           <li>

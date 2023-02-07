@@ -8,6 +8,7 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>2023/02/08 Googleログインを追加</li>
         <li>2023/02/06 TwitterAPI利用機能を削除</li>
         <li>2023/01/05 感想シェア機能を追加</li>
         <li>2022/12/31 参加記録の並び替え機能を追加</li>
