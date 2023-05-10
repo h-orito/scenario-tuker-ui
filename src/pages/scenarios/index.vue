@@ -46,6 +46,28 @@
           />
         </div>
       </div>
+      <div class="my-2 field">
+        <div class="p-inputgroup">
+          <FormIncrementalNumber
+            id="player-num"
+            v-model:value="playerNum"
+            :has-error="false"
+            placeholder="PL人数"
+            @keyup.enter="search"
+          />
+          <div class="flex align-items-center ml-2">
+            <Checkbox
+              id="player-num-empty"
+              v-model="playerNumEmpty"
+              :value="true"
+              :disabled="playerNum == null"
+            />
+            <label for="player-num-empty" class="ml-2">
+              PL人数未登録を含む
+            </label>
+          </div>
+        </div>
+      </div>
       <div class="my-4">
         <div>
           <ButtonPrimary
@@ -122,12 +144,15 @@ const type = ref('')
 const name = ref('')
 const gameSystemName = ref('')
 const authorName = ref('')
+const playerNum = ref()
+const playerNumEmpty = ref(false)
 const isQueryEmpty = computed(() => {
   return (
     name.value.length <= 0 &&
     gameSystemName.value.length <= 0 &&
     type.value === '' &&
-    authorName.value.length <= 0
+    authorName.value.length <= 0 &&
+    playerNum.value === null
   )
 })
 const typeCandidates = ref(
@@ -147,7 +172,9 @@ const search = async () => {
       game_system_id: null,
       game_system_name: gameSystemName.value,
       type: type.value === '' ? null : type.value,
-      author_name: authorName.value
+      author_name: authorName.value,
+      player_num: playerNum.value,
+      player_num_empty: playerNumEmpty.value
     })
   }
   searching.value = false
