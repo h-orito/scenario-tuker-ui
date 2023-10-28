@@ -81,7 +81,7 @@ const closeModal = () => (isShow.value = false)
 const name = ref('')
 const searchedGameSystems: Ref<Array<GameSystem>> = ref([])
 
-const canSearch = computed(() => name.value.length > 1)
+const canSearch = computed(() => name.value.length > 0)
 
 const hasSearched = ref(false)
 const search = async () => {

@@ -74,8 +74,8 @@ const isTwitterFollowing = ref(false)
 const users: Ref<Array<User>> = ref([])
 const canSearch = computed(() => {
   return (
-    name.value.length > 1 ||
-    twitterUserName.value.length > 1 ||
+    name.value.length > 0 ||
+    twitterUserName.value.length > 0 ||
     isTwitterFollowing.value
   )
 })

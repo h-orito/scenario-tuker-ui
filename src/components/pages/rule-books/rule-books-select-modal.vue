@@ -101,8 +101,8 @@ const ruleBooks: Ref<Array<RuleBook>> = ref([])
 
 const canSearch = computed(
   () =>
-    name.value.length > 1 ||
-    gameSystemName.value.length > 1 ||
+    name.value.length > 0 ||
+    gameSystemName.value.length > 0 ||
     !!props.gameSystemId
 )
 

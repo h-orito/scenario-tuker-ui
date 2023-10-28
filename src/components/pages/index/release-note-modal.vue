@@ -8,6 +8,9 @@
   >
     <div class="text-left text-xs md:text-sm">
       <ul>
+        <li>
+          2023/10/28 シナリオ選択などの検索で1文字入力すれば検索できるよう変更
+        </li>
         <li>2023/05/10 シナリオ検索条件にPL人数を追加</li>
         <li>2023/02/08 Googleログインを追加</li>
         <li>2023/02/06 TwitterAPI利用機能を削除</li>

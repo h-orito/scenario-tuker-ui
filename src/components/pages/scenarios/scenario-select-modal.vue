@@ -117,9 +117,9 @@ const hasSearched = ref(false)
 
 const canSearch = computed(
   () =>
-    name.value.length > 1 ||
-    gameSystemName.value.length > 1 ||
-    authorName.value.length > 1 ||
+    name.value.length > 0 ||
+    gameSystemName.value.length > 0 ||
+    authorName.value.length > 0 ||
     !!props.gameSystemId
 )
 
@@ -132,7 +132,9 @@ const search = async () => {
       game_system_id: props.gameSystemId ?? null,
       game_system_name: gameSystemName.value,
       type: props.type.value,
-      author_name: authorName.value
+      author_name: authorName.value,
+      player_num: null,
+      player_num_empty: false
     })
   ).list
 }
