@@ -16,7 +16,9 @@
         <p>感想</p>
         <p>
           Markdown形式（
-          <NuxtLink to="https://www.markdown.jp/syntax/" target="_blank"
+          <NuxtLink
+            to="https://qiita.com/oreo/items/82183bfbaac69971917f"
+            target="_blank"
             >参考</NuxtLink
           >）で入力できます。<br />
           （セキュリティ対策のため一部記法を制限しています）

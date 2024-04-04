@@ -10,6 +10,7 @@
     decrement-button-icon="pi pi-minus"
     input-class="text-right w-5rem"
     :class="hasError ? 'p-invalid' : ''"
+    min="0"
   />
 </template>
 
